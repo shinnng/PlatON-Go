@@ -492,7 +492,7 @@ def test_DG_TR_011(client_new_node, reset_environment):
     :param client_new_node:
     :return:
     """
-    reward = 1000
+    reward = 500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, 0)
@@ -540,7 +540,7 @@ def test_DG_TR_012(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -590,7 +590,7 @@ def test_DG_TR_013(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -639,7 +639,7 @@ def test_DG_TR_013_2(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -685,7 +685,7 @@ def test_DG_TR_014(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)

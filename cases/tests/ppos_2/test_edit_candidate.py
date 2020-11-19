@@ -418,7 +418,7 @@ def test_MPI_018(clients_noconsensus):
     assert candidate_info1['RewardPer'] == 80
     assert candidate_info1['NextRewardPer'] == 580
 
-    result =client2.staking.increase_staking(0, address2, amount=economic.delegate_limit * 100)
+    result = client2.staking.increase_staking(0, address2, amount=economic.delegate_limit * 100)
     assert_code(result, 0)
     economic.wait_settlement(node)
     result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
@@ -533,6 +533,25 @@ def test_MPI_020(clients_noconsensus):
     candidate_info1 = node.ppos.getCandidateInfo(node.node_id)['Ret']
     assert candidate_info1['RewardPer'] == 80
     assert candidate_info1['NextRewardPer'] == 580
+
+
+def test_MPI_022(client_new_node):
+    """
+    修改委托分红比例，再重新修改回原来的
+    """
+    client = client_new_node
+    economic = client.economic
+    node = client.node
+    address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+
+    result = client.staking.create_staking(0, address, address, reward_per=70)
+    assert_code(result, 0)
+    economic.wait_settlement(node, 1)
+    result = client.staking.edit_candidate(address, address, reward_per=75)
+    assert_code(result, 0)
+    time.sleep(3)
+    result = client.staking.edit_candidate(address, address, reward_per=70)
+    assert_code(result, 301008)
 
 #
 # @pytest.mark.P1

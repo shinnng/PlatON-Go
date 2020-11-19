@@ -154,8 +154,9 @@ class TestCreateStaking:
         report_information = mock_duplicate_sign(1, clients_consensus[1].node.nodekey,
                                                  clients_consensus[1].node.blsprikey, 41)
         log.info("Report information: {}".format(report_information))
-        address, _ = client.economic.account.generate_account(client.node.web3, 10 ** 18 * 1000)
-        result = client.duplicatesign.reportDuplicateSign(1, report_information, address)
+        report_address, _ = client.economic.account.generate_account(client.node.web3,
+                                                                     client.economic.delegate_limit * 10)
+        result = client.duplicatesign.reportDuplicateSign(1, report_information, report_address)
         log.info('Node duplicate block result : {}'.format(result))
         assert_code(result, 0)
         verifier_list = get_pledge_list(client.ppos.getVerifierList)
@@ -163,7 +164,8 @@ class TestCreateStaking:
         client.economic.wait_settlement(client.node, 2)
         candidate_info = clients_consensus[1].ppos.getCandidateInfo(clients_consensus[1].node.node_id)
         log.info(candidate_info)
-        address, _ = client.economic.account.generate_account(client.node.web3, 10 ** 18 * 10000000)
+        address, _ = client.economic.account.generate_account(client.node.web3,
+                                                              client.economic.create_staking_limit * 2)
         result = clients_consensus[1].staking.create_staking(0, address, address, reward_per=value)
         assert_code(result, 0)
         self.assert_rewardsper_staking(clients_consensus[1], value)

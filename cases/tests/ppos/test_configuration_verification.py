@@ -266,7 +266,7 @@ def test_IP_CP_002_amount(reset_cfg_env_node, value):
     :return:
     """
     genesis = reset_cfg_env_node.genesis
-    genesis.config.cbft.amount = value
+    genesis.config.cbft.test_LS_CSV_009amount = value
     new_file = reset_cfg_env_node.genesis_path
     genesis.to_file(new_file)
     assert_error_deploy(reset_cfg_env_node, new_file, "Abnormal amount")

@@ -20,7 +20,7 @@
         "staking": {
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
-            "maxValidators": 5,
+            "maxValidators": 28,
             "unStakeFreezeDuration": 2,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
