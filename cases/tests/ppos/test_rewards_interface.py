@@ -972,7 +972,9 @@ class TestwithdrawDelegateReward():
         address2, _ = client1.economic.account.generate_account(client1.node.web3, init_amount)
         result = client1.delegate.withdraw_delegate_reward(address1)
         assert_code(result, 305001)
+        time.sleep(5)
         gas = get_getDelegateReward_gas_fee(client1, 0, 0)
+        print(gas)
         client1.economic.wait_consensus(client1.node)
         balance_after_withdraw_reward = client1.node.eth.getBalance(address1)
         log.info('Address {} after withdraw reward balance {}'.format(address1, balance_after_withdraw_reward))
@@ -1358,15 +1360,15 @@ class TestGas:
         balance_address1 = client2.node.eth.getBalance(address1)
         print('balance_address1: {}'.format(balance_address1))
         staking_and_delegate(client2, address1)
-        time.sleep(2)
+        time.sleep(3)
         balance_address1_1 = client2.node.eth.getBalance(address1)
         log.info('Address {} balance : {}'.format(address1, balance_address1_1))
         data = rlp.encode([rlp.encode(int(1004)), rlp.encode(0), rlp.encode(bytes.fromhex(client1.node.node_id)),
                            rlp.encode(10 ** 18 * 1000)])
         gas = (21000 + 6000 + 16000 + get_the_dynamic_parameter_gas_fee(data)) * client1.node.eth.gasPrice
-        transaction_data = {"to": EconomicConfig.STAKING_ADDRESS, "data": data, "from": address1}
+        transaction_data = {"to": client1.node.web3.stakingAddress, "data": data, "from": address1}
         estimated_gas = client1.node.eth.estimateGas(transaction_data)
-        print(gas, estimated_gas)
+        assert gas == estimated_gas * client1.node.eth.gasPrice
         assert balance_address1 - gas - delegate_amount == balance_address1_1
 
         client1.delegate.withdrew_delegate(stakingnum, address1, amount=10 ** 18 * 100)
