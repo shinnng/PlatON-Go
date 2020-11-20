@@ -49,10 +49,11 @@
         "reward": {
             "newBlockRate": 50,
             "platONFoundationYear": 2,
-            "increaseIssuanceRatio": 500
+            "increaseIssuanceRatio": 500,
+            "theNumberOfDelegationsReward": 2
         },
         "restricting": {
-            "minimum_release": 80000000000000000000
+            "minimumRelease": 80000000000000000000
         },
         "innerAcc": {
             "platonFundAccount": "atx1m6n2wj6cmnnqnmhhaytyf6x75607t7rhszeuhk",

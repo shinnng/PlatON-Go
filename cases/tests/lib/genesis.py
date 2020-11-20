@@ -67,6 +67,7 @@ class Reward:
     newBlockRate: int
     platONFoundationYear: int
     increaseIssuanceRatio: int
+    theNumberOfDelegationsReward: int
 
 
 @dataclass
