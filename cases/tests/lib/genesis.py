@@ -72,7 +72,7 @@ class Reward:
 
 @dataclass
 class Restricting:
-    minimum_release: int
+    minimumRelease: int
 
 
 @dataclass

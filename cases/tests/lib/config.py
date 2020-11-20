@@ -39,7 +39,7 @@ class PipConfig:
     version8 = 591617
     version9 = 526081
     version0 = 3584
-    transaction_cfg = {"gasPrice": 3000000000000000, "gas": 1000000}
+    transaction_cfg = {"gasPrice": 2100000000000000, "gas": 1000000}
     # Lock account account address
     FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
 
