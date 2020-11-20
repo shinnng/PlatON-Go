@@ -421,9 +421,10 @@ def test_LS_RV_005(client_new_node):
     louk_up_balace = client_new_node.node.web3.toWei(100, 'ether')
     plan = [{'Epoch': 1, 'Amount': louk_up_balace}]
     # create restricting plan
-    restricting_info = create_restricting_plan(client_new_node, plan, address, address)
+    create_restricting_plan(client_new_node, plan, address, address)
     # create restricting plan
     restricting_info = create_restricting_plan(client_new_node, plan, address, address)
+    time.sleep(2)
     # assert restricting plan
     assert restricting_info['Ret']['balance'] == louk_up_balace * 2, "ErrMsg:Restricting balance：{}".format(
         restricting_info['Ret']['balance'])
@@ -1825,7 +1826,7 @@ def test_LS_EV_022(client_new_node):
     status = True
     # create account
     amount1 = von_amount(economic.create_staking_limit, 2)
-    amount2 = node.web3.toWei(0.000006, 'ether')
+    amount2 = 942477600000000
     address1, address2 = create_lock_release_amount(client, amount1, amount2)
     # create Restricting Plan
     plan = [{'Epoch': 1, 'Amount': economic.delegate_limit * 100}]
@@ -1897,7 +1898,7 @@ def test_LS_IV_002(client_new_node):
     # create account
     address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     address2, _ = economic.account.generate_account(node.web3,
-                                                    economic.create_staking_limit + node.web3.toWei(0.000009, 'ether'))
+                                                    economic.create_staking_limit + 947475600000000)
     # create Restricting Plan
     # add_staking_amount = von_amount(economic.add_staking_limit, 10)
     plan = [{'Epoch': 1, 'Amount': economic.add_staking_limit * 100}]
@@ -1906,12 +1907,15 @@ def test_LS_IV_002(client_new_node):
     restricting_info = client.ppos.getRestrictingInfo(address2)
     log.info("restricting plan informtion: {}".format(restricting_info))
     # create staking
+    print(node.eth.getBalance(address2))
     result = client.staking.create_staking(0, address2, address2)
     assert_code(result, 0)
     try:
         # Create pledge of increasing holding
+        print(node.eth.getBalance(address2))
         client.staking.increase_staking(1, address2)
         status = False
+        print(1)
     except Exception as e:
         log.info("Use case success, exception information：{} ".format(str(e)))
     assert status, "ErrMsg:Transfer result {}".format(status)
