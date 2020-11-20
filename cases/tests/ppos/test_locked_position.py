@@ -104,11 +104,13 @@ def test_LS_UPV_002_1(client_new_node):
         plan_list.append(v)
     rlp_list = rlp.encode(plan_list)
     data = rlp.encode([rlp.encode(int(4000)), rlp.encode(account), rlp_list])
-    transaction_data = {"to": address, "data": data}
-    aa = node.eth.estimateGas(transaction_data)
+    transaction_data = {"to": node.web3.restrictingAddress, "data": data, "from": address}
+    estimate_gas = node.eth.estimateGas(transaction_data)
+    print(estimate_gas)
     dynamic_gas = get_the_dynamic_parameter_gas_fee(data)
     gas_total = 21000 + 18000 + 8000 + 21000 + dynamic_gas
     log.info("gas_total: {}".format(gas_total))
+    assert estimate_gas == gas_total
     balance = node.eth.getBalance(address)
     # Create a lockout plan
     result = client.restricting.createRestrictingPlan(address, plan, address)
@@ -933,7 +935,7 @@ def test_LS_RV_018(clients_new_node, reset_environment):
     client2.economic.wait_consensus(client2.node, 2)
     log.info("Current block height: {}".format(client2.node.eth.blockNumber))
     # create Restricting Plan1
-    plan = [{'Epoch': 1, 'Amount': economic.delegate_limit}]
+    plan = [{'Epoch': 1, 'Amount': economic.delegate_limit * 100}]
     result = client2.restricting.createRestrictingPlan(address1, plan, address1)
     assert_code(result, 0)
 
@@ -2090,7 +2092,7 @@ def restricting_plan_verification_add_staking2(client, economic, node):
     address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     address2, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     # create Restricting Plan
-    amount = von_amount(economic.add_staking_limit, 10)
+    amount = von_amount(economic.add_staking_limit, 100)
     plan = [{'Epoch': 1, 'Amount': amount}]
     result = client.restricting.createRestrictingPlan(address2, plan, address1)
     assert_code(result, 0)
@@ -2250,7 +2252,7 @@ def test_LS_CSV_012(client_new_node):
     result = client.staking.withdrew_staking(address1)
     assert_code(result, 0)
     # create Restricting Plan
-    amount = von_amount(economic.delegate_limit, 10)
+    amount = von_amount(economic.delegate_limit, 100)
     plan = [{'Epoch': 1, 'Amount': amount}]
     result = client.restricting.createRestrictingPlan(address2, plan, address2)
     assert_code(result, 0)
@@ -2280,7 +2282,7 @@ def test_LS_CSV_013(client_new_node):
     result = client.staking.withdrew_staking(address1)
     assert_code(result, 0)
     # create Restricting Plan
-    amount = von_amount(economic.add_staking_limit, 5)
+    amount = von_amount(economic.add_staking_limit, 100)
     plan = [{'Epoch': 1, 'Amount': amount}]
     result = client.restricting.createRestrictingPlan(address1, plan, address1)
     assert_code(result, 0)
@@ -2348,7 +2350,7 @@ def test_LS_CSV_015(client_new_node):
     # After returning the deposit
     address1, address2 = steps_of_returning_pledge(client, economic, node)
     # create Restricting Plan
-    amount = von_amount(economic.delegate_limit, 10)
+    amount = von_amount(economic.delegate_limit, 100)
     plan = [{'Epoch': 1, 'Amount': amount}]
     result = client.restricting.createRestrictingPlan(address2, plan, address2)
     assert_code(result, 0)
@@ -2373,7 +2375,7 @@ def test_LS_CSV_016(client_new_node):
     # After returning the deposit
     address1, address2 = steps_of_returning_pledge(client, economic, node)
     # create Restricting Plan
-    amount = von_amount(economic.add_staking_limit, 5)
+    amount = von_amount(economic.add_staking_limit, 100)
     plan = [{'Epoch': 1, 'Amount': amount}]
     result = client.restricting.createRestrictingPlan(address1, plan, address1)
     assert_code(result, 0)

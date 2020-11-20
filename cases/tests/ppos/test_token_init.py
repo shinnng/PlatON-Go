@@ -150,6 +150,22 @@ def test_IT_SD_011(global_test_env):
     assert status, "ErrMsg:Transfer result {}".format(status)
 
 
+@pytest.mark.P1
+def test_IT_SD_012(global_test_env):
+    """
+    账户转账校验：转账gas费不足
+    :param global_test_env:
+    :return:
+    """
+    node = global_test_env.get_rand_node()
+    address, _ = global_test_env.account.generate_account(node.web3, node.web3.toWei(1000, 'ether'))
+    # Insufficient gas fee for transfer
+    transaction_data = {"to": address, "data": '', "from": address}
+    estimate_gas = node.eth.estimateGas(transaction_data)
+    print(estimate_gas)
+    assert estimate_gas == 21000
+
+
 @pytest.mark.P2
 def test_IT_SD_007(global_test_env):
     """
@@ -304,7 +320,7 @@ def test_test_IT_SD_008_002(client_new_node):
     client = client_new_node
     economic = client.economic
     node = client.node
-    address, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
+    address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
     benifit_address, _ = economic.account.generate_account(node.web3, 0)
     first_staking_balance = node.eth.getBalance(node.web3.stakingAddress)
     log.info("first_staking_balance : {}".format(first_staking_balance))
@@ -2075,7 +2091,7 @@ def test2223(client_new_node):
     # staking_addres, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     # client.staking.create_staking(0,staking_addres,staking_addres,transaction_cfg=)
 # hx = '0xd7d479481b480b149339908d2e267a03b02396d9a84d6774c7d5d76f3434cf80'
-    # result = client.node.eth.analyzeReceiptByHash(hx)
-    # result = client.ppos.getCandidateList()
-    # print(result)
-    # client.economic.env.deploy_all()
+# result = client.node.eth.analyzeReceiptByHash(hx)
+# result = client.ppos.getCandidateList()
+# print(result)
+# client.economic.env.deploy_all()

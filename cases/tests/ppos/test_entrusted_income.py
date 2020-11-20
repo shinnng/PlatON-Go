@@ -1,5 +1,7 @@
 import math
 import time
+from random import uniform, random, randint
+
 import pytest
 import allure
 import rlp
@@ -2918,7 +2920,7 @@ def test_EI_BC_077(client_new_node, reset_environment):
     log.info("Commissioned successfully, commissioned amount：{}".format(economic.delegate_limit))
     economic.wait_settlement(node, 1)
     log.info("Current settlement block height：{}".format(node.eth.blockNumber))
-    result = client.staking.edit_candidate(staking_address, staking_address, reward_per=2000)
+    result = client.staking.edit_candidate(staking_address, staking_address, reward_per=1500)
     assert_code(result, 0)
     block_reward, staking_reward = economic.get_current_year_reward(node)
     economic.wait_settlement(node)
@@ -3623,23 +3625,118 @@ def test_EI_BC_086(client_new_node, reset_environment):
 #     balance = node.eth.getBalance(benifit_address, settlement_block)
 #     print("benifit_balance", balance)
 
+@pytest.mark.P1
+def test_EI_BC_087(client_new_node):
+    """
+    节点质押被A/B委托，等待三个结算周期 A委托失败 查看A B可领取委托分红奖励是否正确
+    """
+    clinet = client_new_node
+    economic = clinet.economic
+    node = clinet.node
+    staking_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
 
-def test_EI_BC_088(clients_noconsensus):
+    result = clinet.staking.create_staking(0, staking_address, staking_address, reward_per=1000)
+    assert_code(result, 0)
+
+    delegate_address1, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 3)
+    delegate_address2, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 2)
+
+    result = clinet.delegate.delegate(0, delegate_address1, node.node_id, amount=economic.delegate_limit * 2)
+    assert_code(result, 0)
+
+    result = clinet.delegate.delegate(0, delegate_address2, node.node_id)
+    assert_code(result, 0)
+
+    economic.wait_settlement(node, 1)
+
+    result = node.ppos.getDelegateReward(delegate_address1)['Ret']
+    reward1 = result[0]['reward']
+    assert reward1
+
+    result = node.ppos.getDelegateReward(delegate_address2)['Ret']
+    reward2 = result[0]['reward']
+    assert reward2
+
+    result = clinet.delegate.delegate(0, delegate_address1)
+    assert_code(result, 301111)
+
+    result = node.ppos.getDelegateReward(delegate_address1)['Ret']
+    reward3 = result[0]['reward']
+    assert reward1 == reward3
+
+    result = node.ppos.getDelegateReward(delegate_address2)['Ret']
+    reward4 = result[0]['reward']
+    assert reward2 == reward4
+
+
+def test_EI_BC_088(clients_noconsensus, client_consensus):
     """
     委托节点数>20，则只领取前20个节点的委托收益
     """
-    client = clients_noconsensus[0]
+    client = client_consensus
     economic = client.economic
     node = client.node
+    # node.ppos.need_analyze = False
+    node_id_list = [i['id'] for i in economic.env.noconsensus_node_config_list]
+    print(node_id_list)
     node_length = len(economic.env.noconsensus_node_config_list)
-    delegate_address, _ = economic.account.generate_account(node.web3, von_amount(economic.delegate_limit, 2))
+    delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
+    print(delegate_address)
+    staking_list = []
     for i in range(node_length):
         address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
-        result = client.staking.create_staking(0, address, address, amount=economic.create_staking_limit, reward_per=1000)
+        staking_list.append(address)
+    print(staking_list)
+
+    for i in range(len(staking_list)):
+        reward_per = randint(100, 10000)
+        # address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+        print(staking_list[i], ":", node.eth.getBalance(staking_list[i]))
+        print(clients_noconsensus[i].node.node_mark)
+        time.sleep(1)
+        result = clients_noconsensus[i].staking.create_staking(0, staking_list[i], staking_list[i],
+                                                               amount=economic.create_staking_limit,
+                                                               reward_per=reward_per)
         assert_code(result, 0)
-    
+        result = client.delegate.delegate(0, delegate_address, clients_noconsensus[i].node.node_id)
+        assert_code(result, 0)
+    economic.wait_settlement(node)
 
-
-
-
-
+    for i in range(10):
+        # print(client.node.ppos.getVerifierList())
+        # delegate_address = 'atx1cghgquqdvm8eekppanyvh8g8y6t7e0lvwpztr6'
+        DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address)['Ret']
+        for i in DelegateReward_info:
+            result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address, i['nodeID'])
+            print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
+        print(DelegateReward_info)
+        print(node.node_mark)
+        result = client.delegate.withdraw_delegate_reward(delegate_address)
+        assert_code(result, 0)
+        time.sleep(3)
+        DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address)['Ret']
+        for i in DelegateReward_info:
+            result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address, i['nodeID'])
+            print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
+        print(DelegateReward_info)
+        delegate_node_id_list = [i['nodeID'] for i in DelegateReward_info]
+        # no_delegate_node = [x for x in node_id_list if x not in delegate_node_id_list]
+        no_delegate_node = []
+        for no_delegate in node_id_list:
+            if no_delegate not in delegate_node_id_list:
+                no_delegate_node.append(no_delegate)
+        # if len(DelegateReward_info) > 20:
+        num_limit = randint(1, 3)
+        print(num_limit)
+        for i in range(num_limit):
+            print(i)
+            result = client.delegate.withdrew_delegate(DelegateReward_info[i]['stakingNum'], delegate_address, DelegateReward_info[i]['nodeID'])
+            assert_code(result, 0)
+        num_limit2 = len(no_delegate_node)
+        if num_limit2 > 0:
+            print(num_limit2)
+            for i in range(randint(1, num_limit2)):
+                print(i)
+                result = client.delegate.delegate(0, delegate_address, node_id=no_delegate_node[i])
+                assert_code(result, 0)
+        economic.wait_settlement(node)

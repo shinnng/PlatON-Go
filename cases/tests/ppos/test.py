@@ -1,3 +1,5 @@
+from random import randint, shuffle
+
 from alaya import HTTPProvider, Web3, WebsocketProvider
 from alaya.eth import Eth
 from alaya.middleware import geth_poa_middleware
@@ -5,11 +7,12 @@ from alaya.ppos import Ppos
 from hexbytes import HexBytes
 
 # from conf.settings import TMP_ADDRES, ACCOUNT_FILE, BASE_DIR
+from numpy.ma import arange
 
 accounts = {}
 
 
-def connect_web3(url, chain_id=201018):
+def connect_web3(url, chain_id=201030):
     if "ws" in url:
         w3 = Web3(WebsocketProvider(url), chain_id=chain_id)
     else:
@@ -55,6 +58,13 @@ def delegate(url, typ, node_id, amount, pri_key):
     web3 = connect_web3(url)
     ppos = Ppos(web3)
     result = ppos.delegate(typ, node_id, amount, pri_key)
+    print(result)
+
+
+def withdraw_delegate_reward(url, pri_key):
+    web3 = connect_web3(url)
+    ppos = Ppos(web3)
+    result = ppos.withdrawDelegateReward(pri_key)
     print(result)
 
 
@@ -113,6 +123,20 @@ def get_RestrictingPlan(url, address):
     print(result)
 
 
+def getDelegateReward(url, address):
+    web3 = connect_web3(url)
+    ppos = Ppos(web3)
+    result = ppos.getDelegateReward(address)
+    print(result)
+
+
+def getDelegateInfo(url, staking_blocknum, del_address, node_id):
+    web3 = connect_web3(url)
+    ppos = Ppos(web3)
+    result = ppos.getDelegateInfo(staking_blocknum, del_address, node_id)
+    print(result)
+
+
 # def get_listGovernParam(url, module=None, from_address=None):
 #     web3 = connect_web3(url)
 #     ppos = Ppos(web3)
@@ -126,48 +150,52 @@ def get_RestrictingPlan(url, address):
 #         return ""
 #     print(json.loads(data))
 
-    #
-    # def create_address(url):
-    #     """
-    #     创建新钱包地址
-    #     """
-    #     web3 = connect_web3(url)
-    #     platon = Eth(web3)
-    #     account = platon.account.create(net_type=web3.net_type)
-    #     address = account.address
-    #     prikey = account.privateKey.hex()[2:]
-    #     account = {
-    #         "address": address,
-    #         "nonce": 0,
-    #         "balance": 0,
-    #         "prikey": prikey,
-    #     }
-    #     accounts = {}
-    #     raw_accounts = LoadFile(ACCOUNT_FILE).get_data()
-    #     print(raw_accounts)
-    #     for account1 in raw_accounts:
-    #         accounts[account1['address']] = account1
-    #     print(accounts)
-    #     accounts[address] = account
-    #     # todo delete debug
-    #     accounts = list(accounts.values())
-    #     with open(os.path.join(BASE_DIR, "deploy/tmp/accounts.yml"), mode="w", encoding="UTF-8") as f:
-    #         yaml.dump(accounts, f, Dumper=yaml.RoundTripDumper)
-    #
-    #
-    # def cycle_sendTransaction(url):
-    #     """
-    #
-    #     """
-    #
-    # with open(TMP_ADDRES, 'a', encoding='utf-8') as f:
-    #     f.write("2")
+#
+# def create_address(url):
+#     """
+#     创建新钱包地址
+#     """
+#     web3 = connect_web3(url)
+#     platon = Eth(web3)
+#     account = platon.account.create(net_type=web3.net_type)
+#     address = account.address
+#     prikey = account.privateKey.hex()[2:]
+#     account = {
+#         "address": address,
+#         "nonce": 0,
+#         "balance": 0,
+#         "prikey": prikey,
+#     }
+#     accounts = {}
+#     raw_accounts = LoadFile(ACCOUNT_FILE).get_data()
+#     print(raw_accounts)
+#     for account1 in raw_accounts:
+#         accounts[account1['address']] = account1
+#     print(accounts)
+#     accounts[address] = account
+#     # todo delete debug
+#     accounts = list(accounts.values())
+#     with open(os.path.join(BASE_DIR, "deploy/tmp/accounts.yml"), mode="w", encoding="UTF-8") as f:
+#         yaml.dump(accounts, f, Dumper=yaml.RoundTripDumper)
+#
+#
+# def cycle_sendTransaction(url):
+#     """
+#
+#     """
+#
+# with open(TMP_ADDRES, 'a', encoding='utf-8') as f:
+#     f.write("2")
 
 
-def fff(url, from_address=None):
-    web3 = connect_web3(url)
-    platon = Eth(web3)
+def fff():
+    # web3 = connect_web3(url)
+    # platon = Eth(web3)
     # print(platon.g)
+    a = arange(10)
+    print(a)
+    abc = shuffle(a)
+    print(abc)
     # result = platon.getTransactionCount(from_address)
     # result = platon.getBalance(from_address)
     # print(platon.blockNumber)
@@ -175,20 +203,20 @@ def fff(url, from_address=None):
 
 
 if __name__ == '__main__':
-    # url = 'http://192.168.10.221:6789'
+    url = 'http://192.168.10.221:6789'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://10.0.0.44:6789'
     # url = 'http:// 47.241.4.217:6789'
-    url = 'http://154.85.35.163:80'
-    account = 'atx1nqee6ze7flv6hunuajqt7el70u7dp49758fxch'
-    pri_key = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
-    pri_key1 = '6558c64ea9b14a069b42148e373616c834ed75828b456ea001390996d7e206a2'
-    from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
-    epoch1 = 10
-    epoch2 = 20
+    # url = 'http://154.85.35.163:80'
+    account = 'atx1cghgquqdvm8eekppanyvh8g8y6t7e0lvwpztr6'
+    pri_key = '432db21b7929e85ab3c44b097b0307d0d6fe4fda6c81bd8eec94aa38af0468b5'
+    # pri_key1 = '6558c64ea9b14a069b42148e373616c834ed75828b456ea001390996d7e206a2'
+    # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
+    # epoch1 = 10
+    # epoch2 = 20
     # amount = Web3.toWei(1, 'ether')
-    amount1 = Web3.toWei(833, 'ether')
-    amount2 = Web3.toWei(837, 'ether')
+    # amount1 = Web3.toWei(833, 'ether')
+    # amount2 = Web3.toWei(837, 'ether')
     # list = ['atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9',
     #         'atx1nccsq48wery09qlma3rapree588cafwlpll8cr',
     #         'atx14w3m34dmx5xjr7wc5yhg6xtp59j3qy4m77t4vl',
@@ -220,20 +248,20 @@ if __name__ == '__main__':
     # plan = [{'Epoch': epoch, 'Amount': amount}]
     # createRestrictingPlan(url, account, plan, pri_key)
     # delegate(url, 0, nodeid, amount, pri_key)
-    plan = [{'Epoch': 10, 'Amount': amount1},
-            {'Epoch': 20, 'Amount': amount1},
-            {'Epoch': 30, 'Amount': amount1},
-            {'Epoch': 40, 'Amount': amount1},
-            {'Epoch': 50, 'Amount': amount1},
-            {'Epoch': 60, 'Amount': amount1},
-            {'Epoch': 70, 'Amount': amount1},
-            {'Epoch': 80, 'Amount': amount1},
-            {'Epoch': 90, 'Amount': amount1},
-            {'Epoch': 100, 'Amount': amount1},
-            {'Epoch': 110, 'Amount': amount1},
-            {'Epoch': 120, 'Amount': amount2}]
+    # plan = [{'Epoch': 10, 'Amount': amount1},
+    #         {'Epoch': 20, 'Amount': amount1},
+    #         {'Epoch': 30, 'Amount': amount1},
+    #         {'Epoch': 40, 'Amount': amount1},
+    #         {'Epoch': 50, 'Amount': amount1},
+    #         {'Epoch': 60, 'Amount': amount1},
+    #         {'Epoch': 70, 'Amount': amount1},
+    #         {'Epoch': 80, 'Amount': amount1},
+    #         {'Epoch': 90, 'Amount': amount1},
+    #         {'Epoch': 100, 'Amount': amount1},
+    #         {'Epoch': 110, 'Amount': amount1},
+    #         {'Epoch': 120, 'Amount': amount2}]
     # address = 'atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9'
-    node_id = 'eac3b0c6569786ca0b6acaa5c80ee71854a00b6e3a53852dfdefe2ea1c6f1ada7eca7208ce942bbb5357adb16b1efe499b91e90655b3a05cc23603c6c421d4e9'
+    # node_id = 'eac3b0c6569786ca0b6acaa5c80ee71854a00b6e3a53852dfdefe2ea1c6f1ada7eca7208ce942bbb5357adb16b1efe499b91e90655b3a05cc23603c6c421d4e9'
 
     # node_id = '71bc24068d1f1f65331ad7573806bf58186375ef993dddf3ea51c8d0da162c801689aed5aa9e809396cd60273af1d2826d918e36ce4d003c578371a7b3b8b429'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -246,12 +274,17 @@ if __name__ == '__main__':
     #     sendTransaction(url, from_address, pri_key, i, amount, 201030)
 
     # withdrewStaking(url, node_id, pri_key1)
-    # node_id = 'b53a0dde131a938ee6f98ee42f88b294897fbce32a028292feadda042ecf56d4b9f54f82407a45d64dbfa00ea450faad383dd7fd117c645c7dea0b16cf35c020'
+    stakingnum = 335
+    node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
     # get_VerifierList(url)
-    get_candidatelist(url)
+    # get_candidatelist(url)
     # get_candinfo(url, node_id)
     # get_candidatelist(url)
     # addresss = 'lat13l39glde394a6kkrm5aenj4ty7m7565x8sgtrf'
     # get_RestrictingPlan(url, account)
-    # fff()
+    fff()
     # get_listGovernParam(url)
+    # getDelegateReward(url, account)
+    # get_VerifierList(url)
+    # withdraw_delegate_reward(url, pri_key)
+    # getDelegateInfo(url, stakingnum, account, node_id)
