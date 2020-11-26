@@ -197,13 +197,12 @@ def test_CS_CL_004(clients_new_node, client_consensus):
     """
     client = clients_new_node[0]
     StakingAddress = EconomicConfig.DEVELOPER_FOUNDATAION_ADDRESS
-    value = client_consensus.node.web3.toWei(1000000, "ether")
-    result = client_consensus.staking.increase_staking(0, StakingAddress, amount=value)
+    # value = client_consensus.node.web3.toWei(1000000, "ether")
+    result = client_consensus.staking.increase_staking(0, StakingAddress, amount=client.economic.create_staking_limit)
     assert_code(result, 0)
     msg = client_consensus.ppos.getCandidateInfo(client_consensus.node.node_id)
     log.info(msg)
-    address, _ = client.economic.account.generate_account(client.node.web3,
-                                                          10 ** 18 * 10000000)
+    address, _ = client.economic.account.generate_account(client.node.web3, client.economic.create_staking_limit * 3)
     value = client.economic.create_staking_limit * 2
     result = client.staking.create_staking(0, address, address, amount=value)
     assert_code(result, 0)

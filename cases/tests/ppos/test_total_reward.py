@@ -1307,7 +1307,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
     reward = 1000
     node = client.node
     economic = client.economic
-    amount = calculate(client.economic.create_staking_limit, 5)
+    amount = calculate(client.economic.create_staking_limit, 2)
     staking_amount = calculate(client.economic.create_staking_limit, 1)
     staking_address, _ = client.economic.account.generate_account(node.web3, amount)
     delegate_address, _ = client.economic.account.generate_account(node.web3, economic.add_staking_limit * 5)
@@ -1318,6 +1318,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
     assert_code(result, 0)
     economic.wait_settlement(node)
     start_balance = get_ben_balance(node, economic, ben_address)
+    print('start_balance', start_balance)
     create_staking(client_2, reward)
     block_reward, staking_reward = economic.get_current_year_reward(node)
 
@@ -1328,6 +1329,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
 
     block_num = economic.get_number_blocks_in_interval(node)
     end_balance = get_ben_balance(node, economic, ben_address)
+    print('end_balance', end_balance)
     total_reward, delegate_reward = calculate_reward(block_reward, staking_reward, block_num, reward)
     candidate_info = node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, delegate_reward)
@@ -1335,6 +1337,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
     block_reward, staking_reward = economic.get_current_year_reward(node)
 
     economic.wait_settlement(node)
+    time.sleep(5)
     candidate_info = node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, delegate_reward)
     block_num = economic.get_number_blocks_in_interval(node)

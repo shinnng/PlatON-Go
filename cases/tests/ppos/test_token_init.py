@@ -119,7 +119,7 @@ def test_IT_SD_002_003(global_test_env, value):
     try:
         address1, _ = global_test_env.account.generate_account(node.web3, 0)
         transfer_amount = node.web3.toWei(value, 'ether')
-        result = global_test_env.account.sendTransaction(node.web3, '', address, address1, node.web3.platon.gasPrice,
+        result = global_test_env.account.sendTransaction(node.web3, '', address, address1, 1 * 10 ** 8,
                                                          21000, transfer_amount)
         log.info("result: {}".format(result))
         status = False
@@ -1948,7 +1948,7 @@ def test_PT_AC_016(client_consensus):
         print("to", addreslist['to'], balance2)
 
 
-def RO_T_001(new_genesis_env, client_noconsensus):
+def test_RO_T_001(new_genesis_env, client_noconsensus):
     """
     同个块高里重复质押、委托、解质押
     """
@@ -1956,7 +1956,7 @@ def RO_T_001(new_genesis_env, client_noconsensus):
     genesis.config.cbft.period = 30000
     genesis.economicModel.common.maxEpochMinutes = 9
     genesis.economicModel.common.additionalCycleTime = 40
-    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.13.0.json"
+    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.14.0.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
 
@@ -2060,7 +2060,7 @@ def test2223(client_new_node):
     # address = 'atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9'
     # node_id = '6cda52721a11a5034ae0dfc03ebe0a60a797e0240f9bba427957abeeb2e367c09ed099c6871bf17158c5d694c4d5ccad363b38055e345898ff02a88e17d66149'
     #
-    print(client.node.ppos.getCandidateList())
+    print(client.node.ppos.getValidatorList())
     # # create account
     # address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     # address2, _ = economic.account.generate_account(node.web3, 0)
@@ -2095,3 +2095,27 @@ def test2223(client_new_node):
 # result = client.ppos.getCandidateList()
 # print(result)
 # client.economic.env.deploy_all()
+
+
+def test_IT_SD2222(global_test_env):
+    """
+    IT_SD_002:二次分配：账户余额不足
+    IT_SD_003:二次分配：转账手续费不足
+    :param global_test_env:
+    :param value:
+    :return:
+    """
+    node = global_test_env.get_rand_node()
+    address, _ = global_test_env.account.generate_account(node.web3, node.web3.toWei(1000, 'ether'))
+    print('address', address, node.eth.getBalance(address))
+    # Account balance insufficient transfer
+    address1, _ = global_test_env.account.generate_account(node.web3, 0)
+    print('address1', address1, node.eth.getBalance(address1))
+    transfer_amount = node.web3.toWei(1, 'ether')
+    gasPrice = 1 * 10**8
+    print('gasPrice', gasPrice)
+    result = global_test_env.account.sendTransaction(node.web3, '', address, address1, gasPrice,
+                                                     21000, transfer_amount)
+    log.info("result: {}".format(result))
+    time.sleep(2)
+    print('address1', address1, node.eth.getBalance(address1))
