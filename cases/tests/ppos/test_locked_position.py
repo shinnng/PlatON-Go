@@ -252,6 +252,7 @@ def test_LS_UPV_007(client_new_node):
     :return:
     """
     # create restricting plan
+    client_new_node.ppos.need_quota_gas = False
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
                                                                    client_new_node.economic.create_staking_limit)
     plan = []
@@ -259,6 +260,7 @@ def test_LS_UPV_007(client_new_node):
         plan.append({'Epoch': i + 1, 'Amount': client_new_node.node.web3.toWei(10, 'ether')})
     log.info("Create lock plan parameters：{}".format(plan))
     result = client_new_node.restricting.createRestrictingPlan(address, plan, address)
+    print(result)
     assert_code(result, 304002)
 
 
@@ -1826,7 +1828,7 @@ def test_LS_EV_022(client_new_node):
     status = True
     # create account
     amount1 = von_amount(economic.create_staking_limit, 2)
-    amount2 = (EconomicConfig.fixed_gas * 2) * node.eth.gasPrice
+    amount2 = EconomicConfig.fixed_gas * node.eth.gasPrice
     address1, address2 = create_lock_release_amount(client, amount1, amount2)
     # create Restricting Plan
     plan = [{'Epoch': 1, 'Amount': economic.delegate_limit * 100}]
@@ -1898,7 +1900,7 @@ def test_LS_IV_002(client_new_node):
     # create account
     address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     address2, _ = economic.account.generate_account(node.web3,
-                                                    economic.create_staking_limit + 947475600000000)
+                                                    economic.create_staking_limit + EconomicConfig.fixed_gas * node.eth.gasPrice)
     # create Restricting Plan
     # add_staking_amount = von_amount(economic.add_staking_limit, 10)
     plan = [{'Epoch': 1, 'Amount': economic.add_staking_limit * 100}]

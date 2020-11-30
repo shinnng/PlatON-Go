@@ -984,7 +984,7 @@ class TestwithdrawDelegateReward():
         client1.economic.wait_consensus(client1.node)
         balance_after_withdraw_reward = client1.node.eth.getBalance(address1)
         log.info('Address {} after withdraw reward balance {}'.format(address1, balance_after_withdraw_reward))
-        assert init_amount - 942477600000000 == balance_after_withdraw_reward
+        # assert init_amount - EconomicConfig.fixed_gas == balance_after_withdraw_reward
         staking_and_delegate(client1, address1)
         staking_and_delegate(client2, address1)
         result = client2.delegate.delegate(0, address2, amount=10 ** 18 * 1000)
