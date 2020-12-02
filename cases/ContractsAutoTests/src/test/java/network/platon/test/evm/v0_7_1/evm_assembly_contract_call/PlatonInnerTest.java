@@ -62,7 +62,7 @@ public class PlatonInnerTest extends ContractPrepareTest {
             tx = platonInner.assemblyCallppos(DataChangeUtil.hexToByteArray(input),addr).send();
             collector.logStepPass("PlatonInnerTest call "+addr+" and code is:"+code+" createRestrictingPlan successfully.contractAddress:" + contractAddress + ", hash:" + tx.getTransactionHash());
             collector.logStepPass("caseName:+caseName>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+"code:"+code);
-            if( !queryCodeSet.contains(code) && (null!=tx.getLogs().get(0).getData() && "".equals(tx.getLogs().get(0).getData()))){
+            if( !queryCodeSet.contains(code) && (null!=tx.getLogs() && tx.getLogs().size()>0 && null!=tx.getLogs().get(0).getData() && "".equals(tx.getLogs().get(0).getData()))){
                 collector.logStepPass("str is >>>"+DataChangeUtil.decodeSystemContractRlp(tx.getLogs().get(0).getData(), chainId));
             }
 

@@ -64,9 +64,9 @@ public class PlatonInnerTest extends ContractPrepareTest {
 
             collector.logStepPass("PlatonInnerTest call "+addr+" and code is:"+code+" createRestrictingPlan successfully.contractAddress:" + contractAddress + ", hash:" + tx.getTransactionHash());
             collector.logStepPass("caseName:+caseName>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+"code:"+code);
-//            if( !queryCodeSet.contains(code) && (null!=tx.getLogs().get(0).getData() && "".equals(tx.getLogs().get(0).getData()))){
-//                collector.logStepPass("str is >>>"+DataChangeUtil.decodeSystemContractRlp(tx.getLogs().get(0).getData(), chainId));
-//            }
+            if( !queryCodeSet.contains(code) && (null!=tx.getLogs() && tx.getLogs().size()>0 && null!=tx.getLogs().get(0).getData() && "".equals(tx.getLogs().get(0).getData()))){
+                collector.logStepPass("str is >>>"+DataChangeUtil.decodeSystemContractRlp(tx.getLogs().get(0).getData(), chainId));
+            }
 
             //获取交易回执
             byte[] resultByte = platonInner.getReturnValue().send();
