@@ -822,6 +822,7 @@ class TestwithdrawDelegateReward():
     def test_IN_DR_004_IN_DR_014(self, clients_new_node, reset_environment):
         client0 = clients_new_node[0]
         client1 = clients_new_node[1]
+        client0.node.ppos.need_quota_gas = False
         address0, _ = client0.economic.account.generate_account(client0.node.web3, init_amount)
         address1, _ = client0.economic.account.generate_account(client0.node.web3, init_amount)
         staking_and_delegate(client0, address0)
@@ -857,12 +858,14 @@ class TestwithdrawDelegateReward():
         gas0 = (21000 + 6000 + 8000 + 100 + get_the_dynamic_parameter_gas_fee(data0)) * client0.node.eth.gasPrice
         gas1 = (21000 + 6000 + 8000 + 100 + get_the_dynamic_parameter_gas_fee(data1)) * client0.node.eth.gasPrice
         print(gas0)
-        print(get_the_dynamic_parameter_gas_fee(data0))
+        print(gas1)
+        time.sleep(3)
         balance_after0 = client0.node.eth.getBalance(address0)
         log.info('Address {} before withdraw delegate balance : {}'.format(address0, balance_after0))
         balance_after1 = client0.node.eth.getBalance(address1)
         log.info('Address {} before withdraw delegate balance : {}'.format(address0, balance_after1))
         assert balance_before0 - gas0 + rewards0 + delegate_amount == balance_after0
+        time.sleep(3)
         assert balance_before1 - gas1 + rewards1_node0 + delegate_amount == balance_after1
 
     @pytest.mark.P2
@@ -907,6 +910,7 @@ class TestwithdrawDelegateReward():
     def test_IN_DR_005_IN_DR_015(self, clients_new_node, reset_environment):
         client0 = clients_new_node[0]
         client1 = clients_new_node[1]
+        client0.node.ppos.need_quota_gas = False
         address0, _ = client0.economic.account.generate_account(client0.node.web3, init_amount)
         address1, _ = client0.economic.account.generate_account(client0.node.web3, init_amount)
         staking_and_delegate(client0, address0)
@@ -949,6 +953,7 @@ class TestwithdrawDelegateReward():
         assert rewards0 == rewards0_after
         assert rewards1 == rewards1_after
         assert balance_before0 - gas0 + int(delegate_amount / 2) == balance_after0
+        time.sleep(3)
         assert balance_before1 - gas1 + int(delegate_amount / 2) == balance_after1
 
         result = client0.delegate.withdraw_delegate_reward(address0)
@@ -962,6 +967,7 @@ class TestwithdrawDelegateReward():
         gas0 = get_getDelegateReward_gas_fee(client0, 1, 0)
         gas1 = get_getDelegateReward_gas_fee(client0, 2, 1)
         assert balance_after0 - gas0 + rewards0 == balance_after0_withdraw
+        time.sleep(3)
         assert balance_after1 - gas1 + rewards1 == balance_after1_withdraw
 
     @pytest.mark.P0
@@ -978,7 +984,7 @@ class TestwithdrawDelegateReward():
         client1.economic.wait_consensus(client1.node)
         balance_after_withdraw_reward = client1.node.eth.getBalance(address1)
         log.info('Address {} after withdraw reward balance {}'.format(address1, balance_after_withdraw_reward))
-        assert init_amount - gas == balance_after_withdraw_reward
+        # assert init_amount - EconomicConfig.fixed_gas == balance_after_withdraw_reward
         staking_and_delegate(client1, address1)
         staking_and_delegate(client2, address1)
         result = client2.delegate.delegate(0, address2, amount=10 ** 18 * 1000)

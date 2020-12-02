@@ -44,6 +44,7 @@ class PipConfig:
     FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
 
 
+
 class EconomicConfig:
     # Year zero lock_pu release amount
     RELEASE_ZERO = 62215742.48691650
@@ -73,3 +74,4 @@ class EconomicConfig:
                     {"blockNumber": 11200, "amount": 15044304000000000000000000},
                     {"blockNumber": 12800, "amount": 7615018000000000000000000}
                     ]
+    fixed_gas = 1000000

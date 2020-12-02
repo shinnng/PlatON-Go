@@ -16,25 +16,22 @@ def test_staking_gas(client_new_node):
     balance1 = node.eth.getBalance(benifit_address)
     log.info(balance1)
     program_version_sign_ = node.program_version_sign[2:]
-    result = client_new_node.ppos.createStaking(0, benifit_address, node.node_id, external_id,
-                                                node_name, website,
-                                                details, economic.create_staking_limit,
-                                                node.program_version, node.program_version_sign, node.blspubkey,
-                                                node.schnorr_NIZK_prove,
-                                                pri_key, reward_per=0)
+    benifit_address = bech32_address_bytes(benifit_address)
+    # result = client_new_node.ppos.createStaking(0, benifit_address, node.node_id, external_id,
+    #                                             node_name, website,
+    #                                             details, economic.create_staking_limit,
+    #                                             node.program_version, node.program_version_sign, node.blspubkey,
+    #                                             node.schnorr_NIZK_prove,
+    #                                             pri_key, reward_per=0)
+    #
+    # assert_code(result, 0)
 
-    assert_code(result, 0)
-
-    data = rlp.encode([rlp.encode(int(1000)), rlp.encode(0), rlp.encode(bech32_address_bytes(benifit_address)),
-                       rlp.encode(bytes.fromhex(node.node_id)), rlp.encode(external_id),
-                       rlp.encode(node_name),
-                       rlp.encode(website), rlp.encode(details),
-                       rlp.encode(economic.create_staking_limit),
-                       rlp.encode(0),
-                       rlp.encode(node.program_version),
-                       rlp.encode(bytes.fromhex(program_version_sign_)),
-                       rlp.encode(bytes.fromhex(node.blspubkey)),
-                       rlp.encode(bytes.fromhex(node.schnorr_NIZK_prove))])
+    data = HexBytes(rlp.encode([rlp.encode(int(1000)), rlp.encode(0), rlp.encode(benifit_address),
+                                rlp.encode(bytes.fromhex(node.node_id)), rlp.encode(external_id), rlp.encode(node_name),
+                                rlp.encode(website), rlp.encode(details),
+                                rlp.encode(economic.create_staking_limit), rlp.encode(600), rlp.encode(node.program_version),
+                                rlp.encode(bytes.fromhex(program_version_sign_)), rlp.encode(bytes.fromhex(node.blspubkey)),
+                                rlp.encode(bytes.fromhex(node.schnorr_NIZK_prove))])).hex()
     esgas = node.eth.estimateGas({"from": benifit_address, "to": node.web3.stakingAddress, "data": data})
     print('esgas', esgas)
     gas = get_the_dynamic_parameter_gas_fee(data) + 21000 + 6000 + 32000

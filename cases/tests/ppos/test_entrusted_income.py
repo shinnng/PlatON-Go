@@ -1,19 +1,20 @@
-import math
 import time
-from random import uniform, random, randint
+from random import randint
 
 import pytest
-import allure
-import rlp
-from alaya.utils.transactions import send_obj_transaction
-from dacite import from_dict
-from common.key import get_pub_key, mock_duplicate_sign
+from common.key import mock_duplicate_sign
 from common.log import log
-from alaya import Web3
-from decimal import Decimal
-from tests.lib import EconomicConfig, Genesis, StakingConfig, Staking, check_node_in_list, assert_code, von_amount, \
-    get_governable_parameter_value, get_the_dynamic_parameter_gas_fee, get_getDelegateReward_gas_fee, \
-    get_block_count_number
+from tests.lib import check_node_in_list, assert_code, von_amount, \
+    get_getDelegateReward_gas_fee
+import time
+from random import randint
+
+import pytest
+
+from common.key import mock_duplicate_sign
+from common.log import log
+from tests.lib import check_node_in_list, assert_code, von_amount, \
+    get_getDelegateReward_gas_fee
 
 
 def create_staking_node(client):
@@ -3680,11 +3681,14 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     node_id_list = [i['id'] for i in economic.env.noconsensus_node_config_list]
     print(node_id_list)
     node_length = len(economic.env.noconsensus_node_config_list)
-    delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
-    print(delegate_address)
+    delegate_address_list = []
+    for i in range(5):
+        delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
+        print(delegate_address)
+        delegate_address_list.append(delegate_address)
     staking_list = []
     for i in range(node_length):
-        address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+        address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 3)
         staking_list.append(address)
     print(staking_list)
 
@@ -3695,48 +3699,53 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
         print(clients_noconsensus[i].node.node_mark)
         time.sleep(1)
         result = clients_noconsensus[i].staking.create_staking(0, staking_list[i], staking_list[i],
-                                                               amount=economic.create_staking_limit,
+                                                               amount=economic.create_staking_limit * 2,
                                                                reward_per=reward_per)
         assert_code(result, 0)
-        result = client.delegate.delegate(0, delegate_address, clients_noconsensus[i].node.node_id)
-        assert_code(result, 0)
+        for delegate_address in delegate_address_list:
+            result = client.delegate.delegate(0, delegate_address, clients_noconsensus[i].node.node_id)
+            assert_code(result, 0)
     economic.wait_settlement(node)
 
-    for i in range(10):
-        # print(client.node.ppos.getVerifierList())
-        # delegate_address = 'atx1cghgquqdvm8eekppanyvh8g8y6t7e0lvwpztr6'
-        DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address)['Ret']
-        for i in DelegateReward_info:
-            result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address, i['nodeID'])
-            print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
-        print(DelegateReward_info)
-        print(node.node_mark)
-        result = client.delegate.withdraw_delegate_reward(delegate_address)
-        assert_code(result, 0)
-        time.sleep(3)
-        DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address)['Ret']
-        for i in DelegateReward_info:
-            result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address, i['nodeID'])
-            print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
-        print(DelegateReward_info)
-        delegate_node_id_list = [i['nodeID'] for i in DelegateReward_info]
-        # no_delegate_node = [x for x in node_id_list if x not in delegate_node_id_list]
-        no_delegate_node = []
-        for no_delegate in node_id_list:
-            if no_delegate not in delegate_node_id_list:
-                no_delegate_node.append(no_delegate)
-        # if len(DelegateReward_info) > 20:
-        num_limit = randint(1, 3)
-        print(num_limit)
-        for i in range(num_limit):
-            print(i)
-            result = client.delegate.withdrew_delegate(DelegateReward_info[i]['stakingNum'], delegate_address, DelegateReward_info[i]['nodeID'])
-            assert_code(result, 0)
-        num_limit2 = len(no_delegate_node)
-        if num_limit2 > 0:
-            print(num_limit2)
-            for i in range(randint(1, num_limit2)):
-                print(i)
-                result = client.delegate.delegate(0, delegate_address, node_id=no_delegate_node[i])
-                assert_code(result, 0)
-        economic.wait_settlement(node)
+    print('getCandidateList', node.ppos.getCandidateList())
+    print('getVerifierList', node.ppos.getVerifierList())
+    print('getValidatorList', node.ppos.getValidatorList())
+    #
+    # while 1:
+    #     # print(client.node.ppos.getVerifierList())
+    #     # delegate_address = 'atx1cghgquqdvm8eekppanyvh8g8y6t7e0lvwpztr6'
+    #     DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address_list[0])['Ret']
+    #     for i in DelegateReward_info:
+    #         result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address_list[0], i['nodeID'])
+    #         print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
+    #     print(DelegateReward_info)
+    #     print(node.node_mark)
+    #     result = client.delegate.withdraw_delegate_reward(delegate_address_list[0])
+    #     assert_code(result, 0)
+    #     time.sleep(3)
+    #     DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address_list[0])['Ret']
+    #     for i in DelegateReward_info:
+    #         result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address_list[0], i['nodeID'])
+    #         print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
+    #     print(DelegateReward_info)
+    #     delegate_node_id_list = [i['nodeID'] for i in DelegateReward_info]
+    #     # no_delegate_node = [x for x in node_id_list if x not in delegate_node_id_list]
+    #     no_delegate_node = []
+    #     for no_delegate in node_id_list:
+    #         if no_delegate not in delegate_node_id_list:
+    #             no_delegate_node.append(no_delegate)
+    #     # if len(DelegateReward_info) > 20:
+    #     num_limit = randint(1, 2)
+    #     print(num_limit)
+    #     for i in range(num_limit):
+    #         print(i)
+    #         result = client.delegate.withdrew_delegate(DelegateReward_info[i]['stakingNum'], delegate_address_list[0], DelegateReward_info[i]['nodeID'])
+    #         assert_code(result, 0)
+    #     num_limit2 = len(no_delegate_node)
+    #     if num_limit2 > 0:
+    #         print(num_limit2)
+    #         for i in range(randint(1, num_limit2)):
+    #             print(i)
+    #             result = client.delegate.delegate(0, delegate_address_list[0], node_id=no_delegate_node[i])
+    #             assert_code(result, 0)
+    #     economic.wait_settlement(node)

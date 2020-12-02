@@ -495,7 +495,7 @@ def test_MPI_019(clients_noconsensus):
 @pytest.mark.P1
 def test_MPI_020(clients_noconsensus):
     """
-    验证人修改分红比例，再退出验证人
+    非验证人修改分红比例，再增持质押金额
     """
     client1 = clients_noconsensus[0]
     client2 = clients_noconsensus[1]

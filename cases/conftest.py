@@ -53,10 +53,15 @@ def pytest_addoption(parser):
     parser.addoption("--platonUrl", action="store", help="platonUrl: url to download platon bin")
     parser.addoption("--nodeFile", action="store", help="nodeFile: the node config file")
     parser.addoption("--accountFile", action="store", help="accountFile: the accounts file")
-    parser.addoption("--initChain", action="store_true", default=True, dest="initChain", help="nodeConfig: default to init chain data")
-    parser.addoption("--installDependency", action="store_true", default=False, dest="installDependency", help="installDependency: default do not install dependencies")
-    parser.addoption("--installSupervisor", action="store_true", default=False, dest="installSuperVisor", help="installSupervisor: default do not install supervisor service")
-    parser.addoption("--cantDeploy", action="store_true", default=False, dest="cantDeploy", help="deploy switch default to can deploy")
+    parser.addoption("--initChain", action="store_true", default=True, dest="initChain",
+                     help="nodeConfig: default to init chain data")
+    parser.addoption("--installDependency", action="store_true", default=False, dest="installDependency",
+                     help="installDependency: default do not install dependencies")
+    parser.addoption("--installSupervisor", action="store_true", default=False, dest="installSuperVisor",
+                     help="installSupervisor: default do not install supervisor service")
+    parser.addoption("--cantDeploy", action="store_true", default=False, dest="cantDeploy",
+                     help="deploy switch default to can deploy")
+
 
 # pytest 'tests/example/test_step.py' --nodeFile "deploy/node/debug_4_4.yml" --accountFile "deploy/accounts.yml" --alluredir="report/allure"
 # --reruns 3
@@ -84,7 +89,8 @@ def global_test_env(request, worker_id):
                 tmp_dir = str(tmp_dir) + worker_id
     # if platon_url:
     #     download.download_platon(platon_url)
-    env = create_env(tmp_dir, node_file, account_file, init_chain, install_dependency, install_supervisor, can_deploy=not cant_deploy)
+    env = create_env(tmp_dir, node_file, account_file, init_chain, install_dependency, install_supervisor,
+                     can_deploy=not cant_deploy)
     # Must choose one, don't use both
     env.deploy_all()
     # env.prepare_all()
@@ -113,7 +119,8 @@ def pytest_runtest_makereport(item, call):
                 if job is None:
                     log_url = os.path.join(item.funcargs["global_test_env"].cfg.bug_log, log_name)
                 else:
-                    log_url = "http://{}:8080/job/PlatON/job/run/{}/artifact/logs/{}".format(socket.gethostbyname(socket.gethostname()), job, log_name)
+                    log_url = "http://{}:8080/job/PlatON/job/run/{}/artifact/logs/{}".format(
+                        socket.gethostbyname(socket.gethostname()), job, log_name)
                 allure.attach('{}'.format(log_url), 'env log', allure.attachment_type.URI_LIST)
             except Exception as e:
                 log.info("exception:{}".format(e))
