@@ -8,13 +8,16 @@ pragma solidity ^0.5.17;
 contract PlatonInner {
 
     bytes returnValue;
+    uint public res;
 
     function assemblyCallppos(bytes memory data,address addr) public {
         uint256 len = data.length;
         uint retsize;
         bytes memory resval;
         assembly {
-            if iszero(call(gas, addr, 0,  add(data, 0x20), len, 0, 0)) {
+            let result := delegatecall(gas, addr, add(data, 0x20), len, 0, 0)
+
+            if iszero(result) {
                 invalid()
             }
             retsize := returndatasize()

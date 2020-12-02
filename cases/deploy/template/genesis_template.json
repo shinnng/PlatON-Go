@@ -50,7 +50,7 @@
             "newBlockRate": 50,
             "platONFoundationYear": 2,
             "increaseIssuanceRatio": 500,
-            "theNumberOfDelegationsReward": 2
+            "theNumberOfDelegationsReward": 20
         },
         "restricting": {
             "minimumRelease": 80000000000000000000

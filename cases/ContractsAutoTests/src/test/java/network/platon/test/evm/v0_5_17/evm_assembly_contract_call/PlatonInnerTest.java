@@ -33,7 +33,7 @@ public class PlatonInnerTest extends ContractPrepareTest {
 
     //查询方法没有回执
     private String[] queryCodeArray = new String[]{"4100","1005","1100","1101","1102","1103","1104","1105","1200","1201","1202","2004",
-            "2100","2101","2102","2103","2104","2105","2106","3001","5100"};
+            "2100","2101","2102","2103","2104","2105","2106","3001","5100","2001","2002","2005","2003","2000"};
 
     private Set<String> queryCodeSet;
 
@@ -60,12 +60,13 @@ public class PlatonInnerTest extends ContractPrepareTest {
             collector.logStepPass("deploy gas used:" + platonInner.getTransactionReceipt().get().getGasUsed());
 
             tx = platonInner.assemblyCallppos(DataChangeUtil.hexToByteArray(input),addr).send();
+            System.out.println("tx:" + tx);
+
             collector.logStepPass("PlatonInnerTest call "+addr+" and code is:"+code+" createRestrictingPlan successfully.contractAddress:" + contractAddress + ", hash:" + tx.getTransactionHash());
             collector.logStepPass("caseName:+caseName>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+"code:"+code);
-            if( !queryCodeSet.contains(code) && (null!=tx.getLogs().get(0).getData() && "".equals(tx.getLogs().get(0).getData()))){
-                collector.logStepPass("str is >>>"+DataChangeUtil.decodeSystemContractRlp(tx.getLogs().get(0).getData(), chainId));
-            }
-
+//            if( !queryCodeSet.contains(code) && (null!=tx.getLogs().get(0).getData() && "".equals(tx.getLogs().get(0).getData()))){
+//                collector.logStepPass("str is >>>"+DataChangeUtil.decodeSystemContractRlp(tx.getLogs().get(0).getData(), chainId));
+//            }
 
             //获取交易回执
             byte[] resultByte = platonInner.getReturnValue().send();

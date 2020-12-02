@@ -1,5 +1,6 @@
 package network.platon.test.evm.v0_5_17.lib;
 
+import com.alaya.tx.exceptions.ContractCallException;
 import network.platon.contracts.evm.v0_5_17.SafeMathMock;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;
@@ -82,6 +83,7 @@ public class SafeMathMockTest extends ContractPrepareTest {
             e.printStackTrace();
         }
     }
+    
     @Test
     @DataSource(type = DataSourceType.EXCEL, file = "test.xls", sheetName = "mul",
             author = "albedo", showName = "lib.SafeMathMockTest-无符号整型相乘", sourcePrefix = "evm/0.5.17")
@@ -99,6 +101,7 @@ public class SafeMathMockTest extends ContractPrepareTest {
             e.printStackTrace();
         }
     }
+    
     @Test
     @DataSource(type = DataSourceType.EXCEL, file = "test.xls", sheetName = "sub",
             author = "albedo", showName = "lib.SafeMathMockTest-无符号整型相减", sourcePrefix = "evm/0.5.17")
@@ -109,9 +112,13 @@ public class SafeMathMockTest extends ContractPrepareTest {
             String contractAddress = using.getContractAddress();
             String transactionHash = using.getTransactionReceipt().get().getTransactionHash();
             collector.logStepPass("SafeMathMock issued successfully.contractAddress:" + contractAddress + ", hash:" + transactionHash);
-            BigInteger result = using.sub(new BigInteger("12"), new BigInteger("13")).send();
-            collector.assertEqual(result, new BigInteger("3963877391197344453575983046348115674221700746820753546331534351508065746944"), "checkout library function");
-            result = using.sub(new BigInteger("13"), new BigInteger("12")).send();
+            try {
+                BigInteger result = using.sub(new BigInteger("12"), new BigInteger("13")).send();
+                collector.assertEqual(result, new BigInteger("3963877391197344453575983046348115674221700746820753546331534351508065746944"), "checkout library function");
+            } catch (ContractCallException e) {
+                collector.assertEqual(e.getMessage(), "Empty value (0x) returned from contract", "checkout library function");
+            }
+            BigInteger result = using.sub(new BigInteger("13"), new BigInteger("12")).send();
             collector.assertEqual(result, new BigInteger("1"), "checkout library function");
         } catch (Exception e) {
             collector.logStepFail("SafeMathMockTest testSub failure,exception msg:", e.getMessage());
@@ -129,9 +136,13 @@ public class SafeMathMockTest extends ContractPrepareTest {
             String contractAddress = using.getContractAddress();
             String transactionHash = using.getTransactionReceipt().get().getTransactionHash();
             collector.logStepPass("SafeMathMock issued successfully.contractAddress:" + contractAddress + ", hash:" + transactionHash);
-            BigInteger result = using.div(new BigInteger("12"), new BigInteger("0")).send();
-            collector.assertEqual(result, new BigInteger("3963877391197344453575983046348115674221700746820753546331534351508065746944"), "checkout library function");
-            result = using.div(new BigInteger("13"), new BigInteger("12")).send();
+            try {
+                BigInteger result = using.div(new BigInteger("12"), new BigInteger("0")).send();
+                collector.assertEqual(result, new BigInteger("3963877391197344453575983046348115674221700746820753546331534351508065746944"), "checkout library function");
+            } catch (ContractCallException e) {
+                collector.assertEqual(e.getMessage(), "Empty value (0x) returned from contract", "checkout library function");
+            }
+            BigInteger result = using.div(new BigInteger("13"), new BigInteger("12")).send();
             collector.assertEqual(result, new BigInteger("1"), "checkout library function");
         } catch (Exception e) {
             collector.logStepFail("SafeMathMockTest testDiv failure,exception msg:", e.getMessage());
@@ -148,9 +159,13 @@ public class SafeMathMockTest extends ContractPrepareTest {
             String contractAddress = using.getContractAddress();
             String transactionHash = using.getTransactionReceipt().get().getTransactionHash();
             collector.logStepPass("SafeMathMock issued successfully.contractAddress:" + contractAddress + ", hash:" + transactionHash);
-            BigInteger result = using.mod(new BigInteger("12"), new BigInteger("0")).send();
-            collector.assertEqual(result, new BigInteger("3963877391197344453575983046348115674221700746820753546331534351508065746944"), "checkout library function");
-            result = using.mod(new BigInteger("13"), new BigInteger("12")).send();
+            try {
+                BigInteger result = using.mod(new BigInteger("12"), new BigInteger("0")).send();
+                collector.assertEqual(result, new BigInteger("3963877391197344453575983046348115674221700746820753546331534351508065746944"), "checkout library function");
+            } catch (ContractCallException e) {
+                collector.assertEqual(e.getMessage(), "Empty value (0x) returned from contract", "checkout library function");
+            }
+            BigInteger result = using.mod(new BigInteger("13"), new BigInteger("12")).send();
             collector.assertEqual(result, new BigInteger("1"), "checkout library function");
         } catch (Exception e) {
             collector.logStepFail("SafeMathMockTest testMod failure,exception msg:", e.getMessage());
