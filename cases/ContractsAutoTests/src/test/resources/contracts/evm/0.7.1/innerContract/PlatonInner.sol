@@ -1,4 +1,4 @@
-pragma solidity ^0.5.17;
+pragma solidity ^0.7.1;
 
 /*
  * network.platon.test.evm 跨合约调用 Platon系统合约
