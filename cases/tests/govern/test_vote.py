@@ -112,7 +112,7 @@ class TestVoteVP:
 @allure.title('Version proposal voting function verification')
 def test_VO_VO_001_V0_RE_001_V0_WA_001_V_STA_1_VO_OP_001_VO_OP_002(no_vp_proposal):
     pip = no_vp_proposal
-    result = pip.submitVersion(pip.node.node_id, str(time.time()), pip.cfg.version8, 2,
+    result = pip.submitVersion(pip.node.node_id, str(time.time()), pip.cfg.version8, 3,
                                pip.node.staking_address, transaction_cfg=pip.cfg.transaction_cfg)
     log.info('Submit version proposal result : {}'.format(result))
     assert_code(result, 0)

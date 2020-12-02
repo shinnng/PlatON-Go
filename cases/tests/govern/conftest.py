@@ -221,9 +221,10 @@ def noproposal_candidate_pips(all_clients) -> List[Pip]:
             if client.node.node_id not in candidate_list:
                 address, _ = client.economic.account.generate_account(client.node.web3, 10**18 * 10000000)
                 result = client.staking.create_staking(0, address, address)
+                assert_code(result, 0)
                 log.info('node {} staking result {}'.format(client.node.node_id, result))
         client.economic.wait_settlement(client.node)
-        nodeid_list = all_clients[0].pip.get_candidate_list_not_verifier()
+        nodeid_list = client.pip.get_candidate_list_not_verifier()
         if not nodeid_list:
             raise Exception('get candidate not verifier failed')
     clients_candidate = get_clients_by_nodeid(nodeid_list, all_clients)
@@ -273,8 +274,9 @@ def preactive_proposal_pips(all_clients):
     log.info('verifierlist :{}'.format(verifier_list))
     client_verifiers = get_clients_by_nodeid(verifier_list, all_clients)
     pips = [client_verifier.pip for client_verifier in client_verifiers]
+    log.info('pips :{}'.format(pips))
     result = pips[0].submitVersion(pips[0].node.node_id, str(time.time()),
-                                   pips[0].cfg.version5, 4, pips[0].node.staking_address,
+                                   pips[0].cfg.version5, 8, pips[0].node.staking_address,
                                    transaction_cfg=pips[0].cfg.transaction_cfg)
     log.info('submit version proposal, result : {}'.format(result))
     proposalinfo = pips[0].get_effect_proposal_info_of_vote()
@@ -282,8 +284,9 @@ def preactive_proposal_pips(all_clients):
     for pip in pips:
         result = version_proposal_vote(pip)
         assert_code(result, 0)
-    wait_block_number(pip.node, proposalinfo.get('EndVotingBlock'))
-    assert pip.get_status_of_proposal(proposalinfo.get('ProposalID')) == 4
+        print('block_number ====', pip.node.block_number)
+    wait_block_number(pips[0].node, proposalinfo.get('EndVotingBlock'))
+    assert pips[0].get_status_of_proposal(proposalinfo.get('ProposalID')) == 4
     return pips
 
 

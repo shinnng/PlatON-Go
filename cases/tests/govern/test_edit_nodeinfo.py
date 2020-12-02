@@ -181,13 +181,13 @@ def test_UP_RE_001_003_006_008_010_UP_RE_011(new_genesis_env, client_noconsensus
     log.info('edit nodeinfo result : {}'.format(result))
     assert_code(result, 0)
 
-    wait_block_number(client.node, 2 * client.economic.settlement_size)
+    wait_block_number(client.node, 4 * client.economic.settlement_size)
     address, _ = client.economic.account.generate_account(client.node.web3, 10**18*10)
     result = client.staking.edit_candidate(client.node.staking_address, address, reward_per=100)
     log.info('edit nodeinfo result : {}'.format(result))
     assert_code(result, 0)
 
-    wait_block_number(client.node, 2*client.economic.settlement_size - 10)
+    wait_block_number(client.node, 6 * client.economic.settlement_size - 10)
     result = client.staking.edit_candidate(client.node.staking_address, address, reward_per=111)
     log.info('edit nodeinfo result : {}'.format(result))
     assert_code(result, 301008)

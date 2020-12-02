@@ -43,7 +43,7 @@ def large_version_proposal_pips(all_clients):
 
 
 @pytest.fixture()
-def proposal_candidate_pips(all_clients):
+def proposal_candidate_pips(all_clients, noproposal_pips):
     '''
     There is voting stage proposal, get candidate list pip object
     :param global_test_env:
@@ -89,7 +89,7 @@ def proposal_candidate_pips(all_clients):
 
 
 @pytest.fixture()
-def large_version_proposal_candidate_pips(all_clients):
+def large_version_proposal_candidate_pips(noproposal_pips, all_clients):
     '''
     There is voting stage proposal, get candidate list pip object
     :param global_test_env:
@@ -1097,7 +1097,7 @@ class TestPreactiveProposalVE:
 class TestNoProposalCA:
     @pytest.mark.P0
     @allure.title('No effective proposal, candiate declare version')
-    def test_DE_CA_001(self, noproposal_candidate_pips, client_verifier):
+    def test_DE_CA_001(self, client_verifier, noproposal_candidate_pips):
         pip = noproposal_candidate_pips[0]
         verison = struct.pack('>I', pip.chain_version)
         if verison[3] != 0:

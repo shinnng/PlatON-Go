@@ -252,6 +252,7 @@ def test_LS_UPV_007(client_new_node):
     :return:
     """
     # create restricting plan
+    client_new_node.node.ppos.need_quota_gas = False
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
                                                                    client_new_node.economic.create_staking_limit)
     plan = []

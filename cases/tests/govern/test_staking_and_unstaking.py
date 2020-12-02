@@ -121,7 +121,7 @@ class TestPreactiveProposalStaking:
         client_verifiers = get_clients_by_nodeid(verifier_list, all_clients)
         pips = [client.pip for client in client_verifiers]
         result = pips[0].submitVersion(pips[0].node.node_id, str(time.time()),
-                                       pips[0].cfg.version5, 3, pips[0].node.staking_address,
+                                       pips[0].cfg.version5, 4, pips[0].node.staking_address,
                                        transaction_cfg=pips[0].cfg.transaction_cfg)
         log.info('submit version proposal, result : {}'.format(result))
         proposalinfo = pips[0].get_effect_proposal_info_of_vote()
@@ -193,7 +193,7 @@ class TestUpgradedProposalStaking:
         client_verifiers = get_clients_by_nodeid(verifier_list, all_clients)
         pips = [client.pip for client in client_verifiers]
         result = pips[0].submitVersion(pips[0].node.node_id, str(time.time()),
-                                       pips[0].cfg.version5, 2, pips[0].node.staking_address,
+                                       pips[0].cfg.version5, 4, pips[0].node.staking_address,
                                        transaction_cfg=pips[0].cfg.transaction_cfg)
         log.info('submit version proposal, result : {}'.format(result))
         proposalinfo = pips[0].get_effect_proposal_info_of_vote()

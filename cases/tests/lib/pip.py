@@ -335,7 +335,6 @@ class Pip:
             return None
 
         proposal_info = self.pip.listProposal().get('Ret')
-        logger.info(f'proposal_info ==== {proposal_info}')
         # proposal_info = json.loads(proposal_info)
         proposal_list_text = []
         proposal_list_version = []

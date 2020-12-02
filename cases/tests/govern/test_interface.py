@@ -413,9 +413,9 @@ class TestgetAccuVerifiersCount:
         assert_code(result, 302006)
         log.info('{}'.format(get_blockhash(pip.node)))
 
-        result = pip.pip.getAccuVerifiersCount(proposalinfo.get('ProposalID'), block_hash='')
-        log.info('Interface getAccuVerifiersCount result : {}'.format(result))
-        assert_code(result, 3)
+        # result = pip.pip.getAccuVerifiersCount(proposalinfo.get('ProposalID'), block_hash='')
+        # log.info('Interface getAccuVerifiersCount result : {}'.format(result))
+        # assert_code(result, 3)
 
         result = pip.pip.getAccuVerifiersCount(proposalinfo.get('ProposalID'),
                                                block_hash='0x5941605fe43ab32fbaf9c6e08dc0970eae50efb7da4248a9a8941f0e50711111')
@@ -443,8 +443,9 @@ class TestListGovernParam:
         assert set(name) == {'maxValidators', 'unStakeFreezeDuration', 'operatingThreshold', 'slashBlocksReward',
                              'stakeThreshold', 'maxBlockGasLimit', 'duplicateSignReportReward', 'maxEvidenceAge',
                              'slashFractionDuplicateSign', 'zeroProduceCumulativeTime', 'zeroProduceNumberThreshold',
-                             'rewardPerMaxChangeRange', 'rewardPerChangeInterval', 'increaseIssuanceRatio', 'zeroProduceFreezeDuration'}
-        assert set(module) == {'block', 'slashing', 'staking', 'reward'}
+                             'rewardPerMaxChangeRange', 'rewardPerChangeInterval', 'increaseIssuanceRatio',
+                             'zeroProduceFreezeDuration', 'minimumRelease'}
+        assert set(module) == {'block', 'slashing', 'staking', 'reward', 'restricting'}
 
     @pytest.mark.P2
     @allure.title('Interface listGovernParam function verification')
