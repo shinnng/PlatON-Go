@@ -63,6 +63,7 @@ public class ContractDelegateCallPPOSTest extends WASMContractPrepareTest {
             String createRestrictingPlanInput = "0xf85483820fa09594c9e1c2b330cf7e759f2493c5c754b34d98b07f93b838f7ca01880de0b6b3a7640000ca02880de0b6b3a7640000ca03880de0b6b3a7640000ca04880de0b6b3a7640000ca05880de0b6b3a7640000";
 
             TransactionReceipt createRestrictingPlanReceipt =  ppos.delegate_call_ppos_send(restrictingContractAddr, createRestrictingPlanInput, Uint64.of(60000000l)).send();
+            System.out.println(createRestrictingPlanReceipt);
 
             String  createRestrictingPlanDataHex = createRestrictingPlanReceipt.getLogs().get(0).getData();
             String createRestrictingPlanDataStr = DataChangeUtil.decodeSystemContractRlp(createRestrictingPlanDataHex, chainId);
