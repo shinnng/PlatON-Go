@@ -87,10 +87,11 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
 
             String  createRestrictingPlanDataHex = createRestrictingPlanReceipt.getLogs().get(0).getData();
             String createRestrictingPlanDataStr = DataChangeUtil.decodeSystemContractRlp(createRestrictingPlanDataHex, chainId);
-            String createRestrictingPlanExpectData = "304004";
+            res = gson.fromJson(createRestrictingPlanDataStr, ContractCrossCallPPOSTest.pposResult.class);
+            int createRestrictingPlanExpectData = 304004;
 
             collector.logStepPass("cross_call_ppos createRestrictingPlan successfully txHash:" + createRestrictingPlanReceipt.getTransactionHash());
-            collector.assertEqual(createRestrictingPlanDataStr, createRestrictingPlanExpectData);
+            collector.assertEqual(res.Code, createRestrictingPlanExpectData);
 
 
             /**
@@ -242,11 +243,11 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
 
             String reportDuplicateSignDataHex = reportDuplicateSignReceipt.getLogs().get(0).getData();
             String reportDuplicateSignDataStr = DataChangeUtil.decodeSystemContractRlp(reportDuplicateSignDataHex, chainId);
-            String reportDuplicateSignExpectData = "0";
-            boolean expectFlag = reportDuplicateSignDataStr.equals(reportDuplicateSignExpectData);
+            pposResult res = gson.fromJson(reportDuplicateSignDataStr, ContractCrossCallPPOSTest.pposResult.class);
+            int reportDuplicateSignExpectData = 303003;
+            collector.assertEqual(res.Code, reportDuplicateSignExpectData);
 
             collector.logStepPass("cross_call_ppos reportDuplicateSign successfully txHash:" + reportDuplicateSignReceipt.getTransactionHash());
-            collector.assertEqual(expectFlag, false);
 
 
             /**
@@ -263,7 +264,7 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
             String checkDuplicateSignHexStr =  ppos.cross_call_ppos_query(slashingContractAddr, checkDuplicateSignInput, Uint64.of(0), Uint64.of(60000000l)).send();
             byte[] checkDuplicateSignByte =  DataChangeUtil.hexToByteArray(checkDuplicateSignHexStr);
             String checkDuplicateSignStr = new String(checkDuplicateSignByte);
-            pposResult res =  gson.fromJson(checkDuplicateSignStr, pposResult.class);
+            res =  gson.fromJson(checkDuplicateSignStr, pposResult.class);
             if (res != null){
                 collector.assertEqual(res.Code, 0, "查询节点是否有多签过 result == expect res: {\"Code\":0,\"Ret\":\"\"}");
             }
@@ -302,10 +303,11 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
 
             String submitTextDataHex = submitTextReceipt.getLogs().get(0).getData();
             String submitTextDataStr =DataChangeUtil.decodeSystemContractRlp(submitTextDataHex, chainId);
-            String submitTextExpectData = "302022";
+            pposResult res = gson.fromJson(submitTextDataStr, ContractCrossCallPPOSTest.pposResult.class);
+            int submitTextExpectData = 302022;
 
+            collector.assertEqual(res.Code, submitTextExpectData);
             collector.logStepPass("cross_call_ppos submitText successfully txHash:" + submitTextReceipt.getTransactionHash());
-            collector.assertEqual(submitTextDataStr, submitTextExpectData);
 
 
             /**
@@ -320,7 +322,7 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
             String getProposalHexStr =  ppos.cross_call_ppos_query(govContractAddr, getProposalInput, Uint64.of(0), Uint64.of(60000000l)).send();
             byte[] getProposalByte =  DataChangeUtil.hexToByteArray(getProposalHexStr);
             String getProposalStr = new String(getProposalByte);
-            pposResult res =  gson.fromJson(getProposalStr, pposResult.class);
+            res =  gson.fromJson(getProposalStr, pposResult.class);
             collector.assertEqual(res.Code, 302006, "查询提案 result == expect res: {\"Code\":302006,\"Ret\":\"proposal not found\"}");
 
         } catch (Exception e) {
@@ -356,7 +358,8 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
 
             String withdrawDelegateRewardDataHex = withdrawDelegateRewardReceipt.getLogs().get(0).getData();
             String withdrawDelegateRewardDataStr = DataChangeUtil.decodeSystemContractRlp(withdrawDelegateRewardDataHex, chainId);
-            String withdrawDelegateRewardExpectData = "305001";
+            pposResult res = gson.fromJson(withdrawDelegateRewardDataStr, ContractCrossCallPPOSTest.pposResult.class);
+            int withdrawDelegateRewardExpectData = 305001;
 
             collector.logStepPass("cross_call_ppos withdrawDelegateReward successfully txHash:" + withdrawDelegateRewardReceipt.getTransactionHash());
             collector.assertEqual(withdrawDelegateRewardDataStr, withdrawDelegateRewardExpectData);
@@ -378,7 +381,7 @@ public class ContractCrossCallPPOSTest extends WASMContractPrepareTest {
             String getDelegateRewardHexStr =  ppos.cross_call_ppos_query(delegateRewardPoolAddr, getDelegateRewardInput, Uint64.of(0), Uint64.of(60000000l)).send();
             byte[] getDelegateRewardByte =  DataChangeUtil.hexToByteArray(getDelegateRewardHexStr);
             String getDelegateRewardStr = new String(getDelegateRewardByte);
-            pposResult res =  gson.fromJson(getDelegateRewardStr, pposResult.class);
+            res =  gson.fromJson(getDelegateRewardStr, pposResult.class);
             collector.assertEqual(res.Code, 305001, "查询候选人详情 result == expect res: {\"Code\":305001,\"Ret\":\"delegation info not found\"}");
 
         } catch (Exception e) {
