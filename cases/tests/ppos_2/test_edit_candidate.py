@@ -632,9 +632,12 @@ def test_MPI_023(client_new_node):
 
     result = client.staking.create_staking(0, address, address)
     assert_code(result, 0)
-    economic.wait_settlement(node, 1)
+    print(node.ppos.getCandidateInfo(node.node_id))
+    economic.wait_settlement(node)
     result = client.staking.edit_candidate(address, address)
     assert_code(result, 0)
+    time.sleep(2)
+    print(node.ppos.getCandidateInfo(node.node_id))
     # time.sleep(3)
     # result = client.staking.edit_candidate(address, address, reward_per=70)
     # assert_code(result, 301008)
