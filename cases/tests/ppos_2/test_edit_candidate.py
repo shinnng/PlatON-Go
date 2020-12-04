@@ -619,3 +619,22 @@ def test_MPI_022(client_new_node):
 #     print(candidate_info1)
 #     assert candidate_info1['RewardPer'] == 580
 #     assert candidate_info1['NextRewardPer'] == 580
+
+
+def test_MPI_023(client_new_node):
+    """
+    调用修改接口，什么参数都不改
+    """
+    client = client_new_node
+    economic = client.economic
+    node = client.node
+    address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+
+    result = client.staking.create_staking(0, address, address)
+    assert_code(result, 0)
+    economic.wait_settlement(node, 1)
+    result = client.staking.edit_candidate(address, address)
+    assert_code(result, 0)
+    # time.sleep(3)
+    # result = client.staking.edit_candidate(address, address, reward_per=70)
+    # assert_code(result, 301008)
