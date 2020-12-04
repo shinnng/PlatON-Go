@@ -64,7 +64,7 @@ class Staking:
                                        self.cfg.website, self.cfg.details, amount, program_version, program_version_sign,
                                        bls_pubkey, bls_proof, pri_key, reward_per, transaction_cfg=transaction_cfg)
 
-    def edit_candidate(self, from_address, benifit_address, node_id=None, reward_per=None, external_id=None, node_name=None, website=None, details=None, transaction_cfg=None):
+    def edit_candidate(self, from_address, benifit_address=None, node_id=None, reward_per=None, external_id=None, node_name=None, website=None, details=None, transaction_cfg=None):
         """
         Modify staking information
         :param benifit_address: Income account for accepting block rewards and staking rewards
@@ -84,7 +84,7 @@ class Staking:
         node_id = node_id if node_id else self.node.node_id
 
         pri_key = self.economic.account.find_pri_key(from_address)
-        return self.ppos.editCandidate(benifit_address, node_id, pri_key, external_id, node_name, website, details,
+        return self.ppos.editCandidate(pri_key, node_id, benifit_address, external_id, node_name, website, details,
                                        reward_per, transaction_cfg=transaction_cfg)
 
     def increase_staking(self, typ, from_address, node_id=None, amount=None, transaction_cfg=None):
