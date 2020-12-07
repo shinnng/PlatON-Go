@@ -3679,32 +3679,46 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     node = client.node
     # node.ppos.need_analyze = False
     node_id_list = [i['id'] for i in economic.env.noconsensus_node_config_list]
-    print(node_id_list)
+    print('可质押节点id列表：', node_id_list)
     node_length = len(economic.env.noconsensus_node_config_list)
-    delegate_address_list = []
-    for i in range(5):
-        delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
-        print(delegate_address)
-        delegate_address_list.append(delegate_address)
+    # delegate_address_list = []
+    # for i in range(5):
+    #     delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
+    #     print(delegate_address)
+    #     delegate_address_list.append(delegate_address)
     staking_list = []
     for i in range(node_length):
-        address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 3)
+        address, _ = economic.account.generate_account(node.web3, 10)
         staking_list.append(address)
-    print(staking_list)
+        amount1 = node.web3.toWei(833 * 2, 'ether')
+        amount2 = node.web3.toWei(837 * 2, 'ether')
+        plan = [{'Epoch': 1, 'Amount': amount1},
+                {'Epoch': 2, 'Amount': amount1},
+                {'Epoch': 30, 'Amount': amount1},
+                {'Epoch': 40, 'Amount': amount1},
+                {'Epoch': 50, 'Amount': amount1},
+                {'Epoch': 60, 'Amount': amount1},
+                {'Epoch': 70, 'Amount': amount1},
+                {'Epoch': 80, 'Amount': amount1},
+                {'Epoch': 90, 'Amount': amount1},
+                {'Epoch': 100, 'Amount': amount1},
+                {'Epoch': 110, 'Amount': amount1},
+                {'Epoch': 120, 'Amount': amount2}]
+        result = client.restricting.createRestrictingPlan(address, plan, economic.account.account_with_money['address'])
+        assert_code(result, 0)
+    print('质押节点地址列表：', staking_list)
 
     for i in range(len(staking_list)):
         reward_per = randint(100, 10000)
         # address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
-        print(staking_list[i], ":", node.eth.getBalance(staking_list[i]))
-        print(clients_noconsensus[i].node.node_mark)
+        print('钱包地址：', staking_list[i], ":", '账户余额：', node.eth.getBalance(staking_list[i]), '锁仓计划：',node.ppos.getRestrictingInfo(staking_list[i]))
+        print('质押节点ip: ', clients_noconsensus[i].node.node_mark)
         time.sleep(1)
-        result = clients_noconsensus[i].staking.create_staking(0, staking_list[i], staking_list[i],
-                                                               amount=economic.create_staking_limit * 2,
-                                                               reward_per=reward_per)
+        result = clients_noconsensus[i].staking.create_staking(1, staking_list[i], staking_list[i],amount=economic.create_staking_limit * 2, reward_per=reward_per)
         assert_code(result, 0)
-        for delegate_address in delegate_address_list:
-            result = client.delegate.delegate(0, delegate_address, clients_noconsensus[i].node.node_id)
-            assert_code(result, 0)
+        # for delegate_address in delegate_address_list:
+        #     result = client.delegate.delegate(0, delegate_address, clients_noconsensus[i].node.node_id)
+        #     assert_code(result, 0)
     economic.wait_settlement(node)
 
     print('getCandidateList', node.ppos.getCandidateList())

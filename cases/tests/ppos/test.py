@@ -210,14 +210,12 @@ def getDelegateInfo(url, staking_blocknum, del_address, node_id):
 #     f.write("2")
 
 
-def fff():
-    # web3 = connect_web3(url)
-    # platon = Eth(web3)
+def fff(url):
+    web3 = connect_web3(url)
+    platon = Eth(web3)
     # print(platon.g)
-    a = arange(10)
+    a = Web3.fromWei(6657754010695187165780, 'ether')
     print(a)
-    abc = shuffle(a)
-    print(abc)
     # result = platon.getTransactionCount(from_address)
     # result = platon.getBalance(from_address)
     # print(platon.blockNumber)
@@ -225,22 +223,23 @@ def fff():
 
 
 if __name__ == '__main__':
-    url = 'http://192.168.9.221:6789'
+    # url = 'http://192.168.10.221:6789'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://10.0.0.44:6789'
     # url = 'http:// 47.241.4.217:6789'
     # url = 'http://154.85.35.163:80'
     # url = 'http://154.85.34.8:6789'
-    url = 'http://192.168.21.186:6771'
-    account = 'atx19pv24mwfxpkyvcxeqjw75x94wugq82y9fvcyks'
+    # url = 'http://192.168.21.186:6771'
+    url = 'https://openapi.alaya.network/rpc'
+    account = 'atp1tpc4auwrxq2zu3zyfz9acxkd0658u44tef0vgt'
     pri_key = '8b2a0625f5272a2655e79a90fa14b315603f8fa3a75c90d54ed85c3e044e6e71'
     # pri_key1 = '6558c64ea9b14a069b42148e373616c834ed75828b456ea001390996d7e206a2'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
     # epoch2 = 20
-    amount = Web3.toWei(10, 'ether')
-    # amount1 = Web3.toWei(833, 'ether')
-    # amount2 = Web3.toWei(837, 'ether')
+    # amount = Web3.toWei(10, 'ether')
+    amount1 = Web3.toWei(833, 'ether')
+    amount2 = Web3.toWei(837, 'ether')
     # list = ['atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9',
     #         'atx1nccsq48wery09qlma3rapree588cafwlpll8cr',
     #         'atx14w3m34dmx5xjr7wc5yhg6xtp59j3qy4m77t4vl',
@@ -272,37 +271,37 @@ if __name__ == '__main__':
     # plan = [{'Epoch': epoch, 'Amount': amount}]
     # createRestrictingPlan(url, account, plan, pri_key)
     # delegate(url, 0, nodeid, amount, pri_key)
-    # plan = [{'Epoch': 10, 'Amount': amount1},
-    #         {'Epoch': 20, 'Amount': amount1},
-    #         {'Epoch': 30, 'Amount': amount1},
-    #         {'Epoch': 40, 'Amount': amount1},
-    #         {'Epoch': 50, 'Amount': amount1},
-    #         {'Epoch': 60, 'Amount': amount1},
-    #         {'Epoch': 70, 'Amount': amount1},
-    #         {'Epoch': 80, 'Amount': amount1},
-    #         {'Epoch': 90, 'Amount': amount1},
-    #         {'Epoch': 100, 'Amount': amount1},
-    #         {'Epoch': 110, 'Amount': amount1},
-    #         {'Epoch': 120, 'Amount': amount2}]
+    plan = [{'Epoch': 10, 'Amount': amount1},
+            {'Epoch': 20, 'Amount': amount1},
+            {'Epoch': 30, 'Amount': amount1},
+            {'Epoch': 40, 'Amount': amount1},
+            {'Epoch': 50, 'Amount': amount1},
+            {'Epoch': 60, 'Amount': amount1},
+            {'Epoch': 70, 'Amount': amount1},
+            {'Epoch': 80, 'Amount': amount1},
+            {'Epoch': 90, 'Amount': amount1},
+            {'Epoch': 100, 'Amount': amount1},
+            {'Epoch': 110, 'Amount': amount1},
+            {'Epoch': 120, 'Amount': amount2}]
     address = 'atx1x8fn2h3uuqtmx8lf2zepdqnraxkwlk264sgxuy'
-    # node_id = 'eac3b0c6569786ca0b6acaa5c80ee71854a00b6e3a53852dfdefe2ea1c6f1ada7eca7208ce942bbb5357adb16b1efe499b91e90655b3a05cc23603c6c421d4e9'
+    node_id = 'efa90dd4c25cad9b20f6657bbc6299071b182744a6770802a86599614eac43a1498f7fdd0aabceb7bc8abe99f6e9e2b4bc41545c7f4eeebfc2f7a13050a775ef'
 
     # node_id = '71bc24068d1f1f65331ad7573806bf58186375ef993dddf3ea51c8d0da162c801689aed5aa9e809396cd60273af1d2826d918e36ce4d003c578371a7b3b8b429'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
     # for i in list:
     #     print(i)
-    # # increase_staking(url, 0, node_id, amount, pri_key1)
-    #     createRestrictingPlan(url, i, plan, pri_key)
-    #     get_RestrictingPlan(url, account)
+    # increase_staking(url, 0, node_id, amount, pri_key1)
+    # createRestrictingPlan(url, account, plan, pri_key)
+    # get_RestrictingPlan(url, account)
     # fff(url)
-    sendTransaction(url, account, pri_key, address, amount, 201030)
+    # sendTransaction(url, account, pri_key, address, amount, 201030)
 
     # withdrewStaking(url, node_id, pri_key1)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
     # get_VerifierList(url)
     # get_candidatelist(url)
-    # get_candinfo(url, node_id)
+    get_candinfo(url, node_id)
     # get_candidatelist(url)
     # addresss = 'lat13l39glde394a6kkrm5aenj4ty7m7565x8sgtrf'
     # get_RestrictingPlan(url, account)
