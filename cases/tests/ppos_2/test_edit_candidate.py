@@ -22,8 +22,8 @@ def test_MPI_001_002(client_new_node):
                                                                          10 ** 18 * 10000000)
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
-    result = client_new_node.ppos.editCandidate(address, client_new_node.node.node_id, external_id,
-                                                node_name, website, details, pri_key, reward_per=0)
+    result = client_new_node.ppos.editCandidate(pri_key, client_new_node.node.node_id, address, external_id,
+                                                node_name, website, details, reward_per=0)
     assert_code(result, 0)
     result = client_new_node.ppos.getCandidateInfo(client_new_node.node.node_id)
     log.info(result)
@@ -369,7 +369,7 @@ def NodeDeployment(clients_noconsensus):
 
 @allure.title("Non-validating nodes modify the commissioned dividend reward")
 @pytest.mark.P1
-def test_MPI_018(clients_noconsensus):
+def test_MPI_018(new_genesis_env, clients_noconsensus):
     """
     非验证人修改委托分红奖励
     """
