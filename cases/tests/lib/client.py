@@ -47,8 +47,7 @@ def get_client_by_nodeid(nodeid, client_obj_list: List[Client]) -> Client:
     for client_obj in client_obj_list:
         if nodeid == client_obj.node.node_id:
             return client_obj
-        else:
-            print("not clinet")
+
 
 
 def get_clients_by_nodeid(nodeid_list, client_obj_list: List[Client]) -> List[Client]:

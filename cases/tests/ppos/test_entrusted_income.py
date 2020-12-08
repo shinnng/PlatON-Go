@@ -3684,8 +3684,8 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     node_length = len(economic.env.noconsensus_node_config_list)
     amount1 = node.web3.toWei(833 * 2, 'ether')
     amount2 = node.web3.toWei(837 * 2, 'ether')
-    plan = [{'Epoch': 4, 'Amount': amount1},
-            {'Epoch': 5, 'Amount': amount1},
+    plan = [{'Epoch': 5, 'Amount': amount1},
+            {'Epoch': 6, 'Amount': amount1},
             {'Epoch': 30, 'Amount': amount1},
             {'Epoch': 40, 'Amount': amount1},
             {'Epoch': 50, 'Amount': amount1},
@@ -3717,7 +3717,8 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
         print('钱包地址：', staking_list[i], ":", '账户余额：', node.eth.getBalance(staking_list[i]), '锁仓计划：',
               node.ppos.getRestrictingInfo(staking_list[i]))
         print('质押节点ip: ', clients_noconsensus[i].node.node_mark)
-        time.sleep(2)
+        # time.sleep(2)
+        # print(clients_noconsensus[i].node.no)
         result = clients_noconsensus[i].staking.create_staking(1, staking_list[i], staking_list[i],
                                                                amount=economic.create_staking_limit * 2,
                                                                reward_per=reward_per)
@@ -3733,12 +3734,12 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     print('getVerifierList', node.ppos.getVerifierList())
     print('getValidatorList', node.ppos.getValidatorList())
     tmp_delegate_address_list = delegate_address_list
-    for i in range(2):
+    for i in range(9):
         validator_list = node.ppos.getValidatorList()['Ret']
         print(validator_list)
         validator_id = [i['NodeId'] for i in validator_list]
         print(validator_id)
-        operate_type = randint(0, 1)
+        operate_type = randint(0, 2)
         print(operate_type)
         # operate_index = randint(0, len(validator_id))
         operate_client = get_client_by_nodeid(validator_id[0], clients_noconsensus)
@@ -3764,9 +3765,14 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     error_address_list = []
     for i in staking_list + delegate_address_list:
         restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
+        print(restricting_info)
         if restricting_info['balance'] > economic.create_staking_limit * 2:
             error_address_list.append(i)
     print(error_address_list)
+    for i in error_address_list:
+        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
+        print(restricting_info)
+
 
 
 
@@ -3810,35 +3816,35 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     #             assert_code(result, 0)
     #     economic.wait_settlement(node)
 
-
-def test_EI_BC_089(clients_noconsensus, client_consensus):
-    """
-    随机触发节点主动退出或零出块
-    """
-    client = client_consensus
-    economic = client_consensus.economic
-    node = client_consensus.node
-    validator_list = node.ppos.getValidatorList()['Ret']
-    print(validator_list)
-    validator_id = [i['NodeId'] for i in validator_list]
-    print(validator_id)
-    operate_type = randint(0, 1)
-    print(operate_type)
-    operate_index = randint(1, len(validator_id))
-    for i in range(7):
-        for node in clients_noconsensus:
-            if validator_id[operate_index] == clients_noconsensus[node].node.node_id:
-                operate_client = clients_noconsensus[node]
-        if operate_type == 0:
-            result = operate_client.staking.withdrew_staking(operate_client.node.staking_address)
-            assert_code(result, 0)
-        elif operate_type == 1:
-            operate_client.node.stop()
-        else:
-            block_number = operate_client.staking.get_stakingblocknum()
-            client.delegate.withdrew_delegate(block_number, dele)
-        economic.wait_settlement(node, 1)
-
-    economic.wait_settlement(node, 2)
-
-
+#
+# def test_EI_BC_089(clients_noconsensus, client_consensus):
+#     """
+#     随机触发节点主动退出或零出块
+#     """
+#     client = client_consensus
+#     economic = client_consensus.economic
+#     node = client_consensus.node
+#     validator_list = node.ppos.getValidatorList()['Ret']
+#     print(validator_list)
+#     validator_id = [i['NodeId'] for i in validator_list]
+#     print(validator_id)
+#     operate_type = randint(0, 1)
+#     print(operate_type)
+#     operate_index = randint(1, len(validator_id))
+#     for i in range(7):
+#         for node in clients_noconsensus:
+#             if validator_id[operate_index] == clients_noconsensus[node].node.node_id:
+#                 operate_client = clients_noconsensus[node]
+#         if operate_type == 0:
+#             result = operate_client.staking.withdrew_staking(operate_client.node.staking_address)
+#             assert_code(result, 0)
+#         elif operate_type == 1:
+#             operate_client.node.stop()
+#         else:
+#             block_number = operate_client.staking.get_stakingblocknum()
+#             client.delegate.withdrew_delegate(block_number, dele)
+#         economic.wait_settlement(node, 1)
+#
+#     economic.wait_settlement(node, 2)
+#
+#
