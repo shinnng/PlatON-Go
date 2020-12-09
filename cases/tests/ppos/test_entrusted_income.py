@@ -3780,7 +3780,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
             {'Epoch': 120, 'Amount': amount2}]
     delegate_address_list = []
     for i in range(20):
-        delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
+        delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 1.1)
         delegate_address_list.append(delegate_address)
         result = client.restricting.createRestrictingPlan(delegate_address, plan,economic.account.account_with_money['address'])
         assert_code(result, 0)
@@ -3824,54 +3824,73 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
         print("3", restricting_info)
 
 
-def test_debug(all_clients):
+def test_debug(all_clients, clients_noconsensus):
     clients = all_clients
-    opt_client = clients[0]
+    opt_client = clients_noconsensus[0]
 
     # 定义两个操作列表
     addressList = []
-    unStakingNodeList = []
-    assert len(addressList) <= len(unStakingNodeList)
+    print(f'addressList: ', addressList)
 
     #### 构造场景
-    # 1、非法金额，锁仓     //不实现
-    pass
+    # 1、锁仓
+    address = addressList[0]
 
-    # 2、混合金额，锁仓
+    # 2、锁仓+委托，锁仓金额足够，不影响委托金额
     address = addressList[1]
-    plan = [{'Epoch': 100, 'Amount': 1000 * 10 ** 18}]
-    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])
+    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)   # 自由金额锁仓不受影响
+    assert result == 0
+    result = opt_client.delegate.delegate(1, address, amount=1000 * 10 ** 18)
     assert result == 0
 
-    # 3、混合金额，锁仓+委托  //无需实现
-    pass
+    # 3、锁仓+委托，锁仓金额不够，扣除部分委托金额
+    address = addressList[2]
+    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)   # 自由金额锁仓不受影响
+    assert result == 0
+    result = opt_client.delegate.delegate(1, address, amount=10000 * 10 ** 18)
+    assert result == 0
+    client = clients_noconsensus[1]
+    result = client.staking.create_staking(0, address, address, amount=10000 * 10 ** 18)    # 自由金额质押不受影响
+    assert result == 0
 
-    # 4、混合金额，锁仓+委托+质押，节点解质押
-    plan = [{'Epoch': 100, 'Amount': 1000 * 10 ** 18}]
+    # 4、锁仓+委托+质押，节点解质押
     address = addressList[3]
-    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])
+    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)    # 自由金额锁仓不受影响
     assert result == 0
-    candidate_list = opt_client.ppos.getCandidateList()['Ret']
-    node_id_list = [i['NodeId'] for i in candidate_list]
-    node_id = random.choice(node_id_list)
-    client = get_client_by_nodeid(node_id, all_clients)
+    result = opt_client.delegate.delegate(1, address, amount=1000 * 10 ** 18)
+    assert result == 0
+    client = clients_noconsensus[2]
+    result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)    # 质押金额将被解质押
+    assert result == 0
+
+    # 5、锁仓+委托+质押，节点不解质押
+    address = addressList[4]
+    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)    # 自由金额锁仓不受影响
+    assert result == 0
+    result = opt_client.delegate.delegate(1, address, amount=1000 * 10 ** 18)
+    assert result == 0
+    plan = [{'Epoch': 100, 'Amount': 5000 * 10 ** 18}]
+    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])    # 新增锁仓金额，使质押节点不被解质押
+    assert result == 0
+    client = clients_noconsensus[3]
     result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)
     assert result == 0
 
-    # 5、混合金额，锁仓+委托+质押，节点不解质押
-    plan = [{'Epoch': 100, 'Amount': 10000 * 10 ** 18}]
-    address = addressList[4]
-    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])
+    # 6、锁仓+委托+质押+增持，节点使用自由金额增持，不解质押
+    address = addressList[5]
+    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)    # 自由金额锁仓不受影响
     assert result == 0
-    candidate_list = opt_client.ppos.getCandidateList()['Ret']
-    node_id_list = [i['NodeId'] for i in candidate_list]
-    node_id = random.choice(node_id_list)
-    client = get_client_by_nodeid(node_id, all_clients)
-    result = client.staking.create_staking(1, address, address, amount=12000 * 10 ** 18)
+    result = opt_client.delegate.delegate(1, address, amount=1000 * 10 ** 18)
+    assert result == 0
+    client = clients_noconsensus[2]
+    result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)    # 质押金额将被解质押
+    assert result == 0
+    result = client.staking.increase_staking(0, address, amount=1000)
     assert result == 0
 
-    # 6、非法金额，多次委托解委托    //不实现
+    # 7、非法金额，多次委托解委托
     pass
+
 
     # 发送升级提案
     # TODO:更新提案版本
@@ -3881,16 +3900,19 @@ def test_debug(all_clients):
     assert result == 0
     pip_id = opt_pip.get_effect_proposal_info_of_vote()
 
-    # 对所有节点进行升级并且投票
-    # TODO:更新上传版本
-    for client in clients:
+    # 获取共识节点
+    candidates = opt_client.ppos.getCandidateList()['Ret'][0]
+    consensus_clients = [get_client_by_nodeid(candidate['nodeid'], clients) for candidate in candidates]
+
+    # TODO:更新上传的二进制位置
+    for client in consensus_clients:
         pip = client.pip
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN8)
         pip.node.restart()
         pip.vote(pip.node.node_id, pip_id, 1, pip.node.node_id)
 
     # 等待升级提案生效
-    res = pip.pip.getProposal(pip_id)
+    res = opt_pip.pip.getProposal(pip_id)
     end_block = res['Ret']['EndVotingBlock']
-    end_block = pip.economic.get_consensus_switchpoint(end_block)
-    wait_block_number(pip.node, end_block)
+    end_block = opt_pip.economic.get_consensus_switchpoint(end_block)
+    wait_block_number(opt_pip.node, end_block)
