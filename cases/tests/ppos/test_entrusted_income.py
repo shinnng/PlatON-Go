@@ -3893,21 +3893,18 @@ def test_debug(all_clients, clients_noconsensus):
 
 
     # 发送升级提案
-    # TODO:更新提案版本
     opt_pip = opt_client.pip
-    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), opt_pip.cfg.version5, 30,
+    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), opt_pip.cfg.version0, 10,
                                        opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
     assert result == 0
     pip_id = opt_pip.get_effect_proposal_info_of_vote()
 
-    # 获取共识节点
+    # 获取共识节点,并进行升级
     candidates = opt_client.ppos.getCandidateList()['Ret'][0]
     consensus_clients = [get_client_by_nodeid(candidate['nodeid'], clients) for candidate in candidates]
-
-    # TODO:更新上传的二进制位置
     for client in consensus_clients:
         pip = client.pip
-        upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN8)
+        upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN0)
         pip.node.restart()
         pip.vote(pip.node.node_id, pip_id, 1, pip.node.node_id)
 
