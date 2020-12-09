@@ -3734,12 +3734,12 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     print('getVerifierList', node.ppos.getVerifierList())
     print('getValidatorList', node.ppos.getValidatorList())
     tmp_delegate_address_list = delegate_address_list
-    for i in range(9):
+    for i in range(1):
         validator_list = node.ppos.getValidatorList()['Ret']
         print(validator_list)
         validator_id = [i['NodeId'] for i in validator_list]
         print(validator_id)
-        operate_type = randint(0, 2)
+        operate_type = 2
         print(operate_type)
         # operate_index = randint(0, len(validator_id))
         operate_client = get_client_by_nodeid(validator_id[0], clients_noconsensus)
@@ -3749,15 +3749,19 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
         if operate_type == 0:
             result = operate_client.staking.withdrew_staking(operate_client.node.staking_address)
             assert_code(result, 0)
+            print("执行退出节点完成")
         elif operate_type == 1:
             operate_client.node.stop()
+            print("执行零出块完成")
         else:
+            print(1)
             block_number = operate_client.staking.get_stakingblocknum()
             delegate_info = node.ppos.getDelegateInfo(block_number, tmp_delegate_address_list[0], operate_client.node.node_id)['Ret']
             delegate_amount = delegate_info['RestrictingPlan']
             result = client.delegate.withdrew_delegate(block_number, tmp_delegate_address_list[0], amount=delegate_amount)
             assert_code(result, 0)
             del tmp_delegate_address_list[0]
+            print("执行赎回委托完成")
         economic.wait_settlement(node)
 
     economic.wait_settlement(node, 3)
@@ -3816,35 +3820,72 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
     #             assert_code(result, 0)
     #     economic.wait_settlement(node)
 
-#
-# def test_EI_BC_089(clients_noconsensus, client_consensus):
-#     """
-#     随机触发节点主动退出或零出块
-#     """
-#     client = client_consensus
-#     economic = client_consensus.economic
-#     node = client_consensus.node
-#     validator_list = node.ppos.getValidatorList()['Ret']
-#     print(validator_list)
-#     validator_id = [i['NodeId'] for i in validator_list]
-#     print(validator_id)
-#     operate_type = randint(0, 1)
-#     print(operate_type)
-#     operate_index = randint(1, len(validator_id))
-#     for i in range(7):
-#         for node in clients_noconsensus:
-#             if validator_id[operate_index] == clients_noconsensus[node].node.node_id:
-#                 operate_client = clients_noconsensus[node]
-#         if operate_type == 0:
-#             result = operate_client.staking.withdrew_staking(operate_client.node.staking_address)
-#             assert_code(result, 0)
-#         elif operate_type == 1:
-#             operate_client.node.stop()
-#         else:
-#             block_number = operate_client.staking.get_stakingblocknum()
-#             client.delegate.withdrew_delegate(block_number, dele)
-#         economic.wait_settlement(node, 1)
-#
-#     economic.wait_settlement(node, 2)
-#
-#
+
+def test_EI_BC_089(clients_noconsensus, client_consensus):
+    """
+    随机触发节点主动退出或零出块
+    """
+    client = client_consensus
+    economic = client.economic
+    node = client.node
+    # node.ppos.need_analyze = False
+    node_id_list = [i['id'] for i in economic.env.noconsensus_node_config_list]
+    print('可质押节点id列表：', node_id_list)
+    amount1 = node.web3.toWei(833, 'ether')
+    amount2 = node.web3.toWei(837, 'ether')
+    plan = [{'Epoch': 2, 'Amount': amount1},
+            {'Epoch': 3, 'Amount': amount1},
+            {'Epoch': 30, 'Amount': amount1},
+            {'Epoch': 40, 'Amount': amount1},
+            {'Epoch': 50, 'Amount': amount1},
+            {'Epoch': 60, 'Amount': amount1},
+            {'Epoch': 70, 'Amount': amount1},
+            {'Epoch': 80, 'Amount': amount1},
+            {'Epoch': 90, 'Amount': amount1},
+            {'Epoch': 100, 'Amount': amount1},
+            {'Epoch': 110, 'Amount': amount1},
+            {'Epoch': 120, 'Amount': amount2}]
+    delegate_address_list = []
+    for i in range(20):
+        delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit)
+        delegate_address_list.append(delegate_address)
+        result = client.restricting.createRestrictingPlan(delegate_address, plan,economic.account.account_with_money['address'])
+        assert_code(result, 0)
+    print('委托钱包地址列表', delegate_address_list)
+    for i in delegate_address_list:
+        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
+        print("1", restricting_info)
+
+    reward_per = randint(100, 10000)
+    address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 3)
+    print('钱包地址：', address, ":", '账户余额：', node.eth.getBalance(address))
+    print('质押节点ip: ', clients_noconsensus[0].node.node_mark)
+    time.sleep(1)
+    result = clients_noconsensus[0].staking.create_staking(0, address, address, amount=economic.create_staking_limit * 2, reward_per=reward_per)
+    assert_code(result, 0)
+    for delegate_address in delegate_address_list:
+        result = client.delegate.delegate(1, delegate_address, clients_noconsensus[0].node.node_id, amount=economic.create_staking_limit)
+        assert_code(result, 0)
+    print(node.eth.blockNumber)
+    economic.wait_settlement(node)
+
+    print('getCandidateList', node.ppos.getCandidateList())
+    print('getVerifierList', node.ppos.getVerifierList())
+    print('getValidatorList', node.ppos.getValidatorList())
+    for i in delegate_address_list:
+        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
+        print("2", restricting_info)
+
+    block_number = client.ppos.getCandidateInfo(clients_noconsensus[0].node.node_id)['Ret']['StakingBlockNum']
+    # for i in delegate_address_list:
+    #     result = node.ppos.getDelegateInfo(block_number, i, clients_noconsensus[0].node.node_id)
+    #     print(result)
+
+    for i in delegate_address_list:
+        result = client.delegate.withdrew_delegate(block_number, i, node_id=clients_noconsensus[0].node.node_id, amount=economic.create_staking_limit)
+        assert_code(result, 0)
+
+    economic.wait_settlement(node)
+    for i in delegate_address_list:
+        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
+        print("3", restricting_info)

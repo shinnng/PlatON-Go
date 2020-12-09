@@ -231,7 +231,7 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     url = 'https://openapi.alaya.network/rpc'
-    account = 'atp1tpc4auwrxq2zu3zyfz9acxkd0658u44tef0vgt'
+    account = 'atp1hgerqd2erw89a6f0n9cch6azdm3mlkn7lnq0gp'
     pri_key = '8b2a0625f5272a2655e79a90fa14b315603f8fa3a75c90d54ed85c3e044e6e71'
     # pri_key1 = '6558c64ea9b14a069b42148e373616c834ed75828b456ea001390996d7e206a2'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -301,10 +301,10 @@ if __name__ == '__main__':
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
     # get_VerifierList(url)
     # get_candidatelist(url)
-    get_candinfo(url, node_id)
+    # get_candinfo(url, node_id)
     # get_candidatelist(url)
     # addresss = 'lat13l39glde394a6kkrm5aenj4ty7m7565x8sgtrf'
-    # get_RestrictingPlan(url, account)
+    get_RestrictingPlan(url, account)
     # fff()
     # get_listGovernParam(url)
     # getDelegateReward(url, account)
