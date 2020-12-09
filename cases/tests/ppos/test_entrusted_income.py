@@ -1,13 +1,13 @@
 import time
-from random import randint
+from random import randint, random
 
 import pytest
 from common.key import mock_duplicate_sign
 from common.log import log
 from tests.lib import check_node_in_list, assert_code, von_amount, \
-    get_getDelegateReward_gas_fee
+    get_getDelegateReward_gas_fee, upload_platon, wait_block_number
 import time
-from random import randint
+import random
 
 import pytest
 
@@ -3753,73 +3753,6 @@ def test_EI_BC_088(clients_noconsensus, client_consensus):
         elif operate_type == 1:
             operate_client.node.stop()
             print("执行零出块完成")
-        else:
-            print(1)
-            block_number = operate_client.staking.get_stakingblocknum()
-            delegate_info = node.ppos.getDelegateInfo(block_number, tmp_delegate_address_list[0], operate_client.node.node_id)['Ret']
-            delegate_amount = delegate_info['RestrictingPlan']
-            result = client.delegate.withdrew_delegate(block_number, tmp_delegate_address_list[0], amount=delegate_amount)
-            assert_code(result, 0)
-            del tmp_delegate_address_list[0]
-            print("执行赎回委托完成")
-        economic.wait_settlement(node)
-
-    economic.wait_settlement(node, 3)
-
-    error_address_list = []
-    for i in staking_list + delegate_address_list:
-        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
-        print(restricting_info)
-        if restricting_info['balance'] > economic.create_staking_limit * 2:
-            error_address_list.append(i)
-    print(error_address_list)
-    for i in error_address_list:
-        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
-        print(restricting_info)
-
-
-
-
-    #
-    # while 1:
-    #     # print(client.node.ppos.getVerifierList())
-    #     # delegate_address = 'atx1cghgquqdvm8eekppanyvh8g8y6t7e0lvwpztr6'
-    #     DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address_list[0])['Ret']
-    #     for i in DelegateReward_info:
-    #         result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address_list[0], i['nodeID'])
-    #         print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
-    #     print(DelegateReward_info)
-    #     print(node.node_mark)
-    #     result = client.delegate.withdraw_delegate_reward(delegate_address_list[0])
-    #     assert_code(result, 0)
-    #     time.sleep(3)
-    #     DelegateReward_info = client.node.ppos.getDelegateReward(delegate_address_list[0])['Ret']
-    #     for i in DelegateReward_info:
-    #         result = node.ppos.getDelegateInfo(i['stakingNum'], delegate_address_list[0], i['nodeID'])
-    #         print(i['nodeID'], ':', result['Ret']['DelegateEpoch'])
-    #     print(DelegateReward_info)
-    #     delegate_node_id_list = [i['nodeID'] for i in DelegateReward_info]
-    #     # no_delegate_node = [x for x in node_id_list if x not in delegate_node_id_list]
-    #     no_delegate_node = []
-    #     for no_delegate in node_id_list:
-    #         if no_delegate not in delegate_node_id_list:
-    #             no_delegate_node.append(no_delegate)
-    #     # if len(DelegateReward_info) > 20:
-    #     num_limit = randint(1, 2)
-    #     print(num_limit)
-    #     for i in range(num_limit):
-    #         print(i)
-    #         result = client.delegate.withdrew_delegate(DelegateReward_info[i]['stakingNum'], delegate_address_list[0], DelegateReward_info[i]['nodeID'])
-    #         assert_code(result, 0)
-    #     num_limit2 = len(no_delegate_node)
-    #     if num_limit2 > 0:
-    #         print(num_limit2)
-    #         for i in range(randint(1, num_limit2)):
-    #             print(i)
-    #             result = client.delegate.delegate(0, delegate_address_list[0], node_id=no_delegate_node[i])
-    #             assert_code(result, 0)
-    #     economic.wait_settlement(node)
-
 
 def test_EI_BC_089(clients_noconsensus, client_consensus):
     """
@@ -3889,3 +3822,75 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
     for i in delegate_address_list:
         restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
         print("3", restricting_info)
+
+
+def test_debug(all_clients):
+    clients = all_clients
+    opt_client = clients[0]
+
+    # 定义两个操作列表
+    addressList = []
+    unStakingNodeList = []
+    assert len(addressList) <= len(unStakingNodeList)
+
+    #### 构造场景
+    # 1、非法金额，锁仓     //不实现
+    pass
+
+    # 2、混合金额，锁仓
+    address = addressList[1]
+    plan = [{'Epoch': 100, 'Amount': 1000 * 10 ** 18}]
+    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])
+    assert result == 0
+
+    # 3、混合金额，锁仓+委托  //无需实现
+    pass
+
+    # 4、混合金额，锁仓+委托+质押，节点解质押
+    plan = [{'Epoch': 100, 'Amount': 1000 * 10 ** 18}]
+    address = addressList[3]
+    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])
+    assert result == 0
+    candidate_list = opt_client.ppos.getCandidateList()['Ret']
+    node_id_list = [i['NodeId'] for i in candidate_list]
+    node_id = random.choice(node_id_list)
+    client = get_client_by_nodeid(node_id, all_clients)
+    result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)
+    assert result == 0
+
+    # 5、混合金额，锁仓+委托+质押，节点不解质押
+    plan = [{'Epoch': 100, 'Amount': 10000 * 10 ** 18}]
+    address = addressList[4]
+    result = opt_client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money['address'])
+    assert result == 0
+    candidate_list = opt_client.ppos.getCandidateList()['Ret']
+    node_id_list = [i['NodeId'] for i in candidate_list]
+    node_id = random.choice(node_id_list)
+    client = get_client_by_nodeid(node_id, all_clients)
+    result = client.staking.create_staking(1, address, address, amount=12000 * 10 ** 18)
+    assert result == 0
+
+    # 6、非法金额，多次委托解委托    //不实现
+    pass
+
+    # 发送升级提案
+    # TODO:更新提案版本
+    opt_pip = opt_client.pip
+    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), opt_pip.cfg.version5, 30,
+                                       opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
+    assert result == 0
+    pip_id = opt_pip.get_effect_proposal_info_of_vote()
+
+    # 对所有节点进行升级并且投票
+    # TODO:更新上传版本
+    for client in clients:
+        pip = client.pip
+        upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN8)
+        pip.node.restart()
+        pip.vote(pip.node.node_id, pip_id, 1, pip.node.node_id)
+
+    # 等待升级提案生效
+    res = pip.pip.getProposal(pip_id)
+    end_block = res['Ret']['EndVotingBlock']
+    end_block = pip.economic.get_consensus_switchpoint(end_block)
+    wait_block_number(pip.node, end_block)
