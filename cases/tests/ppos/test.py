@@ -231,7 +231,7 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     url = 'https://openapi.alaya.network/rpc'
-    account = 'atp1hgerqd2erw89a6f0n9cch6azdm3mlkn7lnq0gp'
+    account = 'atp1ecny079uncmenfsv3xtsyfklr6vpzx0c6vxw37'
     pri_key = '8b2a0625f5272a2655e79a90fa14b315603f8fa3a75c90d54ed85c3e044e6e71'
     # pri_key1 = '6558c64ea9b14a069b42148e373616c834ed75828b456ea001390996d7e206a2'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -283,8 +283,8 @@ if __name__ == '__main__':
             {'Epoch': 100, 'Amount': amount1},
             {'Epoch': 110, 'Amount': amount1},
             {'Epoch': 120, 'Amount': amount2}]
-    address = 'atx1x8fn2h3uuqtmx8lf2zepdqnraxkwlk264sgxuy'
-    node_id = 'efa90dd4c25cad9b20f6657bbc6299071b182744a6770802a86599614eac43a1498f7fdd0aabceb7bc8abe99f6e9e2b4bc41545c7f4eeebfc2f7a13050a775ef'
+    address = 'atp1jzxeyyntlypr5r44exzgdgkzdrgt7ccp9n3tc4'
+    node_id = '9dcae009ba538e18b877b04f286a915fbec4c8b79ce33df7eacab61438f50077d038c9832d0f811b71432ff0acd2599fd822c1395478392cdf4f39e7de2a52b7'
 
     # node_id = '71bc24068d1f1f65331ad7573806bf58186375ef993dddf3ea51c8d0da162c801689aed5aa9e809396cd60273af1d2826d918e36ce4d003c578371a7b3b8b429'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -301,10 +301,11 @@ if __name__ == '__main__':
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
     # get_VerifierList(url)
     # get_candidatelist(url)
-    # get_candinfo(url, node_id)
+    get_candinfo(url, node_id)
     # get_candidatelist(url)
     # addresss = 'lat13l39glde394a6kkrm5aenj4ty7m7565x8sgtrf'
-    get_RestrictingPlan(url, account)
+    # print(Web3.fromWei(30000000000000000000, 'ether'))
+    # get_RestrictingPlan(url, account)
     # fff()
     # get_listGovernParam(url)
     # getDelegateReward(url, account)
