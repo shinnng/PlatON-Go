@@ -2521,7 +2521,7 @@ def test_LS_UPV_022(client_new_node, client_consensus):
     clinet1.economic.wait_settlement(clinet1.node, 3)
     restricting_info2 = clinet1.node.ppos.getRestrictingInfo(address2)['Ret']
     print(restricting_info2)
-    release_amonut = int(Decimal(str(amount1)) * Decimal(str(4)))
+    release_amonut = int(Decimal(str(amount1)) * Decimal(str(5)))
     print(release_amonut)
     assert restricting_info1['balance'] - release_amonut == restricting_info2['balance']
     economic.wait_settlement(node)
