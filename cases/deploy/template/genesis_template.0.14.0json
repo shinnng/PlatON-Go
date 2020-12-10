@@ -1,6 +1,6 @@
 {
     "config": {
-        "chainId": 201018,
+        "chainId": 201030,
         "eip155Block": 3,
         "cbft": {
             "initialNodes": [
@@ -20,7 +20,7 @@
         "staking": {
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
-            "maxValidators": 28,
+            "maxValidators": 5,
             "unStakeFreezeDuration": 2,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
@@ -56,9 +56,9 @@
             "minimumRelease": 80000000000000000000
         },
         "innerAcc": {
-            "platonFundAccount": "atp1m6n2wj6cmnnqnmhhaytyf6x75607t7rh6y9kyu",
+            "platonFundAccount": "atx1m6n2wj6cmnnqnmhhaytyf6x75607t7rhszeuhk",
             "platonFundBalance": 2500000000000000000000000,
-            "cdfAccount": "atp1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4vll2fq",
+            "cdfAccount": "atx1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4xerq62",
             "cdfBalance": 500000000000000000000000
         }
     },
