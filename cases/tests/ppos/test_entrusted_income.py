@@ -3789,7 +3789,13 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
         result = client.restricting.createRestrictingPlan(delegate_address, plan,
                                                           economic.account.account_with_money['address'])
         assert_code(result, 0)
-    print('委托钱包地址列表', delegate_address_list)
+    print('非法委托钱包地址列表', delegate_address_list)
+
+    delegate_other_address, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 1)
+    result = client.restricting.createRestrictingPlan(delegate_other_address, plan,
+                                                      economic.account.account_with_money['address'])
+    assert_code(result, 0)
+    print('锁仓计划无超出可用锁仓余额',delegate_other_address)
     for i in delegate_address_list:
         restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
         print("1", restricting_info)

@@ -252,7 +252,7 @@ def test_LS_UPV_007(client_new_node):
     :return:
     """
     # create restricting plan
-    client_new_node.node.ppos.need_quota_gas = False
+    # client_new_node.node.ppos.need_quota_gas = False
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
                                                                    client_new_node.economic.create_staking_limit)
     plan = []
@@ -747,6 +747,8 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     # create restricting plan and staking
     address1, address2 = create_restricting_plan_and_staking(client1, economic, node)
     # view
+    balance = node.eth.getBalance(address2)
+    print(balance)
     candidate_info = client1.ppos.getCandidateInfo(node.node_id)
     pledge_amount = candidate_info['Ret']['Shares']
     log.info("pledge_amount: {}".format(pledge_amount))
@@ -771,12 +773,12 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     restricting_info = client2.ppos.getRestrictingInfo(address2)
     log.info("restricting info: {}".format(restricting_info))
     info = restricting_info['Ret']
-    assert (info['Pledge'] == pledge_amount - punishment_amonut * 2) or (
-            info['Pledge'] == pledge_amount - punishment_amonut), 'ErrMsg: restricting Pledge amount {}'.format(
+    balance1 = client2.node.eth.getBalance(address2)
+    print(balance1)
+    assert info['Pledge'] == pledge_amount - punishment_amonut, 'ErrMsg: restricting Pledge amount {}'.format(
         info['Pledge'])
-    assert (info['balance'] == pledge_amount - punishment_amonut * 2) or (
-            info['balance'] == pledge_amount - punishment_amonut), 'ErrMsg: restricting balance amount {}'.format(
-        info['balance'])
+    assert info['balance'] == 0
+    assert balance == balance1
     # create Restricting Plan again
     staking_amount = von_amount(economic.create_staking_limit, 2)
     plan = [{'Epoch': 1, 'Amount': staking_amount}]
@@ -787,8 +789,9 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     log.info("restricting info: {}".format(restricting_info3))
     assert_code(restricting_info3, 0)
     info2 = restricting_info3['Ret']
-    assert info2['balance'] == staking_amount + info['balance'] - info[
-        'debt'], "rrMsg: restricting balance amount {}".format(info2['balance'])
+    balance2 = client2.node.eth.getBalance(address2)
+    print(balance2)
+    assert info2['balance'] == staking_amount + pledge_amount - punishment_amonut - info['debt'], "rrMsg: restricting balance amount {}".format(info2['balance'])
     assert info2['debt'] == 0, "rrMsg: restricting debt amount {}".format(info2['debt'])
     assert info2['plans'][0]['amount'] == staking_amount, "rrMsg: restricting plans amount {}".format(
         info2['plans'][0]['amount'])
@@ -799,6 +802,9 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     restricting_info3 = client2.ppos.getRestrictingInfo(address2)
     log.info("restricting info: {}".format(restricting_info3))
     assert_code(restricting_info3, 304005)
+    balance3 = client2.node.eth.getBalance(address2)
+    print(balance3)
+    assert balance3 == balance2 + info2['balance']
 
 
 @pytest.mark.P1

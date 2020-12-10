@@ -325,11 +325,19 @@ def test_UP_FV_009(clients_new_node):
     client2 = clients_new_node[1]
     economic = client1.economic
     node = client1.node
+    print(node.node_mark)
     # create restricting plan and staking
+    restricting_balance = node.eth.getBalance(node.web3.restrictingAddress)
     address1 = restricting_plan_validation_staking(client1, economic, node)
     # Waiting for the end of the settlement period
+    time.sleep(2)
+    restricting_balance1 = node.eth.getBalance(node.web3.restrictingAddress)
+
+    assert restricting_balance + economic.create_staking_limit == restricting_balance1
     economic.wait_settlement(node)
     # Obtain block bonus and pledge bonus
+    balance = client2.node.eth.getBalance(address1)
+    print(balance)
     block_reward, staking_reward = client1.economic.get_current_year_reward(node)
     # Get penalty blocks
     slash_blocks = get_governable_parameter_value(client1, 'slashBlocksReward')
@@ -355,10 +363,13 @@ def test_UP_FV_009(clients_new_node):
     log.info("restricting plan informtion: {}".format(restricting_info))
     info = restricting_info['Ret']
     if punishment_amonut < economic.create_staking_limit:
-        assert (info['balance'] == economic.create_staking_limit - punishment_amonut) or (info['balance'] == economic.create_staking_limit - punishment_amonut * 2), 'ErrMsg: restricting balance amount {}'.format(
-            info['balance'])
+        assert info['Pledge'] == economic.create_staking_limit - punishment_amonut
     else:
         assert_code(restricting_info, 304005)
+    client2.economic.wait_settlement(client2.node, 3)
+    balance1 = client2.node.eth.getBalance(address1)
+    print(balance1)
+    assert balance + economic.create_staking_limit - punishment_amonut == balance1
 
 
 @pytest.mark.P2
