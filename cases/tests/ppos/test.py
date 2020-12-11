@@ -225,19 +225,19 @@ def fff(url):
 if __name__ == '__main__':
     # url = 'http://192.168.10.221:6789'
     # url = 'http://10.1.1.51:6789'
-    url = 'http://192.168.120.150:6789'
+    # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
     # url = 'http://154.85.35.163:80'
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'atp109d687jtva09wgts5h09zvuxf3yfxt5v96rurt'
-    pri_key = 'b8f74343d859603ae8484add2d0bb91206a9c05e07a1c1674d1c89523453e7ac'
+    account = 'atp19ykyzcs9xk7tc9shav24js8g53uejzletdeets'
+    pri_key = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
     # pri_key1 = '6558c64ea9b14a069b42148e373616c834ed75828b456ea001390996d7e206a2'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
     # epoch2 = 20
-    # amount = Web3.toWei(10, 'ether')
+    amount = Web3.toWei(1, 'ether')
     amount1 = Web3.toWei(833, 'ether')
     amount2 = Web3.toWei(837, 'ether')
     # list = ['atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9',
@@ -253,47 +253,49 @@ if __name__ == '__main__':
     #         'atx1ckxg24sa4clv239y93talm79h7ac8r20t4dl8e',
     #         'atx19qtc92y2s9a6dyvuqxrqwpsaztz95mel4xuhkv']
     # ac = 'atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9'
-    list = ['atx1y2pejagyaj2s8jzrcrtrc2xl3x5l5r3hxfu8z3',
-            'atx1n39fsmhhleyrru6smcy9m9q4w6t4mxz5439tc8',
-            'atx124u7787cqrsclat26jv2vtph29slanruhsz95j',
-            'atx1jnh4qfvuvam86hfhy08daw5ahsnmryjcuyzlx8',
-            'atx1quxk2dju0774w65lu4dzuhac28q8c5ak8lk46e',
-            'atx1j89t4zw9znq7582yf8ut99a8ynz8tp0m75ksj6',
-            'atx1lr0tn4c7q37y2yjfe5a6vks7trjgznr3t7yy3h',
-            'atx1we7rgld9n8att6l9tw5m5lpkqfa5y3dedk7yuk',
-            'atx12mevpl56jz07wu0lk4hmlmqwmcfwhukxqxejmy',
-            'atx1wjk3qwhmvg3e5chnk5k8kxp23cyjh3e4np4xwx',
-            'atx1740vqwuaxetpeym6j7kvp6w0c28r4vyz4m5znr',
-            'atx1wuth2jvd98dfaw40dg294xzj8hlhq3s3r69v39',
-            'atx1sg03frnmah7rxahaxphklfxl5aug37ytgayfu7',
-            'atx1nyzkjzy8lgmmswpyvpw6dfe9hw9krkhm8gzdue',
-            'atx10sccfk6v8rmv35xh9fhaaxchw48u2xggt3vamv']
+    # list = ['atx1y2pejagyaj2s8jzrcrtrc2xl3x5l5r3hxfu8z3',
+    #         'atx1n39fsmhhleyrru6smcy9m9q4w6t4mxz5439tc8',
+    #         'atx124u7787cqrsclat26jv2vtph29slanruhsz95j',
+    #         'atx1jnh4qfvuvam86hfhy08daw5ahsnmryjcuyzlx8',
+    #         'atx1quxk2dju0774w65lu4dzuhac28q8c5ak8lk46e',
+    #         'atx1j89t4zw9znq7582yf8ut99a8ynz8tp0m75ksj6',
+    #         'atx1lr0tn4c7q37y2yjfe5a6vks7trjgznr3t7yy3h',
+    #         'atx1we7rgld9n8att6l9tw5m5lpkqfa5y3dedk7yuk',
+    #         'atx12mevpl56jz07wu0lk4hmlmqwmcfwhukxqxejmy',
+    #         'atx1wjk3qwhmvg3e5chnk5k8kxp23cyjh3e4np4xwx',
+    #         'atx1740vqwuaxetpeym6j7kvp6w0c28r4vyz4m5znr',
+    #         'atx1wuth2jvd98dfaw40dg294xzj8hlhq3s3r69v39',
+    #         'atx1sg03frnmah7rxahaxphklfxl5aug37ytgayfu7',
+    #         'atx1nyzkjzy8lgmmswpyvpw6dfe9hw9krkhm8gzdue',
+    #         'atx10sccfk6v8rmv35xh9fhaaxchw48u2xggt3vamv']
+    list = ['atp1hv0emc4szs84xyw8qv72m7vfkal225anawehjs', 'atp174rxr9fggrk3haf6d9hchtwkdh59lylarfw7y4']
     # plan = [{'Epoch': epoch, 'Amount': amount}]
     # createRestrictingPlan(url, account, plan, pri_key)
     # delegate(url, 0, nodeid, amount, pri_key)
-    plan = [{'Epoch': 1, 'Amount': amount1},
-            {'Epoch': 2, 'Amount': amount1},
-            {'Epoch': 3, 'Amount': amount1},
-            {'Epoch': 4, 'Amount': amount1},
-            {'Epoch': 5, 'Amount': amount1},
-            {'Epoch': 6, 'Amount': amount1},
-            {'Epoch': 7, 'Amount': amount1},
-            {'Epoch': 8, 'Amount': amount1},
-            {'Epoch': 9, 'Amount': amount1},
-            {'Epoch': 10, 'Amount': amount1},
-            {'Epoch': 11, 'Amount': amount1},
-            {'Epoch': 12, 'Amount': amount2}]
+    plan = [{'Epoch': 2, 'Amount': amount1},
+            {'Epoch': 200, 'Amount': amount1},
+            {'Epoch': 300, 'Amount': amount1},
+            {'Epoch': 400, 'Amount': amount1},
+            {'Epoch': 500, 'Amount': amount1},
+            {'Epoch': 600, 'Amount': amount1},
+            {'Epoch': 700, 'Amount': amount1},
+            {'Epoch': 800, 'Amount': amount1},
+            {'Epoch': 900, 'Amount': amount1},
+            {'Epoch': 1000, 'Amount': amount1},
+            {'Epoch': 1100, 'Amount': amount1},
+            {'Epoch': 1200, 'Amount': amount2}]
     address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
-    node_id = '9dcae009ba538e18b877b04f286a915fbec4c8b79ce33df7eacab61438f50077d038c9832d0f811b71432ff0acd2599fd822c1395478392cdf4f39e7de2a52b7'
-
+    # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
+    node_id = '2d25f7686573602334589ac2e606a3743d34fcae0c7d34c6eadc01dbecd21f349d93ec227b2c43a5f61eab7fff1e0382e8a9f61a2cce9cf8eb0730a697a98159'
+    # print(Web3.fromWei(1001000000000000000000, 'ether'))
     # node_id = '71bc24068d1f1f65331ad7573806bf58186375ef993dddf3ea51c8d0da162c801689aed5aa9e809396cd60273af1d2826d918e36ce4d003c578371a7b3b8b429'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
-    # for i in list:
-    #     print(i)
+    for i in list:
+        print(i)
+        createRestrictingPlan(url, i, plan, pri_key)
     # increase_staking(url, 0, node_id, amount, pri_key1)
-    createRestrictingPlan(url, address, plan, pri_key)
-    time.sleep(2)
-    get_RestrictingPlan(url, address)
+    # time.sleep(2)
+    # get_RestrictingPlan(url, account)
     # fff(url)
     # sendTransaction(url, account, pri_key, address, amount, 201030)
 
@@ -305,8 +307,7 @@ if __name__ == '__main__':
     # get_candinfo(url, node_id)
     # get_candidatelist(url)
     # addresss = 'lat13l39glde394a6kkrm5aenj4ty7m7565x8sgtrf'
-    # print(Web3.fromWei(30000000000000000000, 'ether'))
-    # get_RestrictingPlan(url, account)
+    # print(Web3.fromWei(12000000000000000000000, 'ether'))
     # fff()
     # get_listGovernParam(url)
     # getDelegateReward(url, account)
@@ -318,6 +319,8 @@ if __name__ == '__main__':
     # node_id_list = [i['id'] for i in noconsensus_node_config_list]
     # for i in node_id_list:
     #     print(i)
-    #     delegate(url, 0, i, amount, pri_key)
+    # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
+    # delegate(url, 1, node_id, amount, pri_key)
+    # get_RestrictingPlan(url, account)
