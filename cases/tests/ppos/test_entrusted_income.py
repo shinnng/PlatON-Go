@@ -3905,7 +3905,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
 
 
 
-    # 5、锁仓+委托+质押，节点不解质押
+    # # 5、锁仓+委托+质押，节点不解质押
     # address = addressList[4]
     # client = clients_noconsensus[3]
     # result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
@@ -3919,7 +3919,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
     # result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)
     # assert result == 0
     # log.info(f'address4: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
-    #
+
     # # 6、锁仓+委托+质押+增持，节点使用自由金额增持，不解质押
     # address = addressList[5]
     # client = clients_noconsensus[4]
@@ -3927,13 +3927,13 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
     # assert result == 0
     # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=1000 * 10 ** 18)
     # assert result == 0
-    # result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)  # 质押金额将被解质押
+    # result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)
     # assert result == 0
     # result = client.staking.increase_staking(0, address, amount=1000)
     # assert result == 0
     # log.info(f'address5: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
-
-    # 7、非法金额，多次委托解委托
+    #
+    # # 7、非法金额，多次委托解委托
     # pass
 
 
@@ -3975,7 +3975,15 @@ def test_upgrade_proposal(all_clients, client_consensus):
         # assert result == 0
 
     # 等待升级提案生效
-    end_block = pip_info['EndVotingBlock']
-    end_block = opt_pip.economic.get_consensus_switchpoint(end_block)
-    wait_block_number(opt_pip.node, end_block)
-    print(opt_pip.pip.getActiveVersion())
+    # end_block = pip_info['EndVotingBlock']
+    # end_block = opt_pip.economic.get_consensus_switchpoint(end_block)
+    # wait_block_number(opt_pip.node, end_block)
+    # print(opt_pip.pip.getActiveVersion())
+
+
+def test_staking(clients_noconsensus):
+    for client in clients_noconsensus:
+        staking_address, _ = client.economic.account.generate_account(client.node.web3, 20010 * 10 **18)
+        result = client.staking.create_staking(0, staking_address, staking_address)
+        assert result == 0
+

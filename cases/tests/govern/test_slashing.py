@@ -5,7 +5,7 @@ from common.log import log
 from tests.lib import check_node_in_list, upload_platon, wait_block_number
 from tests.lib.genesis import to_genesis
 from tests.ppos.test_general_punishment import verify_low_block_rate_penalty, get_out_block_penalty_parameters
-from tests.lib.client import Client
+from tests.lib.client import Client, get_client_by_nodeid
 from tests.lib.config import PipConfig
 
 
@@ -98,7 +98,7 @@ def make_0mb_slash(slash_client, check_client):
     log.info("make zero produce block")
     start_num, end_num = verify_low_block_rate_penalty(slash_client, check_client, block_reward, slash_blocks, pledge_amount, 'Released')
     log.info('check Verifier Lists')
-    assert check_node_in_list(slash_node.node_id, check_client.ppos.getCandidateList) is False
+    # assert check_node_in_list(slash_node.node_id, check_client.ppos.getCandidateList) is False
     assert check_node_in_list(slash_node.node_id, check_client.ppos.getVerifierList) is False
     assert check_node_in_list(slash_node.node_id, check_client.ppos.getValidatorList) is False
     slash_client.node.start()
@@ -501,3 +501,43 @@ class TestSlashing:
         wait_proposal_active(pip, pip_id)
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         assert version_declare(pip) == 0
+
+
+    @pytest.mark.P1
+    def test_debug(self, verifiers):
+        pips = [verifier.pip for verifier in verifiers]
+        pip = pips[0]
+        pip_id = version_proposal(pip, 3584, 10)
+        upload_platon(pips[0].node, pip.cfg.PLATON_NEW_BIN)
+        upload_platon(pips[1].node, pip.cfg.PLATON_NEW_BIN)
+        upload_platon(pips[2].node, pip.cfg.PLATON_NEW_BIN)
+        upload_platon(pips[3].node, pip.cfg.PLATON_NEW_BIN)
+        votes(pip_id, pips, [1, 1, 1, 1])
+        start_num, end_num = make_0mb_slash(verifiers[0], verifiers[1])
+        wait_block_number(verifiers[2], end_num)
+        print(verifiers[2].pip.pip.getTallyResult(pip_id))
+        print(verifiers[2].pip.getProposal('0xd2dcc9a940163447561c05671ee1f93027fa1bd5b66073f2ad6718a596d15ede'))
+        print(verifiers[2].pip.getTallyResult('0xd2dcc9a940163447561c05671ee1f93027fa1bd5b66073f2ad6718a596d15ede'))
+        # print(pip.getAccuVerifiersCount('0xd2dcc9a940163447561c05671ee1f93027fa1bd5b66073f2ad6718a596d15ede', '0x9b1c11d6e460df5be31fdb1a1d7f019c1c59ce52e7e80954de9221a66412d052'))
+
+    @pytest.mark.P1
+    def test_debug2(self, all_clients):
+        client = get_client_by_nodeid('bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775', all_clients)
+        assert client
+        address, private_key = client.economic.account.generate_account(client.node.web3)
+        log.info(f'#### {address}, {private_key}')
+        client.economic.account.sendTransaction(client.node.web3, '', client.economic.account.account_with_money['address'], address, 10 * 10 ** 18, 21000, 100 * 10 ** 18)
+        plan = [{'Epoch': 2, 'Amount': 2000 * 10 ** 18},
+                {'Epoch': 4, 'Amount': 2000 * 10 ** 18},
+                {'Epoch': 8, 'Amount': 2000 * 10 ** 18},
+                {'Epoch': 16, 'Amount': 2000 * 10 ** 18},
+                {'Epoch': 32, 'Amount': 2000 * 10 ** 18},]
+        result = client.restricting.createRestrictingPlan(address, plan, client.economic.account.account_with_money['address'])
+        assert result == 0
+        result = client.staking.create_staking(1, address, address)
+        assert result == 0
+        block = client.node.block_number
+        wait_block_number(client.node, block + 2 * 160 + 10)
+        start_num, end_num = make_0mb_slash(client, all_clients[0])
+        wait_block_number(client, end_num)
+
