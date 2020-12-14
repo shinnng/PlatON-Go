@@ -3940,43 +3940,44 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
 
 
 def test_upgrade_proposal(all_clients, client_consensus):
-    # log.info([client.node.node_id for client in all_clients])
+
     opt_client = client_consensus
     # opt_client = client_consensus
     log.info(f'opt client: {opt_client.node.node_mark, opt_client.node.node_id}')
 
     # 发送升级提案
     opt_pip = opt_client.pip
-    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), opt_pip.cfg.version0, 5,
+    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), opt_pip.cfg.version0, 10,
                                    opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
     assert result == 0
     pip_info = opt_pip.get_effect_proposal_info_of_vote()
     log.info(f'pip_info: {pip_info}')
 
-    # 获取共识节点
-    candidates = opt_client.ppos.getCandidateList()['Ret']
-    log.info(f'candidates: {candidates}')
-    consensus_clients = []
-    for candidate in candidates:
-        consensus_client = get_client_by_nodeid(candidate['NodeId'], all_clients)
-        log.info(f'consensus_client: {consensus_client}')
-        if consensus_client:
-            consensus_clients.append(consensus_client)
+    # 获取验证人节点
+    verifiers = opt_client.ppos.getVerifierList()['Ret']
+    log.info(f'verifiers: {verifiers}')
+    verifier_clients = []
+    for verifier in verifiers:
+        verifier_client = get_client_by_nodeid(verifier['NodeId'], all_clients)
+        # log.info(f'verifier_client: {verifier_client.node.node_mark}')
+        if verifier_client:
+            verifier_clients.append(verifier_client)
+    log.info(f'verifier_clients: {[verifier.node.node_mark for verifier in verifier_clients]}')
 
     # 进行升级
-    for client in consensus_clients:
-        log.info(f'vote client: {client.node.node_mark}')
+    for client in verifier_clients:
+        log.info(f'vote client: {client.node.node_mark}, {client.node.node_id}')
         pip = client.pip
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         try:
             result = pip.vote(pip.node.node_id, pip_info['ProposalID'], 1, pip.node.staking_address)
+            log.info(f'vote result: {result}')
         except Exception as e:
-            print(e)
-        log.info(f'vote result: {result}')
-        # assert result == 0
+            print(f'ERROR: {e}')
 
     # 等待升级提案生效
     end_block = pip_info['EndVotingBlock']
     end_block = opt_pip.economic.get_consensus_switchpoint(end_block)
     wait_block_number(opt_pip.node, end_block)
     print(opt_pip.pip.getActiveVersion())
+    assert opt_pip.pip.getActiveVersion()['Ret'] == 3584
