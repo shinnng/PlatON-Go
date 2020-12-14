@@ -3940,8 +3940,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
 
 
 def test_upgrade_proposal(all_clients, client_consensus):
-    log.info(client.node.node_id for client in all_clients)
-
+    # log.info([client.node.node_id for client in all_clients])
     opt_client = client_consensus
     # opt_client = client_consensus
     log.info(f'opt client: {opt_client.node.node_mark, opt_client.node.node_id}')
