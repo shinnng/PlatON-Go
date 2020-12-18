@@ -395,7 +395,7 @@ def test_MPI_018(new_genesis_env, clients_noconsensus):
     # result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
     # assert not result
 
-    result = client1.staking.edit_candidate(address1, reward_per=5800)
+    result = client1.staking.edit_candidate(address1, reward_per=580)
     assert_code(result, 0)
     candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
     assert candidate_info['RewardPer'] == 80
