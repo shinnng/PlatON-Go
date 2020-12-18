@@ -2,12 +2,15 @@ import os
 import time
 from random import randint, shuffle
 
-from alaya import HTTPProvider, Web3, WebsocketProvider
+from alaya import HTTPProvider, Web3, WebsocketProvider, Account
+from alaya.admin import Admin
 from alaya.eth import Eth
 from alaya.middleware import geth_poa_middleware
+from alaya.packages.platon_keys.utils.address import MIANNETHRP
 from alaya.ppos import Ppos
 from hexbytes import HexBytes
-
+from alaya.packages.platon_account.account import Account
+# from alaya.packages.platon_keys
 # from conf.settings import TMP_ADDRES, ACCOUNT_FILE, BASE_DIR
 from numpy.ma import arange
 
@@ -17,7 +20,7 @@ from conf.settings import BASE_DIR
 accounts = {}
 
 
-def connect_web3(url, chain_id=201030):
+def connect_web3(url, chain_id=201018):
     if "ws" in url:
         w3 = Web3(WebsocketProvider(url), chain_id=chain_id)
     else:
@@ -33,16 +36,21 @@ def createRestrictingPlan(url, account, plan, pri_key):
     print(result)
 
 
-# def createstaking(url, typ, benifit_address, node_id, pri_key, amount):
-#     web3 = connect_web3(url)
-#     ppos = Ppos(web3)
-#     external_id = None
-#     node_name = None
-#     website = None
-#     details = None
-#     result = ppos.createStaking(typ, benifit_address, node_id, external_id, node_name, website, details, amount,
-#                                  program_version, program_version_sign, bls_pubkey, bls_proof, pri_key, reward_per, transaction_cfg=None)
-#     print(result)
+def createstaking(url, typ, pri_key, amount, reward_per=1000):
+    web3 = connect_web3(url)
+    admin = Admin(web3)
+    ppos = Ppos(web3)
+    print("==== create staking =====")
+    # w3 = Web3(HTTPProvider(node_url), chain_id=chain_id)
+    program_version = admin.getProgramVersion()['Version']
+    version_sign = admin.getProgramVersion()['Sign']
+    bls_proof = admin.getSchnorrNIZKProve()
+    bls_pubkey = admin.nodeInfo['blsPubKey']
+    node_id = admin.nodeInfo['id']
+    benifit_address = Account.privateKeyToAccount(pri_key, MIANNETHRP).address
+    result = ppos.createStaking(typ, benifit_address, node_id, 'external_id', 'node_name', 'website', 'details',
+                                amount, program_version, version_sign, bls_pubkey, bls_proof, pri_key, reward_per)
+    print(f"create staking result = {result}")
 
 
 def increase_staking(url, type, node_id, amount, pri_key):
@@ -97,8 +105,8 @@ def sendTransaction(url, from_address, prikey, to_address, value, chain_id):
     web3 = connect_web3(url)
     platon = Eth(web3)
     nonce = platon.getTransactionCount(from_address)
-    # gasPrice = platon.gasPrice
-    gasPrice = 100000000
+    gasPrice = platon.gasPrice
+    # gasPrice = 100000000
     transaction_dict = {
         "to": to_address,
         "gasPrice": gasPrice,
@@ -170,6 +178,20 @@ def getDelegateInfo(url, staking_blocknum, del_address, node_id):
     print(result)
 
 
+def create_account(url, chain_id=201030):
+    web3 = connect_web3(url)
+    platon = Eth(web3)
+    if chain_id == 201030:
+        HRP = 'atx'
+    else:
+        HRP = 'atp'
+    account = platon.account.create(net_type=HRP)
+    address = account.address
+    prikey = account.privateKey.hex()[2:]
+    print(f"create account = {address}, {prikey}")
+    return address, prikey
+
+
 # def get_listGovernParam(url, module=None, from_address=None):
 #     web3 = connect_web3(url)
 #     ppos = Ppos(web3)
@@ -235,6 +257,7 @@ def fff(url):
 
 if __name__ == '__main__':
     url = 'http://192.168.10.221:6789'
+    # url = 'http://192.168.10.221:6790'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
@@ -242,14 +265,14 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'atx197pj6ta9hchq09e5rm92n89x7fer0zrgvva6qf'
-    pri_key = '7901d8aab38188b20f4a53af99f6d104404e8284d2d14d68012f823ac98f8cb0'
-    # account = 'atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0'
-    # pri_key = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
+    account = 'atp1vrvs0lyg76cklxp6yl26dgx74e96g59zufmw7s'
+    pri_key = '20c5c2ee6251da2b60f789a1e7fc32a548bf69e5f24bb4e24fad6a81ea5b8dc6'
+    # account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
+    # pri_key1 = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
     # epoch2 = 20
-    amount = Web3.toWei(1, 'ether')
+    # create_account(url)
     amount1 = Web3.toWei(833, 'ether')
     amount2 = Web3.toWei(837, 'ether')
     # list = ['atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9',
@@ -265,61 +288,79 @@ if __name__ == '__main__':
     #         'atx1ckxg24sa4clv239y93talm79h7ac8r20t4dl8e',
     #         'atx19qtc92y2s9a6dyvuqxrqwpsaztz95mel4xuhkv']
     # ac = 'atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9'
-    # list = ['atx1y2pejagyaj2s8jzrcrtrc2xl3x5l5r3hxfu8z3',
-    #         'atx1n39fsmhhleyrru6smcy9m9q4w6t4mxz5439tc8',
-    #         'atx124u7787cqrsclat26jv2vtph29slanruhsz95j',
-    #         'atx1jnh4qfvuvam86hfhy08daw5ahsnmryjcuyzlx8',
-    #         'atx1quxk2dju0774w65lu4dzuhac28q8c5ak8lk46e',
-    #         'atx1j89t4zw9znq7582yf8ut99a8ynz8tp0m75ksj6',
-    #         'atx1lr0tn4c7q37y2yjfe5a6vks7trjgznr3t7yy3h',
-    #         'atx1we7rgld9n8att6l9tw5m5lpkqfa5y3dedk7yuk',
-    #         'atx12mevpl56jz07wu0lk4hmlmqwmcfwhukxqxejmy',
-    #         'atx1wjk3qwhmvg3e5chnk5k8kxp23cyjh3e4np4xwx',
-    #         'atx1740vqwuaxetpeym6j7kvp6w0c28r4vyz4m5znr',
-    #         'atx1wuth2jvd98dfaw40dg294xzj8hlhq3s3r69v39',
-    #         'atx1sg03frnmah7rxahaxphklfxl5aug37ytgayfu7',
-    #         'atx1nyzkjzy8lgmmswpyvpw6dfe9hw9krkhm8gzdue',
-    #         'atx10sccfk6v8rmv35xh9fhaaxchw48u2xggt3vamv']
+    # privateKey = ['b1b59658038c80d8f6f2b1f3d968417e938af6f5ea3c29d01aee4a4fb7f1a26f',
+    #               '798c9a1a06564f4d9533c3a1d6fb96348b62a92c049d16669b871896c3bcd873',
+    #               'ae5acd5e594a459bbe3faadc00ac64be79aa93251f0bd0243f05628a14657a2e',
+    #               '127e0451e60c9c1df551dc9050362ab9ab7deeafa160672857aaf00f2b8c0139',
+    #               '5d6514d3878eb2b98ae77d7d4cb687e17411f338fac61a5c24fb0e25d3499b45',
+    #               '7b4a75bd91933c30d15f5aab5ce79cd4f886373d307fa91619f1e145a5f5c622',
+    #               '4298456cd70c306cb4827f57bb59ec311b22d4694e8b4793344fcd2a96bafa7a',
+    #               '969502cd2da5aac9eab511c0f85fd544db48e4311f34a2037e8479b9b412f9c0',
+    #               'd01ccb8952c0107a5c49396bb7915ca6dbc1ad913b5e36370f540b5938f238c3',
+    #               '3832e25a1f6feb6eb5e8c26c66494c7c9467181a635b8fa38cc51dd040f40bae',
+    #               '2f98ef83dffae0ee71b9b5d9ad70901a671b6d718e36e8cbab9b9de6d6d76ecd',
+    #               '80d9a69bff3eb0131c6237365399666a09a6b2c77ac861b858cc7dbf16efbb54',
+    #               'e4633d9261cf53f5320e5af29273ba3a3e990d042b0f9dae89169db9e66b5a56',
+    #               '504523e07a4d5c6a2e44fa18df316bfedfe58dedfa5a29c20d7153e70fd99850',
+    #               'fbef6de59dd738e192dee8efbd96dc8a8432447173bbb835ecca43b39efd4b28',
+    #               '687e466709fff60a681d58a892532a4673baebcb10f59dc559328611cbb1e41f',
+    #               'b452ac93e4a65114eae569607460ae7b53a9f64c45c9e675ce79d7022fb2197c',
+    #               'a0e6c7d073c13df70f8b85a5b9f9bc137a3c75c489f03f1497cc34ae2947d97b',
+    #               '9085ec2a136adb886990419794528945f1b750fb770bf07e5778a124c6058c83',
+    #               '3c1d0950c6329ba7376a5e7d06713edd34012947aa95dd78c1954d56e5d5632e',
+    #               '71108275ade39f514162869f52183b19ce7ba70c9ac8ddccc86113e871fd1c03',
+    #               '3f2ed71cba9c15decf008819a3c4d93dd0dffbb7888acb22ea4a0ad4c7bf35e8',
+    #               '3a3fbabfddf9934c6ca1395b486db656be9e3a7fc66f7340a6332209432c3575',
+    #               '4fe61a44da26bf1a09771f6b26d22a40e03250dc1ef2141208611485f0ea79d1',
+    #               '7cb35bcebe5900bcdc7ea7fd47486128f4b22b8ecd1595bb47e8f8866b190d17',
+    #               'a4a026cb5c7d10c7ebef0069528e43358b63de2dd707715b566fd177429d66b2',
+    #               'c8cfb8fbc397a11dc5b9c3ce61b9498166edd1051abb4c30f61fa948d1cbba0c']
     # list = ['atp1n2yckcf0lp8fd4x3u4gqndyf7at4j9auanjd9r', 'atp1sga8gepxjlznwy6z9emerja95cqh57zrrsxa4z']
-    # plan = [{'Epoch': epoch, 'Amount': amount}]
+    # plan = [{'Epoch': 32, 'Amount': Web3.toWei(1000, 'ether')}]
     # createRestrictingPlan(url, account, plan, pri_key)
     # delegate(url, 0, nodeid, amount, pri_key)
-    # plan = [{'Epoch': 2, 'Amount': amount1},
-    #         {'Epoch': 200, 'Amount': amount1},
-    #         {'Epoch': 300, 'Amount': amount1},
-    #         {'Epoch': 400, 'Amount': amount1},
-    #         {'Epoch': 500, 'Amount': amount1},
-    #         {'Epoch': 600, 'Amount': amount1},
-    #         {'Epoch': 700, 'Amount': amount1},
-    #         {'Epoch': 800, 'Amount': amount1},
-    #         {'Epoch': 900, 'Amount': amount1},
-    #         {'Epoch': 1000, 'Amount': amount1},
-    #         {'Epoch': 1100, 'Amount': amount1},
-    #         {'Epoch': 1200, 'Amount': amount2}]
+    plan = [{'Epoch': 1, 'Amount': amount1},
+            {'Epoch': 8, 'Amount': amount1},
+            {'Epoch': 16, 'Amount': amount1},
+            {'Epoch': 32, 'Amount': amount1},
+            {'Epoch': 64, 'Amount': amount1},
+            {'Epoch': 128, 'Amount': amount1},
+            {'Epoch': 300, 'Amount': amount1},
+            {'Epoch': 400, 'Amount': amount1},
+            {'Epoch': 500, 'Amount': amount1},
+            {'Epoch': 600, 'Amount': amount1},
+            {'Epoch': 700, 'Amount': amount1},
+            {'Epoch': 800, 'Amount': amount2}]
     # plan = [{'Epoch': 20000, 'Amount': Web3.toWei(1000, 'ether')}]
-    address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
+    # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '2d25f7686573602334589ac2e606a3743d34fcae0c7d34c6eadc01dbecd21f349d93ec227b2c43a5f61eab7fff1e0382e8a9f61a2cce9cf8eb0730a697a98159'
+    node_id = '50b6d2f6490040ac0813d0aa0042d6020b0e537d5922805b00de7180bbdb29fca4877fdbf2d2dcd570b8ac9a904c02c69a60c9089239bfff04e0252886ef1158'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
-    node_id1 = '2d25f7686573602334589ac2e606a3743d34fcae0c7d34c6eadc01dbecd21f349d93ec227b2c43a5f61eab7fff1e0382e8a9f61a2cce9cf8eb0730a697a98159'
+    node_id1 = '52a81dbc622bd99cfbd9d3d1a256b2cbf4eb3f1db2cd848bb9fd5d4a7ed60f8e383b0ee2fa4500e7ea1e8b1397a57f695d3cce9a175d6c49111326d1038072ea'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
     # for i in list:
     #     print(i)
     #     createRestrictingPlan(url, i, plan, pri_key)
-    # createRestrictingPlan(url, account, plan, pri_key)
+    # createRestrictingPlan(url, account, plan, pri_key1)
     # time.sleep(2)
     # get_RestrictingPlan(url, account)
     # fff(url)
-    # sendTransaction(url, account, pri_key, address, amount, 201030)
-    # web3 = connect_web3(url)
-    # platon = Eth(web3)
-    # amount = platon.getBalance('atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp8h9fxw')
+    # sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
+    web3 = connect_web3(url)
+    platon = Eth(web3)
+    # print(platon.gasPrice)
+    amount = platon.getBalance(account)
+    print(amount)
+    # amount = platon.getBalance(account, 96815)
     # print(amount)
+    # amount = platon.getBalance(account, 96816)
+    # print(amount)
+    # print(Web3.fromWei(10000999988655200000000, 'ether'))
     # platon.gasPrice
     # withdrewStaking(url, node_id1, pri_key)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
-    get_VerifierList(url)
+    # get_VerifierList(url)
     # get_candidatelist(url)
     # StakingBlockNum = 515
     # get_candidatelist(url)
@@ -328,7 +369,7 @@ if __name__ == '__main__':
     # fff()
     # get_listGovernParam(url)
     # getDelegateReward(url, account)
-    # get_VerifierList(url)
+    get_VerifierList(url)
     # withdraw_delegate_reward(url, pri_key)
     # node_config = LoadFile(os.path.abspath(os.path.join(BASE_DIR, "deploy/node/node-32.yml"))).get_data()
     # noconsensus_node_config_list = node_config.get("noconsensus", [])
@@ -338,13 +379,14 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
+    # amount = Web3.toWei(10000, 'ether')
+    # amount = 9167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
-    # withdraw_delegate(url, 127, node_id, Web3.toWei(1000, 'ether'), pri_key)
+    # for pri_key in privateKey:
+    # withdraw_delegate(url, 18990, node_id, amount, pri_key)
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
+    # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
     # get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
-    # get_RestrictingPlan(url, account)
-
-
-
+    get_RestrictingPlan(url, account)

@@ -20,7 +20,7 @@
         "staking": {
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
-            "maxValidators": 10,
+            "maxValidators": 5,
             "unStakeFreezeDuration": 2,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
@@ -28,7 +28,7 @@
         "slashing": {
             "slashFractionDuplicateSign": 100,
             "duplicateSignReportReward": 50,
-            "slashBlocksReward": 5,
+            "slashBlocksReward": 40,
             "maxEvidenceAge": 1,
             "zeroProduceCumulativeTime": 1,
             "zeroProduceNumberThreshold": 1,
