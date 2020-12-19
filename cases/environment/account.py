@@ -128,7 +128,7 @@ class Account:
 
         prikey = account.privateKey.hex()[2:]
         if balance != 0:
-            self.sendTransaction(web3, '', self.account_with_money['address'], address, web3.PLATON.gasPrice, 21000, balance)
+            self.sendTransaction(web3, '', self.account_with_money['address'], address, platon.gasPrice, 21000, balance)
         account = {
             "address": address,
             "nonce": 0,

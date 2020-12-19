@@ -9,7 +9,7 @@
             "period": 10000,
             "validatorMode": "ppos"
         },
-        "genesisVersion": 3840
+        "genesisVersion": 3328
     },
     "economicModel": {
         "common": {
@@ -20,7 +20,7 @@
         "staking": {
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
-            "maxValidators": 5,
+            "maxValidators": 10,
             "unStakeFreezeDuration": 2,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
@@ -28,7 +28,7 @@
         "slashing": {
             "slashFractionDuplicateSign": 100,
             "duplicateSignReportReward": 50,
-            "slashBlocksReward": 40,
+            "slashBlocksReward": 5,
             "maxEvidenceAge": 1,
             "zeroProduceCumulativeTime": 1,
             "zeroProduceNumberThreshold": 1,
