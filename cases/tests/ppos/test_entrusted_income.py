@@ -3770,7 +3770,9 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
     print('可质押节点id列表：', node_id_list)
     amount1 = node.web3.toWei(833, 'ether')
     amount2 = node.web3.toWei(837, 'ether')
-    plan = [{'Epoch': 2, 'Amount': amount1},
+    plan = [{'Epoch': 1, 'Amount': amount1},
+            {'Epoch': 3, 'Amount': amount1},
+            {'Epoch': 4, 'Amount': amount1},
             {'Epoch': 5, 'Amount': amount1},
             {'Epoch': 6, 'Amount': amount1},
             {'Epoch': 7, 'Amount': amount1},
@@ -3779,36 +3781,36 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
             {'Epoch': 10, 'Amount': amount1},
             {'Epoch': 11, 'Amount': amount1},
             {'Epoch': 12, 'Amount': amount1},
-            {'Epoch': 13, 'Amount': amount1},
-            {'Epoch': 14, 'Amount': amount1},
-            {'Epoch': 15, 'Amount': amount2}]
+            {'Epoch': 13, 'Amount': amount2}]
     delegate_address_list = []
-    for i in range(20):
+    for i in range(10):
         delegate_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
         delegate_address_list.append(delegate_address)
+        print(delegate_address, node.eth.getBalance(delegate_address))
         result = client.restricting.createRestrictingPlan(delegate_address, plan,
                                                           economic.account.account_with_money['address'])
         assert_code(result, 0)
     print('非法委托钱包地址列表', delegate_address_list)
-
+    print('锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
     # for i in delegate_address_list:
     #     restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
     #     print("1", restricting_info)
 
-    reward_per = randint(100, 10000)
+    # reward_per = randint(100, 10000)
     address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 3)
     print('钱包地址：', address, ":", '账户余额：', node.eth.getBalance(address))
     print('质押节点id: ', opt_client.node.node_id)
     time.sleep(1)
     result = opt_client.staking.create_staking(0, address, address,
                                                amount=economic.create_staking_limit * 2,
-                                               reward_per=reward_per)
+                                               reward_per=0)
     assert_code(result, 0)
     for delegate_address in delegate_address_list:
         result = client.delegate.delegate(1, delegate_address, opt_client.node.node_id,
                                           amount=economic.create_staking_limit)
         assert_code(result, 0)
     print(node.eth.blockNumber)
+    print('委托后锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
     economic.wait_settlement(node)
     # print('getCandidateList', node.ppos.getCandidateList())
     # print('getVerifierList', node.ppos.getVerifierList())
@@ -3826,30 +3828,21 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
         result = client.delegate.withdrew_delegate(block_number, i, node_id=opt_client.node.node_id,
                                                    amount=economic.create_staking_limit)
         assert_code(result, 0)
-
-    economic.wait_settlement(node)
+    print('赎回委托后锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
+    # economic.wait_settlement(node)
     for i in delegate_address_list:
         restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
-        print("3", restricting_info)
+        print(i, restricting_info)
+        print(i, node.eth.getBalance(i))
 
-    amount3 = node.web3.toWei(1000, 'ether')
-    plan_1 = [{'Epoch': 2, 'Amount': amount3},
-              {'Epoch': 5, 'Amount': amount3},
-              {'Epoch': 6, 'Amount': amount3},
-              {'Epoch': 7, 'Amount': amount3},
-              {'Epoch': 8, 'Amount': amount3},
-              {'Epoch': 9, 'Amount': amount3},
-              {'Epoch': 10, 'Amount': amount3},
-              {'Epoch': 11, 'Amount': amount3},
-              {'Epoch': 12, 'Amount': amount3},
-              {'Epoch': 13, 'Amount': amount3},
-              {'Epoch': 14, 'Amount': amount3},
-              {'Epoch': 15, 'Amount': amount3}]
+    amount3 = node.web3.toWei(100000, 'ether')
+    plan_1 = [{'Epoch': 100, 'Amount': amount3}]
     lock_other_address, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 1)
     result = client.restricting.createRestrictingPlan(lock_other_address, plan_1,
                                                       economic.account.account_with_money['address'])
     assert_code(result, 0)
-    print('锁仓计划正常锁仓余额', lock_other_address)
+    print('锁仓计划正常锁仓地址', lock_other_address)
+    print('新增锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
     lock_other_client = clients_noconsensus[2]
     result = lock_other_client.staking.create_staking(1, lock_other_address, lock_other_address)
     assert_code(result, 0)
@@ -3869,34 +3862,36 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
     # address = addressList[0]
     # log.info(
     #     f'Scene0 ## Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
-    result = opt_client.delegate.delegate(1, delegate_other_address, amount=economic.delegate_limit * 1000)  # 正常锁仓计划委托
-    assert_code(result, 0)
-    log.info(
-        f'address: {delegate_other_address}, Balance: {opt_client.node.eth.getBalance(delegate_other_address)}, Restricting: {node.ppos.getRestrictingInfo(delegate_other_address)}')
+    # result = opt_client.delegate.delegate(1, delegate_other_address, amount=economic.delegate_limit * 1000)  # 正常锁仓计划委托
+    # assert_code(result, 0)
+    # log.info(
+    #     f'address: {delegate_other_address}, Balance: {opt_client.node.eth.getBalance(delegate_other_address)}, Restricting: {node.ppos.getRestrictingInfo(delegate_other_address)}')
 
-    # 2、锁仓+委托，锁仓金额足够，不影响委托金额
-    address = addressList[1]
-    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
-    assert result == 0
-    result = opt_client.delegate.delegate(1, address, amount=10000 * 10 ** 18)
-    assert result == 0
-    log.info(
-        f'address1: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+    # # 2、锁仓+委托，锁仓金额足够，不影响委托金额
+    # address = addressList[1]
+    # result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = opt_client.delegate.delegate(1, address, amount=10000 * 10 ** 18)
+    # assert result == 0
+    # log.info(
+    #     f'address1: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
 
     # 3、锁仓+委托，锁仓金额不够，扣除部分委托金额
-    address = addressList[2]
+    address = addressList[0]
     client = clients_noconsensus[1]
-    result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
-    assert result == 0
-    result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=1000 * 10 ** 18)
-    assert result == 0
-    result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)  # 自由金额质押不受影响
-    assert result == 0
-    result = client.staking.increase_staking(0, address, amount=1000 * 10 ** 18)
-    assert result == 0
-    log.info(
-        f'address2: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
-
+    # result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=19167 * 10 ** 18)
+    # assert result == 0
+    # benifit_address, _ = economic.account.generate_account(node.web3, 0)
+    # result = client.staking.create_staking(1, benifit_address, address, amount=19167 * 10 ** 18)  # 自由金额质押不受影响
+    # assert result == 0
+    # result = client.staking.increase_staking(0, address, amount=1000 * 10 ** 18)
+    # assert result == 0
+    # log.info(
+    #     f'address2: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+    # print(address, node.eth.getBalance(address))
+    # print(address, '委托后锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
     # # 4、锁仓+委托+质押，节点解质押
     # address = addressList[3]
     # client = clients_noconsensus[2]
@@ -3963,14 +3958,6 @@ def test_upgrade_proposal(all_clients, client_consensus):
     # opt_client = client_consensus
     log.info(f'opt client: {opt_client.node.node_mark, opt_client.node.node_id}')
 
-    # 发送升级提案
-    opt_pip = opt_client.pip
-    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), opt_pip.cfg.version0, 10,
-                                   opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
-    assert result == 0
-    pip_info = opt_pip.get_effect_proposal_info_of_vote()
-    log.info(f'pip_info: {pip_info}')
-
     # 获取共识节点
     candidates = opt_client.ppos.getCandidateList()['Ret']
     log.info(f'candidates: {candidates}')
@@ -3982,15 +3969,25 @@ def test_upgrade_proposal(all_clients, client_consensus):
             consensus_clients.append(consensus_client)
 
     # 进行升级
+    for client in all_clients:
+        log.info(f'upload client: {client.node.node_mark}')
+        pip = client.pip
+        upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+
+    # 发送升级提案
+    opt_pip = opt_client.pip
+    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), 3584, 2,
+                                   opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
+    assert result == 0
+    pip_info = opt_pip.get_effect_proposal_info_of_vote()
+    log.info(f'pip_info: {pip_info}')
+
     for client in consensus_clients:
         log.info(f'vote client: {client.node.node_mark}')
         pip = client.pip
-        upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
-        try:
-            result = pip.vote(pip.node.node_id, pip_info['ProposalID'], 1, pip.node.staking_address)
-            log.info(f'vote result: {result}')
-        except Exception as e:
-            print(e)
+        result = pip.vote(pip.node.node_id, pip_info['ProposalID'], 1, pip.node.staking_address)
+        log.info(f'vote result: {result}')
+
         # log.info(f'vote result: {result}')
         # assert result == 0
 
