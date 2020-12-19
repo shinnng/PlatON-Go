@@ -2,6 +2,7 @@ from functools import wraps
 
 from alaya import Web3
 from alaya.packages.platon_account.account import Account
+from alaya.packages.platon_account.signers.local import LocalAccount
 from alaya.packages.platon_keys.utils.address import TESTNETHRP
 from alaya.utils.contracts import find_matching_fn_abi
 
@@ -9,10 +10,10 @@ from environment.node import Node
 from tests.lib import Client
 
 
-def deploy(web3: Web3, abi: str, bytecode: str, account: Account, **constructor_args):
+def deploy(web3: Web3, bytecode: str, abi: str, account: LocalAccount, **constructor_args):
     # account = Account.privateKeyToAccount(deployer)
-    nonce = web3.platon.getTransactionCount(account.address)
-    contract = web3.platon.contract(abi=abi, bytecode=bytecode)
+    nonce = web3.eth.getTransactionCount(account.address)
+    contract = web3.eth.contract(abi=abi, bytecode=bytecode)
     transaction = {
         'gas': 4012388,
         'gasPrice': 100000000,
@@ -24,24 +25,25 @@ def deploy(web3: Web3, abi: str, bytecode: str, account: Account, **constructor_
     transaction["data"] = data
     print(f'#### transaction: {transaction}')
     print(f'#### deployer: {account.address}')
-    signed_tx = web3.account.signTransaction(transaction, account.private).rawTransaction
-    tx_hex = web3.sendRawTransaction(signed_tx)
+    signed_tx = web3.eth.account.signTransaction(transaction, account.privateKey).rawTransaction
+    tx_hex = web3.eth.sendRawTransaction(signed_tx)
     print('trans_hex is :{}'.format(tx_hex.hex()))
     receipt = web3.waitForTransactionReceipt(tx_hex)
     print('contractAddress is :{}'.format(receipt['contractAddress']))
-    return receipt['contractAddress']
+    address = receipt['contractAddress']
+    return Contract(web3, bytecode, abi, address, account)
 
 
 class Contract:
 
-    def __init__(self, web3, bytecode, abi, address, account=None, **init_args):
+    def __init__(self, web3: Web3, bytecode: str, abi: str, address: str, account: LocalAccount = None, **init_args):
         self.web3 = web3
         self.bytecode = bytecode
         self.abi = abi
         self.address = address
         self.account = account
         # self.address = deploy(abi, bytecode, web3, private_key, **init_args)
-        self.contract = web3.contract(abi=abi, bytecode=bytecode)
+        self.contract = web3.eth.contract(abi=abi, bytecode=bytecode)
         self.functions = self.contract.functions
         self.events = self.contract.events
         self.fallback = self.contract.fallback
@@ -61,27 +63,27 @@ class Contract:
             if function_abi['stateMutability'] == 'view':
                 tx = {
                     'chainId': 201018,
-                    'nonce': self.web3.getTransactionCount('atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0'),
+                    'nonce': self.web3.eth.getTransactionCount('atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0'),
                     'gas': 2000000,
                     'value': 0,
                     'gasPrice': 1000000000,
                     'to': self.address
                 }
                 txn = func(*args, **kwargs).buildTransaction(tx)
-                self.web3.call(txn)
+                self.web3.eth.call(txn)
             else:
                 tx = {
                     'chainId': 201018,
-                    'nonce': self.web3.getTransactionCount('atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0'),
+                    'nonce': self.web3.eth.getTransactionCount('atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0'),
                     'gas': 2000000,
                     'value': 0,
                     'gasPrice': 1000000000,
                     'to': self.address
                 }
                 txn = func(*args, **kwargs).buildTransaction(tx)
-                signed_txn = self.web3.account.signTransaction(txn, private_key=self.owner.privateKey.hex())
+                signed_txn = self.web3.eth.account.signTransaction(txn, private_key=self.owner.privateKey.hex())
                 print(f'### signed_txn: {signed_txn}')
-                res = self.web3.sendRawTransaction(signed_txn.rawTransaction).hex()
+                res = self.web3.eth.sendRawTransaction(signed_txn.rawTransaction).hex()
                 print(f'### res: {res}')
 
         return call_selector()
