@@ -143,7 +143,7 @@ def test_IT_SD_011(global_test_env):
         address1, _ = global_test_env.account.generate_account(node.web3, 0)
         global_test_env.account.sendTransaction(node.web3, '', address,
                                                 address1,
-                                                node.web3.platon.gasPrice, 2100, 500)
+                                                node.web3.web3.gasPrice, 2100, 500)
         status = False
     except Exception as e:
         log.info("Use case success, exception information：{} ".format(str(e)))
@@ -181,8 +181,8 @@ def test_IT_SD_007(global_test_env):
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
     balance1 = node.eth.getBalance(address)
     log.info("Account balance after transfer： {}".format(balance1))
-    log.info("Transaction fee： {}".format(node.web3.platon.gasPrice * 21000))
-    assert balance == balance1 + node.web3.platon.gasPrice * 21000, "ErrMsg:Account balance after transfer：{}".format(
+    log.info("Transaction fee： {}".format(node.web3.web3.gasPrice * 21000))
+    assert balance == balance1 + node.web3.web3.gasPrice * 21000, "ErrMsg:Account balance after transfer：{}".format(
         balance1)
 
 
@@ -201,9 +201,9 @@ def test_IT_SD_008(global_test_env):
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
     balance1 = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
     log.info("Account balance after transfer： {}".format(balance1))
-    log.info("Transaction fee： {}".format(node.web3.platon.gasPrice * 21000))
+    log.info("Transaction fee： {}".format(node.web3.web3.gasPrice * 21000))
     assert balance1 == balance + node.web3.toWei(100,
-                                                 'ether') + node.web3.platon.gasPrice * 21000, "ErrMsg:Account balance after transfer：{}".format(
+                                                 'ether') + node.web3.web3.gasPrice * 21000, "ErrMsg:Account balance after transfer：{}".format(
         balance1)
 
 
@@ -1534,14 +1534,14 @@ def send_batch_transactions(obj, transaction_list):
         from_address = transactions_dict['from']
         to_address = transactions_dict['to']
         data = transactions_dict['data']
-        gasPrice = obj.node.web3.platon.gasPrice
+        gasPrice = obj.node.web3.web3.gasPrice
         if transactions_dict['amount'] is not None:
             value = obj.node.web3.toWei(transactions_dict['amount'], 'ether')
         else:
             value = ''
         if transactions_dict['data'] is not None:
             transaction_data = {"to": to_address, "data": transactions_dict['data'], "from": from_address}
-            gas = obj.node.web3.platon.estimateGas(transaction_data)
+            gas = obj.node.web3.web3.estimateGas(transaction_data)
         else:
             gas = 21000
         if transactions_dict['nonce'] is None:
@@ -1703,7 +1703,7 @@ def PT_AC_006(client_consensus):
     transaction_list = []
     addres1, private_key1 = economic.account.generate_account(node.web3, node.web3.toWei(100, 'ether'))
     addres2, private_key2 = economic.account.generate_account(node.web3, node.web3.toWei(0, 'ether'))
-    nonce = client_consensus.node.web3.platon.getTransactionCount(addres1)
+    nonce = client_consensus.node.web3.web3.getTransactionCount(addres1)
     transaction_dict = {'from': addres1, 'from_private': private_key1, 'to': addres2, 'to_private': private_key2,
                         'amount': 10, 'nonce': nonce, 'data': ''}
     transaction_list.append(transaction_dict)
