@@ -28,7 +28,7 @@ def deploy(web3: Web3, bytecode: str, abi: str, account: LocalAccount, **constru
     signed_tx = web3.eth.account.signTransaction(transaction, account.privateKey).rawTransaction
     tx_hex = web3.eth.sendRawTransaction(signed_tx)
     print('trans_hex is :{}'.format(tx_hex.hex()))
-    receipt = web3.waitForTransactionReceipt(tx_hex)
+    receipt = web3.eth.waitForTransactionReceipt(tx_hex)
     print('contractAddress is :{}'.format(receipt['contractAddress']))
     address = receipt['contractAddress']
     return Contract(web3, bytecode, abi, address, account)
@@ -50,7 +50,8 @@ class Contract:
         for func in self.contract.functions:
             # 通过方法名获取方法
             print(f'### func: {func}')
-            setattr(self, func, getattr(self.contract.functions, func))
+            warp_function = self.call_selector(getattr(self.contract.functions, func))
+            setattr(self, func, warp_function)
 
         # self._set_functions(contract.functions)
         # self._setattr(contract.variables)
@@ -59,7 +60,8 @@ class Contract:
     def call_selector(self, func):
         @wraps(func)
         def call_selector(*args, **kwargs):
-            function_abi = find_matching_fn_abi(self.abi, func.__name__)
+            print(f'### find func: {func.name}')
+            function_abi = find_matching_fn_abi(self.abi, func.name)
             if function_abi['stateMutability'] == 'view':
                 tx = {
                     'chainId': 201018,
