@@ -25,7 +25,7 @@ def test_LS_FV_001(client_consensus):
     # Reset environment
     client_consensus.economic.env.deploy_all()
     # view Lock in contract amount
-    lock_up_amount = client_consensus.node.eth.getBalance(EconomicConfig.FOUNDATION_LOCKUP_ADDRESS)
+    lock_up_amount = client_consensus.node.eth.getBalance(client_consensus.node.web3.restrictingAddress)
     log.info("Lock in contract amount: {}".format(lock_up_amount))
     # view Lockup plan
     result = client_consensus.ppos.getRestrictingInfo(EconomicConfig.INCENTIVEPOOL_ADDRESS)

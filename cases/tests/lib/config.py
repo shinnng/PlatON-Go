@@ -53,17 +53,17 @@ class EconomicConfig:
     # Built in node Amount of pledge
     DEVELOPER_STAKING_AMOUNT = 1500000000000000000000000
     # PlatON Foundation Address
-    FOUNDATION_ADDRESS = "atx1m6n2wj6cmnnqnmhhaytyf6x75607t7rhszeuhk"
+    FOUNDATION_ADDRESS = "atp1m6n2wj6cmnnqnmhhaytyf6x75607t7rh6y9kyu"
     # Lock account account address
     FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
     # Pledged contract address
     STAKING_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzrzv4mm"
     # PlatON incentive pool account
-    INCENTIVEPOOL_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr75cqxf"
+    INCENTIVEPOOL_ADDRESS = "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr5jy24r"
     # Remaining total account
-    REMAIN_ACCOUNT_ADDRESS = "atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9"
+    REMAIN_ACCOUNT_ADDRESS = "atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0"
     # Developer Foundation Account
-    DEVELOPER_FOUNDATAION_ADDRESS = 'atx1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4xerq62'
+    DEVELOPER_FOUNDATAION_ADDRESS = 'atp1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4vll2fq'
 
     release_info = [{"blockNumber": 1600, "amount": 55965742000000000000000000},
                     {"blockNumber": 3200, "amount": 49559492000000000000000000},

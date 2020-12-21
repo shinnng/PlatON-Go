@@ -42,25 +42,24 @@ def test_IT_IA_002_to_007(new_genesis_env):
     genesis.economicModel.innerAcc.cdfBalance = community_amount
     surplus_amount = str(Web3.toWei(105000000, 'ether') - community_amount - platon_fund - Web3.toWei(2000000, 'ether'))
     genesis.alloc = {
-        "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr75cqxf": {
+        "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr5jy24r": {
             "balance": "2000000000000000000000000"
         },
-        "atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9": {
+        "atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0": {
             "balance": surplus_amount
         }
     }
-    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.13.2.json"
+    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.0.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
 
     # Verify the amount of each built-in account
-    foundation_louckup = node.eth.getBalance(EconomicConfig.FOUNDATION_LOCKUP_ADDRESS, 0)
-    log.info('Initial lock up contract address： {} amount：{}'.format(EconomicConfig.FOUNDATION_LOCKUP_ADDRESS,
-                                                                     foundation_louckup))
+    foundation_louckup = node.eth.getBalance(node.web3.restrictingAddress, 0)
+    log.info('Initial lock up contract address： {} amount：{}'.format(node.web3.restrictingAddress,foundation_louckup))
     incentive_pool = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS, 0)
     log.info('Incentive pool address：{} amount：{}'.format(EconomicConfig.INCENTIVEPOOL_ADDRESS, incentive_pool))
-    staking = node.eth.getBalance(EconomicConfig.STAKING_ADDRESS, 0)
-    log.info('Address of pledge contract：{} amount：{}'.format(EconomicConfig.STAKING_ADDRESS, staking))
+    staking = node.eth.getBalance(node.web3.stakingAddress, 0)
+    log.info('Address of pledge contract：{} amount：{}'.format(node.web3.stakingAddress, staking))
     foundation = node.eth.getBalance(EconomicConfig.FOUNDATION_ADDRESS, 0)
     log.info('PlatON Foundation address：{} amount：{}'.format(EconomicConfig.FOUNDATION_ADDRESS, foundation))
     remain = node.eth.getBalance(EconomicConfig.REMAIN_ACCOUNT_ADDRESS, 0)
