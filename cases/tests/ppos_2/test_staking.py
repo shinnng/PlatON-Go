@@ -360,35 +360,3 @@ def test_IV_031(client_new_node):
     # assert_code(result, 301101)
 
 
-def test_IV_032(client_new_node):
-    """
-    混合金额质押，仅使用锁仓
-    """
-    client = client_new_node
-    economic = client.economic
-    node = client.node
-    staking_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
-    benifit_address, _ = economic.account.generate_account(node.web3, 0)
-    amount1 = node.web3.toWei(833, 'ether')
-    amount2 = node.web3.toWei(837, 'ether')
-    plan = [{'Epoch': 1, 'Amount': amount1},
-            {'Epoch': 2, 'Amount': amount1},
-            {'Epoch': 3, 'Amount': amount1},
-            {'Epoch': 4, 'Amount': amount1},
-            {'Epoch': 5, 'Amount': amount1},
-            {'Epoch': 6, 'Amount': amount1},
-            {'Epoch': 7, 'Amount': amount1},
-            {'Epoch': 8, 'Amount': amount1},
-            {'Epoch': 9, 'Amount': amount1},
-            {'Epoch': 10, 'Amount': amount1},
-            {'Epoch': 11, 'Amount': amount1},
-            {'Epoch': 12, 'Amount': amount2}]
-    result = client.restricting.createRestrictingPlan(staking_address, plan, economic.account.account_with_money['address'])
-    assert_code(result, 0)
-    result = client_new_node.staking.create_staking(2, benifit_address, staking_address)
-    assert_code(result, 0)
-    economic.wait_settlement(node)
-    candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
-    assert candidate_info['Released'] == 0
-    assert candidate_info['RestrictingPlan'] == economic.create_staking_limit
-
