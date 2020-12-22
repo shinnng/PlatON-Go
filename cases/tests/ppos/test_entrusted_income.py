@@ -3970,7 +3970,7 @@ def test_upgrade_proposal(all_clients, client_consensus):
 
     # 进行升级
     for client in all_clients:
-        log.info(f'upload client: {client.node.node_mark}')
+        log.info(f'upload client: {client.node.node_mark, client.node.program_version}')
         pip = client.pip
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
 

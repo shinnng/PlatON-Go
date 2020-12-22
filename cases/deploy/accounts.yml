@@ -1,7 +1,7 @@
 - id: 1
   address: atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0
   prikey: f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74
-  nonce: 44
+  nonce: 1
   balance: 100000000000000000000000000
 - id: 2
   address: atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr5jy24r
@@ -1745,3 +1745,7 @@
   nonce: 0
   balance: 0
   prikey: 45bb805326e7dfa493fa171f17d377cd66a945739693d4946bf88ad8ba525903
+- address: atp1ezmaqey4lrwfmlusmx9cc0l86s8muaz2v9maek
+  nonce: 0
+  balance: 10000000000000000000000000
+  prikey: 25586762e4bfbfb9fbde5a0dab6ce96dddad49f789c3ccba415977710a422491
