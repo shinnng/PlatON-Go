@@ -3834,3 +3834,165 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
     economic.wait_settlement(node, 2)
 
 
+<<<<<<< Updated upstream
+=======
+    economic.wait_settlement(node)
+    for i in delegate_address_list:
+        restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
+        print("3", restricting_info)
+
+    lock_other_address, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 1)
+    result = client.restricting.createRestrictingPlan(lock_other_address, plan,
+                                                      economic.account.account_with_money['address'])
+    assert_code(result, 0)
+    print('锁仓计划正常锁仓余额', lock_other_address)
+
+    delegate_other_address, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 1)
+    result = client.restricting.createRestrictingPlan(delegate_other_address, plan,
+                                                      economic.account.account_with_money['address'])
+    assert_code(result, 0)
+    log.info(f'正常锁仓委托地址: {delegate_other_address}, Restricting: {node.ppos.getRestrictingInfo(delegate_other_address)}')
+
+    # 定义两个操作列表
+    addressList = delegate_address_list
+    print(f'addressList: ', addressList)
+
+    # 构造场景
+    # 1、锁仓
+    # address = addressList[0]
+    # log.info(
+    #     f'Scene0 ## Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+    result = opt_client.delegate.delegate(1, delegate_other_address, amount=economic.delegate_limit * 1000) # 正常锁仓计划委托
+    assert_code(result, 0)
+    log.info(f'address: {delegate_other_address}, Balance: {opt_client.node.eth.getBalance(delegate_other_address)}, Restricting: {node.ppos.getRestrictingInfo(delegate_other_address)}')
+
+    # 2、锁仓+委托，锁仓金额足够，不影响委托金额
+    address = addressList[1]
+    result = opt_client.delegate.delegate(0, address, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    assert result == 0
+    result = opt_client.delegate.delegate(1, address, amount=10000 * 10 ** 18)
+    assert result == 0
+    log.info(f'address1: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+
+    # 3、锁仓+委托，锁仓金额不够，扣除部分委托金额
+    address = addressList[2]
+    client = clients_noconsensus[1]
+    # result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=1000 * 10 ** 18)
+    # assert result == 0
+    result = client.staking.create_staking(0, address, address, amount=10000 * 10 ** 18)  # 自由金额质押不受影响
+    assert result == 0
+    result = client.staking.increase_staking(1, address, amount=10000 * 10 ** 18)
+    assert result == 0
+    log.info(
+        f'address2: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+
+    # # 4、锁仓+委托+质押，节点解质押
+    # address = addressList[3]
+    # client = clients_noconsensus[2]
+    # result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=12000 * 10 ** 18)
+    # assert result == 0
+    # # result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)  # 质押金额将被解质押
+    # # assert result == 0
+    # log.info(
+    #     f'address3: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+
+    # # 4、锁仓+委托+质押，节点解质押
+    # address = addressList[3]
+    # client = clients_noconsensus[2]
+    # print("锁仓质押节点id", client.node.node_id)
+    # result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=12000 * 10 ** 18)
+    # assert result == 0
+    # result = client.staking.create_staking(0, address, address, amount=10000 * 10 ** 18)  # 质押金额将被解质押
+    # assert result == 0
+    # result = client.staking.increase_staking(1, address, amount=1000 * 10 ** 18)
+    # assert result == 0
+    # log.info(
+    #     f'address3: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+
+    # # 5、锁仓+委托+质押，节点不解质押
+    # address = addressList[4]
+    # client = clients_noconsensus[3]
+    # print("创建锁仓质押节点id", client.node.node_id)
+    # result = client.delegate.delegate(0, address, opt_client.node.node_id, amount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=1000 * 10 ** 18)
+    # assert result == 0
+    # plan = [{'Epoch': 100, 'Amount': 5000 * 10 ** 18}]
+    # result = client.ppos.createRestrictingPlan(address, plan, opt_client.economic.account.account_with_money[
+    #     'prikey'])  # 新增锁仓金额，使质押节点不被解质押
+    # assert result == 0
+    # result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)
+    # assert result == 0
+    # log.info(f'address4: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+
+    # # 6、锁仓+委托+质押+增持，节点使用自由金额增持，不解质押
+    # address = addressList[5]
+    # client = clients_noconsensus[4]
+    # result = client.delegate.delegate(0, address, opt_client.node.node_id, mount=1000 * 10 ** 18)  # 自由金额锁仓不受影响
+    # assert result == 0
+    # result = client.delegate.delegate(1, address, opt_client.node.node_id, amount=1000 * 10 ** 18)
+    # assert result == 0
+    # result = client.staking.create_staking(1, address, address, amount=10000 * 10 ** 18)  # 质押金额将被解质押
+    # assert result == 0
+    # result = client.staking.increase_staking(0, address, amount=1000)
+    # assert result == 0
+    # log.info(f'address5: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+
+    # 7、非法金额，多次委托解委托
+    # pass
+
+
+def test_upgrade_proposal(all_clients, clients_consensus):
+
+    opt_client = clients_consensus[0]
+    # opt_client = client_consensus
+    log.info(f'opt client: {opt_client.node.node_mark, opt_client.node.node_id}')
+
+    # 获取验证人节点
+    # verifiers = opt_client.ppos.getVerifierList()['Ret']
+    # log.info(f'verifiers: {verifiers}')
+    # verifier_clients = []
+    # for verifier in client_consensus:
+    #     # verifier_client = get_client_by_nodeid(verifier['NodeId'], all_clients)
+    #     # log.info(f'verifier_client: {verifier_client.node.node_mark}')
+    #     if verifier:
+    #         verifier_clients.append(verifier)
+    # log.info(f'verifier_clients: {[verifier.node.node_mark for verifier in verifier_clients]}')
+
+    # 替换二进制
+    for client in clients_consensus:
+        log.info(f'update platon: {client.node.node_mark}, {client.node.node_id}')
+        pip = client.pip
+        upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+
+    # 发送升级提案
+    opt_pip = opt_client.pip
+    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), 3584, 4,
+                                   opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
+    assert result == 0
+    pip_info = opt_pip.get_effect_proposal_info_of_vote()
+    log.info(f'pip_info: {pip_info}')
+
+    # 进行升级
+    for client in clients_consensus:
+        log.info(f'vote client: {client.node.node_mark}, {client.node.node_id}')
+        pip = client.pip
+        try:
+            result = pip.vote(pip.node.node_id, pip_info['ProposalID'], 1, pip.node.staking_address)
+            log.info(f'vote result: {result}')
+        except Exception as e:
+            print(f'ERROR: {e}')
+
+    # 等待升级提案生效
+    end_block = pip_info['EndVotingBlock']
+    end_block = opt_pip.economic.get_consensus_switchpoint(end_block)
+    wait_block_number(opt_pip.node, end_block)
+    print(opt_pip.pip.getActiveVersion())
+    assert opt_pip.pip.getActiveVersion()['Ret'] == 3584
+>>>>>>> Stashed changes
