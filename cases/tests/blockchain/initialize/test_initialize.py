@@ -1,9 +1,8 @@
-import os
 import pytest
 import json
 import allure
-from tests.lib.genesis import to_genesis
-from common.log import log
+from lib.genesis import to_genesis
+from funcs.log import log
 
 
 @pytest.fixture(scope="function", autouse=True)

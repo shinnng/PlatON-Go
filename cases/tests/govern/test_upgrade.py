@@ -1,6 +1,6 @@
-from common.log import log
-from tests.lib.utils import assert_code, wait_block_number, upload_platon, get_pledge_list, get_block_count_number
-from tests.lib import Genesis
+from funcs.log import log
+from lib.utils import assert_code, wait_block_number, upload_platon, get_pledge_list, get_block_count_number
+from lib import Genesis
 from dacite import from_dict
 from tests.govern.test_voting_statistics import submittpandvote, submitcppandvote, \
     submitppandvote, submitcvpandvote, submitvpandvote

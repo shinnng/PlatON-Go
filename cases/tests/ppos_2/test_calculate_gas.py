@@ -1,4 +1,4 @@
-from tests.lib.utils import *
+from lib.utils import *
 import rlp
 import pytest
 from alaya.packages.platon_account.internal.transactions import bech32_address_bytes

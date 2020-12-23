@@ -2,8 +2,8 @@ import pytest
 import allure
 from copy import copy
 import time
-from common.log import log
-from tests.lib import Genesis
+from funcs.log import log
+from lib import Genesis
 from dacite import from_dict
 
 

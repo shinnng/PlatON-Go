@@ -3,9 +3,9 @@ import socket
 import allure
 import os
 import sys
-from common import download
-from environment.env import create_env
-from common.log import log
+from funcs import download
+from tools.platon_deploy.env import create_env
+from funcs.log import log
 
 """
 Download platon bin, this file cannot be imported as a package

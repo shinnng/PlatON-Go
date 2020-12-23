@@ -1,12 +1,10 @@
-import time
-import json
 from copy import copy
 
 import pytest
 from dacite import from_dict
 from alaya import Web3
-from tests.lib.genesis import Genesis
-from environment.node import Node
+from lib.genesis import Genesis
+from tools.platon_deploy.node import Node
 
 
 def assert_error_deploy(env: Node, genesis_file, msg="Error config"):

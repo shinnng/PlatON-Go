@@ -1,17 +1,15 @@
-from decimal import Decimal
-
 import allure
 import pytest
 import time
 
 from dacite import from_dict
 
-from common.log import log
+from funcs.log import log
 from alaya import Web3
 
-from tests.lib import Genesis
-from tests.lib.utils import get_pledge_list, get_block_count_number, assert_code
-from common.key import generate_key
+from lib import Genesis
+from lib.utils import get_pledge_list, get_block_count_number, assert_code
+from funcs.key import generate_key
 from tests.ppos_2.conftest import calculate
 
 

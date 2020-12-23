@@ -6,7 +6,7 @@
 
 import pytest
 from decimal import Decimal
-from tests.lib.utils import assert_code
+from lib.utils import assert_code
 
 
 def calculate(big_int, mul):

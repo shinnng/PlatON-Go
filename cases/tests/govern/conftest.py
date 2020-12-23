@@ -1,12 +1,12 @@
 import pytest
-from common.log import log
+from funcs.log import log
 import time
 import math
-from tests.lib.client import get_client_by_nodeid, get_clients_by_nodeid, Client
+from lib import get_client_by_nodeid, get_clients_by_nodeid, Client
 from tests.conftest import get_clients
-from tests.lib.utils import get_pledge_list, upload_platon, wait_block_number, assert_code, get_governable_parameter_value
+from lib.utils import get_pledge_list, upload_platon, wait_block_number, assert_code, get_governable_parameter_value
 from typing import List
-from tests.lib import Pip
+from lib import Pip
 
 
 def get_refund_to_account_block(pip, blocknumber=None):

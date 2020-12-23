@@ -1,13 +1,12 @@
 from dacite import from_dict
-from tests.lib import Genesis
-from tests.lib.utils import assert_code, wait_block_number, upload_platon, get_pledge_list
-from tests.lib.client import get_client_by_nodeid
+from lib import Genesis
+from lib.utils import assert_code, wait_block_number, upload_platon
+from lib import get_client_by_nodeid
 import pytest
 import time, os
 from tests.govern.test_voting_statistics import submitvpandvote
-from common.log import log
+from funcs.log import log
 from hexbytes import HexBytes
-from common.connect import connect_web3
 
 
 class TestPlatonVersion:

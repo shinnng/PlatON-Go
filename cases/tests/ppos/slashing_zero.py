@@ -1,12 +1,12 @@
 import time
 import pytest
 from dacite import from_dict
-from common.log import log
-from tests.lib.utils import assert_code
-from tests.lib.utils import wait_block_number, get_pledge_list
+from funcs.log import log
+from lib.utils import assert_code
+from lib.utils import get_pledge_list
 from tests.ppos.conftest import create_staking
 from tests.ppos.conftest import calculate
-from tests.lib.genesis import Genesis
+from lib.genesis import Genesis
 
 pri_key = ""
 

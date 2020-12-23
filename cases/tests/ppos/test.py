@@ -1,7 +1,3 @@
-import os
-import time
-from random import randint, shuffle
-
 from alaya import HTTPProvider, Web3, WebsocketProvider
 from alaya.eth import Eth
 from alaya.middleware import geth_poa_middleware
@@ -9,10 +5,6 @@ from alaya.ppos import Ppos
 from hexbytes import HexBytes
 
 # from conf.settings import TMP_ADDRES, ACCOUNT_FILE, BASE_DIR
-from numpy.ma import arange
-
-from common.load_file import LoadFile
-from conf.settings import BASE_DIR
 
 accounts = {}
 

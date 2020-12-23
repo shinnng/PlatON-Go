@@ -2,12 +2,10 @@ import time
 from decimal import Decimal
 
 from dacite import from_dict
-from dacite import from_dict
-import copy
-from common.key import mock_duplicate_sign
-from common.log import log
+from funcs.key import mock_duplicate_sign
+from funcs.log import log
 from tests.conftest import param_governance_verify_before_endblock, param_governance_verify
-from tests.lib import Genesis, check_node_in_list, assert_code, von_amount, get_pledge_list, wait_block_number
+from lib import Genesis, check_node_in_list, assert_code, von_amount, get_pledge_list, wait_block_number
 
 
 def update_zero_produce(new_genesis_env, cumulativetime=4, numberthreshold=3):

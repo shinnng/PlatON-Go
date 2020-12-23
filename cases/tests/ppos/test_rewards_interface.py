@@ -1,14 +1,12 @@
-from common.log import log
-from tests.lib import EconomicConfig
-from tests.lib.utils import assert_code, get_pledge_list
-from common.key import mock_duplicate_sign
-from tests.lib.utils import wait_block_number, get_the_dynamic_parameter_gas_fee, get_getDelegateReward_gas_fee
+from funcs.log import log
+from lib.utils import assert_code, get_pledge_list
+from funcs.key import mock_duplicate_sign
+from lib.utils import wait_block_number, get_the_dynamic_parameter_gas_fee, get_getDelegateReward_gas_fee
 import rlp
 from typing import List
 import time, math, pytest
 from tests.govern.test_voting_statistics import createstaking
 from copy import copy
-from conf import settings as conf
 
 delegate_amount = 10 ** 18 * 1000
 init_amount = 10 ** 18 * 10000

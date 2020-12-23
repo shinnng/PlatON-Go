@@ -4,7 +4,7 @@ from copy import copy
 import pytest
 import allure
 
-from common.connect import connect_web3, run_ssh
+from funcs.connect import connect_web3, run_ssh
 
 
 def isConnection(ip, port):

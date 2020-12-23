@@ -2,19 +2,16 @@ import time
 
 import allure
 import pytest
-from alaya.eth import Eth
 from eth_utils import is_integer
 
-from common.log import log
-from common.connect import run_ssh_cmd
-from alaya.admin import Admin
+from funcs.log import log
+from funcs.connect import run_ssh_cmd
 
-from conf.settings import NODE_FILE
 # from environment import t1est_env_impl
 
 
 # py.test tests/cmd/account/t1est_account.py -s --nodeFile "deploy/4_node.yml" --accountFile "deploy/accounts.yml" --initChain --startAll
-from environment import Node
+from tools.platon_deploy import Node
 
 
 class AccountEnv:

@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-from common.log import log
+from funcs.log import log
 
 
 def transaction(w3, from_address, to_address=None, value=1000000000000000000000, gas=91000000, gasPrice=9000000000):

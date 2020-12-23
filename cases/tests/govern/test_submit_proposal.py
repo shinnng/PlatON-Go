@@ -1,12 +1,12 @@
-from common.log import log
+from funcs.log import log
 from dacite import from_dict
-from tests.lib import Genesis
+from lib import Genesis
 import pytest, allure
-from tests.lib.utils import wait_block_number, assert_code, get_governable_parameter_value
-from tests.lib.client import get_client_by_nodeid
+from lib.utils import wait_block_number, assert_code, get_governable_parameter_value
+from lib import get_client_by_nodeid
 import time
 import math
-from tests.govern.test_voting_statistics import submitcppandvote, submitcvpandvote, submitppandvote
+from tests.govern.test_voting_statistics import submitcppandvote, submitcvpandvote
 
 
 @pytest.mark.P0

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from tests.conftest import param_governance_verify_before_endblock
-from tests.lib.utils import *
+from lib.utils import *
 import pytest
 from dacite import from_dict
-from common.log import log
-from tests.lib import Genesis
+from funcs.log import log
+from lib import Genesis
 
 
 @pytest.mark.P2

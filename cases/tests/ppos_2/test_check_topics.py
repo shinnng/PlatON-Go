@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from tests.lib.utils import *
+from lib.utils import *
 import pytest
-from common.key import mock_duplicate_sign
+from funcs.key import mock_duplicate_sign
 from tests.ppos_2.conftest import check_receipt
 
 

@@ -1,11 +1,11 @@
 import pytest
 import allure
-from common.log import log
-from common.key import mock_duplicate_sign
+from funcs.log import log
+from funcs.key import mock_duplicate_sign
 import time
-from tests.lib.utils import assert_code, wait_block_number, upload_platon
-from tests.lib.client import Client
-from tests.lib import Genesis
+from lib.utils import assert_code, wait_block_number, upload_platon
+from lib import Client
+from lib import Genesis
 from dacite import from_dict
 from tests.govern.conftest import proposal_vote, version_proposal_vote
 

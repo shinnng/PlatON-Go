@@ -1,0 +1,96 @@
+{
+    "config": {
+        "chainId": 201018,
+        "eip155Block": 3,
+        "cbft": {
+            "initialNodes": [
+                {
+                    "node": "enode://e51278714f6d8218900a311b251753f4f9408295561c4a913385e7817bbe6e69056c9f3a46dd56284d311f1e080f82d1edff98502af525fd19d233dd2406ec54@192.168.120.124:16789",
+                    "blsPubKey": "ce87f4a0629b9244c7c84f79da7f792a0c8ae32eaba2d3caf2e25f8195753eca5ea5ca8914b9a2bbb20c44a93783e8150288ada939ae473fb1a8500193ce14e16e55ce9489f933f2fc4b5111053c04ea74259564c385100e32007cf3bbe0f484"
+                },
+                {
+                    "node": "enode://5030440865a11ce0ab1441d3977647b0606e1f34897cfea1e55ea13d91c7a7fc5575fd3d1614f005384dc7e6974e4f96193d38883507eebcdcc29ca57d19499d@192.168.120.122:16789",
+                    "blsPubKey": "a426fae1bb5a01f535b7f64d76f716930f60b8e2873c18b823acd1885d7f3c7539a378e0107dd27fbe46deaaea091f0df116f94b1ebeac988bf3fd32510fe8b5d2edbdd4d310bfb42b57dc03c2a7aa9bb95eb96d050899083307f5736b376086"
+                },
+                {
+                    "node": "enode://4555b0d40b857f50186703c48bc342f2e15473823627d5aa817dabe992171361ccf9d8c57967077dc5500eec65b5b9beb3f56efae4ffd3ddbf2753f4499e8c2e@192.168.120.123:16789",
+                    "blsPubKey": "0c7017fb6233f4d3593173aecb507f4b29dc956bff8093ed572bdc5ae7e5c30f4b17a7651daeaa03d30db3a34a3148084b81fc203106a7f4b39100c855a6b01937fe7e8079f4fe7a2bdac4e447720b5e14f89dc6ffd0e40a66ba7359097d2c87"
+                },
+                {
+                    "node": "enode://35bb5daad814fe902030cba6fd2d3ec60906dab70ba5df4d42a19448d300ab203cfd892c325f6716965dd93d8de2a377a2806c9703b69b68287577c70f9e7c07@192.168.120.121:16789",
+                    "blsPubKey": "add743cdbb0f9ae2bd5fd4faf36a70d7ca52d00f0912bc915bd1b6c8a6a93914c7fbf35bb00b7d4dd47ba1bb6c37f9089ac02558ca4bca697e2a091e618af0dc82254358ff55e7a161109d17a05ea6d1fe7481864640227b4f4b3c3f2606660e"
+                }
+            ],
+            "amount": 10,
+            "period": 10000,
+            "validatorMode": "ppos"
+        },
+        "genesisVersion": 3840
+    },
+    "economicModel": {
+        "common": {
+            "maxEpochMinutes": 3,
+            "maxConsensusVals": 4,
+            "additionalCycleTime": 28
+        },
+        "staking": {
+            "stakeThreshold": 10000000000000000000000,
+            "operatingThreshold": 1000000000000000000,
+            "maxValidators": 10,
+            "unStakeFreezeDuration": 2,
+            "rewardPerMaxChangeRange": 500,
+            "rewardPerChangeInterval": 2
+        },
+        "slashing": {
+            "slashFractionDuplicateSign": 100,
+            "duplicateSignReportReward": 50,
+            "slashBlocksReward": 5,
+            "maxEvidenceAge": 1,
+            "zeroProduceCumulativeTime": 1,
+            "zeroProduceNumberThreshold": 1,
+            "zeroProduceFreezeDuration": 1
+        },
+        "gov": {
+            "versionProposalVoteDurationSeconds": 1600,
+            "versionProposalSupportRate": 6670,
+            "textProposalVoteDurationSeconds": 160,
+            "textProposalVoteRate": 5000,
+            "textProposalSupportRate": 6670,
+            "cancelProposalVoteRate": 5000,
+            "cancelProposalSupportRate": 6670,
+            "paramProposalVoteDurationSeconds": 160,
+            "paramProposalVoteRate": 5000,
+            "paramProposalSupportRate": 6670
+        },
+        "reward": {
+            "newBlockRate": 50,
+            "platONFoundationYear": 2,
+            "increaseIssuanceRatio": 500,
+            "theNumberOfDelegationsReward": 2
+        },
+        "restricting": {
+            "minimumRelease": 80000000000000000000
+        },
+        "innerAcc": {
+            "platonFundAccount": "atp1m6n2wj6cmnnqnmhhaytyf6x75607t7rh6y9kyu",
+            "platonFundBalance": 2500000000000000000000000,
+            "cdfAccount": "atp1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4vll2fq",
+            "cdfBalance": 500000000000000000000000
+        }
+    },
+    "nonce": "0x0376e56dffd12ab53bb149bda4e0cbce2b6aabe4cccc0df0b5a39e12977a2fcd23",
+    "timestamp": "0x175301efa90",
+    "extraData": "0xd782070186706c61746f6e86676f312e3131856c696e757800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "gasLimit": "9424776",
+    "alloc": {
+        "atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0": {
+            "balance": "100000000000000000000000000"
+        },
+        "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr5jy24r": {
+            "balance": "2000000000000000000000000"
+        }
+    },
+    "number": "0x0",
+    "gasUsed": "0x0",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+}

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from tests.lib.utils import *
+from lib.utils import *
 import pytest
-from tests.lib.config import EconomicConfig
-from common.key import mock_duplicate_sign
+from lib.config import EconomicConfig
+from funcs.key import mock_duplicate_sign
 
 
 @pytest.mark.P1

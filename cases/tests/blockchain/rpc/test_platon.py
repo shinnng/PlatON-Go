@@ -17,7 +17,7 @@ from alaya.exceptions import (
     InvalidAddress,
 )
 
-from common.log import log
+from funcs.log import log
 import time
 
 UNKNOWN_ADDRESS = '0xdEADBEeF00000000000000000000000000000000'

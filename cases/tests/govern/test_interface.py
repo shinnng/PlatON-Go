@@ -1,8 +1,8 @@
-from common.log import log
-from tests.lib.utils import assert_code, wait_block_number, get_blockhash, get_the_dynamic_parameter_gas_fee
+from funcs.log import log
+from lib.utils import assert_code, wait_block_number, get_blockhash, get_the_dynamic_parameter_gas_fee
 from dacite import from_dict
-from tests.lib import Genesis
-from common.key import mock_duplicate_sign
+from lib import Genesis
+from funcs.key import mock_duplicate_sign
 from tests.govern.test_voting_statistics import submitppandvote, submitcvpandvote, submitvpandvote, submittpandvote, submitcppandvote
 
 import time

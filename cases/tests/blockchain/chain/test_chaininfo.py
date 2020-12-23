@@ -1,10 +1,9 @@
 import pytest
 import allure
-from environment.env import TestEnvironment
 from copy import copy
 from hexbytes import HexBytes
 import time
-from common.log import log
+from funcs.log import log
 
 
 @pytest.fixture(scope="function", autouse=True)

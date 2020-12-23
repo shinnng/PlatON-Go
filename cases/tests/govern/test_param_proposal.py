@@ -1,12 +1,11 @@
 import time
 from typing import List
 import pytest
-from common.log import log
-from tests.lib import check_node_in_list, upload_platon, wait_block_number
-from tests.lib.genesis import to_genesis
+from funcs.log import log
+from lib import check_node_in_list, wait_block_number
 from tests.ppos.test_general_punishment import verify_low_block_rate_penalty, get_out_block_penalty_parameters
-from tests.lib.client import Client
-from tests.lib.config import PipConfig
+from lib import Client
+from lib.config import PipConfig
 
 
 @pytest.fixture()

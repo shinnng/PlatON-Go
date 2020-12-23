@@ -2,20 +2,12 @@ import time
 from random import randint
 
 import pytest
-from common.key import mock_duplicate_sign
-from common.log import log
-from tests.lib import check_node_in_list, assert_code, von_amount, \
-    get_getDelegateReward_gas_fee
-import time
-from random import randint
 
-import pytest
-
-from common.key import mock_duplicate_sign
-from common.log import log
-from tests.lib import check_node_in_list, assert_code, von_amount, \
+from funcs.key import mock_duplicate_sign
+from funcs.log import log
+from lib import check_node_in_list, assert_code, von_amount, \
     get_getDelegateReward_gas_fee
-from tests.lib.client import get_client_by_nodeid
+from lib import get_client_by_nodeid
 
 
 def create_staking_node(client):

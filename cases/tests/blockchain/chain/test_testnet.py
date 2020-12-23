@@ -5,7 +5,7 @@ import pytest
 from alaya.eth import PlatON
 from hexbytes import HexBytes
 
-from common.log import log
+from funcs.log import log
 
 
 # @pytest.mark.skip("Test case process is random and needs to be executed multiple times manually")

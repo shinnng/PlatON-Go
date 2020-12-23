@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from tests.lib.utils import *
+from lib.utils import *
 import pytest
-from tests.lib.config import EconomicConfig
 import allure
 
 

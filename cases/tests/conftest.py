@@ -2,10 +2,10 @@ import time
 from typing import List
 import pytest
 from copy import copy
-from tests.lib import StakingConfig
-from common.log import log
-from tests.lib.client import Client, get_client_by_nodeid, get_clients_by_nodeid
-from tests.lib.utils import get_pledge_list, wait_block_number, assert_code, upload_platon
+from lib import StakingConfig
+from funcs.log import log
+from lib import Client, get_client_by_nodeid, get_clients_by_nodeid
+from lib.utils import get_pledge_list, wait_block_number, assert_code, upload_platon
 
 
 @pytest.fixture()

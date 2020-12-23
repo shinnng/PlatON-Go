@@ -3,7 +3,7 @@ import time
 import allure
 import pytest
 from copy import copy
-from common.log import log
+from funcs.log import log
 
 
 @pytest.fixture(scope="function", autouse=True)

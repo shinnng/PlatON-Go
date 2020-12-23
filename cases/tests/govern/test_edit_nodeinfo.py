@@ -1,10 +1,9 @@
-import pytest, time
+import pytest
 from tests.conftest import param_governance_verify_before_endblock
-from tests.lib.client import get_client_by_nodeid
-from tests.lib.utils import get_governable_parameter_value, assert_code, wait_block_number
-from common.log import log
+from lib.utils import get_governable_parameter_value, assert_code, wait_block_number
+from funcs.log import log
 from dacite import from_dict
-from tests.lib.genesis import Genesis
+from lib.genesis import Genesis
 
 @pytest.mark.P2
 def test_UP_RE_005_012_013(new_genesis_env, client_noconsensus, client_consensus):

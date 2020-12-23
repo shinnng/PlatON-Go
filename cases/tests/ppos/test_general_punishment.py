@@ -4,11 +4,11 @@ from decimal import Decimal
 import pytest
 from dacite import from_dict
 
-from common.key import mock_duplicate_sign
-from common.log import log
-from tests.conftest import get_clients_noconsensus, clients_consensus, get_consensus_clients
-from tests.lib import Genesis, check_node_in_list, assert_code, von_amount, \
-    get_governable_parameter_value, get_getDelegateReward_gas_fee
+from funcs.key import mock_duplicate_sign
+from funcs.log import log
+from tests.conftest import get_clients_noconsensus, get_consensus_clients
+from lib import Genesis, check_node_in_list, assert_code, von_amount, \
+    get_governable_parameter_value
 
 
 def get_out_block_penalty_parameters(client, node, amount_type):

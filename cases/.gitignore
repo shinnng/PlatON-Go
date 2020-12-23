@@ -10,9 +10,9 @@
 **/.*
 
 # ASSIGN
-deploy/tmp
-deploy/node
-deploy/bin
+resource/tmp
+tools/platon_deploy/nodefile
+tools/platon_deploy/bin
 
 # OTHER
 **/*.py[cod]

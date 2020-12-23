@@ -1,12 +1,9 @@
 import time
 import pytest
-import allure
-from dacite import from_dict
-from common.key import get_pub_key, mock_duplicate_sign
-from common.log import log
-from alaya import Web3
+from funcs.key import mock_duplicate_sign
+from funcs.log import log
 from decimal import Decimal
-from tests.lib import EconomicConfig, Genesis, StakingConfig, Staking, check_node_in_list, assert_code, von_amount, \
+from lib import check_node_in_list, assert_code, von_amount, \
     get_governable_parameter_value
 
 

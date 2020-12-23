@@ -8,11 +8,11 @@ import time
 import pytest
 from decimal import Decimal
 
-from common.log import log
-from common.key import mock_duplicate_sign
-from tests.lib.genesis import to_genesis
-from tests.lib.client import Client
-from tests.lib.utils import assert_code, get_pledge_list, von_amount
+from funcs.log import log
+from funcs.key import mock_duplicate_sign
+from lib.genesis import to_genesis
+from lib import Client
+from lib.utils import assert_code, get_pledge_list, von_amount
 from tests.ppos.conftest import create_staking, calculate
 
 

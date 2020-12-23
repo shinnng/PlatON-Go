@@ -2,9 +2,9 @@ import time
 import pytest
 import rlp
 
-from common.key import mock_duplicate_sign, generate_key
-from common.log import log
-from tests.lib import (
+from funcs.key import mock_duplicate_sign, generate_key
+from funcs.log import log
+from lib import (
     EconomicConfig,
     StakingConfig,
     check_node_in_list,

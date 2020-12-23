@@ -10,7 +10,7 @@ from alaya import Web3
 from alaya.eth import Eth
 from hexbytes import HexBytes
 
-from common.log import log
+from funcs.log import log
 
 password = "88888888"
 to_address = "atx1nssezvh4cljl5emq3a244j53xeg0kery423jja"

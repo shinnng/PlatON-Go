@@ -1,12 +1,12 @@
 import pytest
 import allure
-from common.log import log
+from funcs.log import log
 import time
-from tests.lib.utils import assert_code, wait_block_number, upload_platon
-from tests.lib.client import get_client_by_nodeid
+from lib.utils import assert_code, wait_block_number, upload_platon
+from lib import get_client_by_nodeid
 from tests.govern.conftest import version_proposal_vote, get_refund_to_account_block, proposal_vote, verifier_node_version
 from dacite import from_dict
-from tests.lib.genesis import Genesis
+from lib.genesis import Genesis
 from tests.govern.test_voting_statistics import submitvpandvote, submittpandvote, submitcppandvote
 
 

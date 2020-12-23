@@ -2,10 +2,10 @@ import os
 import pytest
 import json
 import allure
-from common.log import log
+from funcs.log import log
 from concurrent.futures import ThreadPoolExecutor, wait, ALL_COMPLETED
-from common.load_file import LoadFile
-from common.connect import run_ssh_cmd
+from funcs.load_file import LoadFile
+from funcs.connect import run_ssh_cmd
 
 
 def one_put_config_task(node):

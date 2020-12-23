@@ -8,17 +8,17 @@ from alaya import Web3
 from dacite import from_dict
 from alaya.packages.platon_account.internal.transactions import bech32_address_bytes
 
-from common.key import get_pub_key, mock_duplicate_sign
-from common.log import log
+from funcs.key import get_pub_key, mock_duplicate_sign
+from funcs.log import log
 from tests.conftest import get_clients_noconsensus
-from tests.lib import (EconomicConfig,
-                       Genesis,
-                       check_node_in_list,
-                       assert_code,
-                       von_amount,
-                       get_governable_parameter_value,
-                       get_pledge_list, HexBytes,
-                       wait_block_number, rlp)
+from lib import (EconomicConfig,
+                 Genesis,
+                 check_node_in_list,
+                 assert_code,
+                 von_amount,
+                 get_governable_parameter_value,
+                 get_pledge_list, HexBytes,
+                 wait_block_number, rlp)
 
 
 @pytest.mark.P0

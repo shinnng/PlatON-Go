@@ -1,18 +1,18 @@
 import pytest
 from dacite import from_dict
-from common.key import mock_duplicate_sign
-from common.log import log
+from funcs.key import mock_duplicate_sign
+from funcs.log import log
 from decimal import Decimal
 from tests.conftest import (param_governance_verify,
                             param_governance_verify_before_endblock,
                             get_client_consensus,
                             staking_cfg
                             )
-from tests.lib import (EconomicConfig,
-                       Genesis, check_node_in_list,
-                       assert_code, get_governable_parameter_value,
-                       wait_block_number, von_amount
-                       )
+from lib import (EconomicConfig,
+                 Genesis, check_node_in_list,
+                 assert_code, get_governable_parameter_value,
+                 wait_block_number, von_amount
+                 )
 
 
 def pledge_punishment(clients):

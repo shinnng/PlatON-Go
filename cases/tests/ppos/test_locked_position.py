@@ -1,16 +1,13 @@
 import time
 import pytest
-import allure
 import rlp
-from alaya.utils.transactions import send_obj_transaction
 from dacite import from_dict
 from alaya.packages.platon_account.internal.transactions import bech32_address_bytes
 
-from common.key import get_pub_key, mock_duplicate_sign
-from common.log import log
+from funcs.log import log
 from alaya import Web3
 from decimal import Decimal
-from tests.lib import EconomicConfig, Genesis, StakingConfig, Staking, check_node_in_list, assert_code, von_amount, \
+from lib import EconomicConfig, Genesis, assert_code, von_amount, \
     get_governable_parameter_value, get_the_dynamic_parameter_gas_fee
 
 
