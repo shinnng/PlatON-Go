@@ -98,7 +98,7 @@ class TestCreateStaking:
                                    amount=2 * staking.economic.genesis.economicModel.staking.stakeThreshold,
                                    reward_per=100000)
         except ValueError as e:
-            assert e.args[0].get('message') == "gas required exceeds allowance or always failing transaction"
+            assert e.args[0].get('message') == "the tx data is invalid: parse tx data is failed: BytesToUint16:rlp: input string too long for uint16"
 
         try:
             staking.create_staking(0, address, address, node_id=staking.node.node_id,

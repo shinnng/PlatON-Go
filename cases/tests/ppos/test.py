@@ -256,7 +256,7 @@ def fff(url):
 
 
 if __name__ == '__main__':
-    url = 'http://192.168.10.224:6790'
+    # url = 'http://192.168.10.224:6790'
     # url = 'http://192.168.10.221:6790'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
@@ -264,7 +264,7 @@ if __name__ == '__main__':
     # url = 'http://154.85.35.163:80'
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
-    # url = 'https://openapi.alaya.network/rpc'
+    url = 'https://openapi.alaya.network/rpc'
     account = 'atp1zu6j8d4rz03lafgcfrdxc075fx6p85633utaq5'
     pri_key = 'a872ee498a5a92b87b1780b1d3d71dd0cfce2980f59960b76318f5d409908303'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -334,7 +334,7 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '2d25f7686573602334589ac2e606a3743d34fcae0c7d34c6eadc01dbecd21f349d93ec227b2c43a5f61eab7fff1e0382e8a9f61a2cce9cf8eb0730a697a98159'
+    node_id = '79f86478381b2472b009f790dd0b8b32f65169cd3a447e43eafb0f359f9edb16ef4d15e45cec54adc5e691ddf43d6ec29066b8dc90457482cf9189caebc9d99f'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -346,30 +346,30 @@ if __name__ == '__main__':
     # get_RestrictingPlan(url, account)
     # fff(url)
     # sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
-    web3 = connect_web3(url)
-    platon = Eth(web3)
-    print(platon.blockNumber)
+    # web3 = connect_web3(url)
+    # platon = Eth(web3)
+    # print(platon.blockNumber)
     # # print(platon.gasPrice)
-    tmp_amount = 0
-    tmp_amount1 = 0
-    for i in range(13):
-        number = 160 * (i + 1)
-        amount = platon.getBalance(account, number)
-        print(account, amount)
-        if amount is not None:
-            y = amount - tmp_amount1
-            tmp_amount1 = amount
-            print("账户余额差：", y)
-        amount = platon.getBalance(web3.restrictingAddress, number)
-        print(web3.restrictingAddress, amount)
-        if amount is not None:
-            x = amount - tmp_amount
-            tmp_amount = amount
-            print("锁仓合约余额差：", x)
-    amount = platon.getBalance(account)
-    print(account, amount)
-    amount = platon.getBalance(web3.restrictingAddress)
-    print(web3.restrictingAddress, amount)
+    # tmp_amount = 0
+    # tmp_amount1 = 0
+    # for i in range(13):
+    #     number = 160 * (i + 1)
+    #     amount = platon.getBalance(account, number)
+    #     print(account, amount)
+    #     if amount is not None:
+    #         y = amount - tmp_amount1
+    #         tmp_amount1 = amount
+    #         print("账户余额差：", y)
+    #     amount = platon.getBalance(web3.restrictingAddress, number)
+    #     print(web3.restrictingAddress, amount)
+    #     if amount is not None:
+    #         x = amount - tmp_amount
+    #         tmp_amount = amount
+    #         print("锁仓合约余额差：", x)
+    # amount = platon.getBalance(account)
+    # print(account, amount)
+    # amount = platon.getBalance(web3.restrictingAddress)
+    # print(web3.restrictingAddress, amount)
     # amount = platon.getBalance(web3.stakingAddress)
     # print(amount)
     # print(Web3.fromWei(2035626000000000000, 'ether'))
@@ -404,7 +404,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    # get_candinfo(url, node_id1)
+    get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
-    get_RestrictingPlan(url, account)
-    get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')
+    # get_RestrictingPlan(url, account)
+    # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')

@@ -1202,7 +1202,7 @@ def test_LS_PV_010(client_new_node):
     status = True
     # create account
     amount1 = economic.create_staking_limit * 2
-    amount2 = (EconomicConfig.fixed_gas * 2) * node.eth.gasPrice
+    amount2 = EconomicConfig.fixed_gas * node.eth.gasPrice
     address1, address2 = create_lock_release_amount(client, amount1, amount2)
     # create Restricting Plan
     plan = [{'Epoch': 1, 'Amount': economic.create_staking_limit}]

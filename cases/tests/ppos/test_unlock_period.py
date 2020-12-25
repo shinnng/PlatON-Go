@@ -328,12 +328,15 @@ def test_UP_FV_009(clients_new_node):
     print(node.node_mark)
     # create restricting plan and staking
     restricting_balance = node.eth.getBalance(node.web3.restrictingAddress)
+    staking_balance = node.eth.getBalance(node.web3.stakingAddress)
     address1 = restricting_plan_validation_staking(client1, economic, node)
     # Waiting for the end of the settlement period
     time.sleep(2)
     restricting_balance1 = node.eth.getBalance(node.web3.restrictingAddress)
+    staking_balance1 = node.eth.getBalance(node.web3.stakingAddress)
 
-    assert restricting_balance + economic.create_staking_limit == restricting_balance1
+    assert restricting_balance == restricting_balance1
+    assert staking_balance + economic.create_staking_limit == staking_balance1
     economic.wait_settlement(node)
     # Obtain block bonus and pledge bonus
     balance = client2.node.eth.getBalance(address1)

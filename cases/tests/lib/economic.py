@@ -1,3 +1,4 @@
+import time
 from decimal import Decimal
 
 from dacite import from_dict
@@ -147,6 +148,8 @@ class Economic:
         # annualcycle = (self.additional_cycle_time * 60) // self.settlement_size
         # annual_size = annualcycle * self.settlement_size
         # # starting_block_height = math.floor(current_block / annual_size) * annual_size
+        # time.sleep(10)
+        # print(node.eth.blockNumber)
         if verifier_num is None:
             verifier_list = get_pledge_list(node.ppos.getVerifierList)
             verifier_num = len(verifier_list)
@@ -262,6 +265,7 @@ class Economic:
         if proportion_ratio is None:
             proportion_ratio = self.genesis.economicModel.slashing.duplicateSignReportReward
         penalty_reward = int(Decimal(str(amount)) * Decimal(str(penalty_ratio / 10000)))
+        print(penalty_reward)
         proportion_reward = int(Decimal(str(penalty_reward)) * Decimal(str(proportion_ratio / 100)))
         incentive_pool_reward = penalty_reward - proportion_reward
         return proportion_reward, incentive_pool_reward
