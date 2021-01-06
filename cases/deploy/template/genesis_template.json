@@ -8,8 +8,7 @@
             "amount": 10,
             "period": 10000,
             "validatorMode": "ppos"
-        },
-        "genesisVersion": 3328
+        },  "genesisVersion": 3330
     },
     "economicModel": {
         "common": {
@@ -20,8 +19,8 @@
         "staking": {
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
-            "maxValidators": 10,
-            "unStakeFreezeDuration": 2,
+            "maxValidators": 20,
+            "unStakeFreezeDuration": 5,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
         },

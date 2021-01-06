@@ -178,6 +178,13 @@ def getDelegateInfo(url, staking_blocknum, del_address, node_id):
     print(result)
 
 
+def getRelatedListByDelAddr(url, del_address):
+    web3 = connect_web3(url)
+    ppos = Ppos(web3)
+    result = ppos.getRelatedListByDelAddr(del_address)
+    print(result)
+
+
 def create_account(url, chain_id=201030):
     web3 = connect_web3(url)
     platon = Eth(web3)
@@ -256,8 +263,8 @@ def fff(url):
 
 
 if __name__ == '__main__':
-    url = 'http://192.168.10.224:6790'
-    # url = 'http://192.168.10.221:6790'
+    # url = 'http://192.168.10.224:6790'
+    url = 'http://192.168.120.121:6790'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
@@ -265,8 +272,8 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'atp1zu6j8d4rz03lafgcfrdxc075fx6p85633utaq5'
-    pri_key = 'a872ee498a5a92b87b1780b1d3d71dd0cfce2980f59960b76318f5d409908303'
+    account = 'atp1zpunl3yfp42yazqmqvkna54nrjuu6khfnhhwg2'
+    pri_key = '4e79261e16440b9cc8b4e225c555308afe7aaa2765ad9032d9fb1d90cc530720'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     pri_key1 = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -334,9 +341,9 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '2d25f7686573602334589ac2e606a3743d34fcae0c7d34c6eadc01dbecd21f349d93ec227b2c43a5f61eab7fff1e0382e8a9f61a2cce9cf8eb0730a697a98159'
+    node_id = 'd80caefe38ec4bfcb8bf99793f63da63662d0acf34c8adeb96ab89a3c6b96b4cf862d405febfa708d28f64895e755e1f60c2821124915f369746a78834a8b906'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
-    node_id1 = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
+    node_id1 = '25af23c768bb57bbb5b72e349cf23bbb371e7359a3c0436cc3c22f28edbfa3429a511cd1f05783f4b385f84cd0649884fd36b8d3018b0a108ed7e7b189f41566'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
     # for i in list:
     #     print(i)
@@ -349,23 +356,23 @@ if __name__ == '__main__':
     web3 = connect_web3(url)
     platon = Eth(web3)
     print(platon.blockNumber)
-    # # print(platon.gasPrice)
-    tmp_amount = 0
-    tmp_amount1 = 0
-    for i in range(13):
-        number = 160 * (i + 1)
-        amount = platon.getBalance(account, number)
-        print(account, amount)
-        if amount is not None:
-            y = amount - tmp_amount1
-            tmp_amount1 = amount
-            print("账户余额差：", y)
-        amount = platon.getBalance(web3.restrictingAddress, number)
-        print(web3.restrictingAddress, amount)
-        if amount is not None:
-            x = amount - tmp_amount
-            tmp_amount = amount
-            print("锁仓合约余额差：", x)
+    # # # print(platon.gasPrice)
+    # tmp_amount = 0
+    # tmp_amount1 = 0
+    # for i in range(13):
+    #     number = 160 * (i + 1)
+    #     amount = platon.getBalance(account, number)
+    #     print(account, amount)
+    #     if amount is not None:
+    #         y = amount - tmp_amount1
+    #         tmp_amount1 = amount
+    #         print("账户余额差：", y)
+    #     amount = platon.getBalance(web3.restrictingAddress, number)
+    #     print(web3.restrictingAddress, amount)
+    #     if amount is not None:
+    #         x = amount - tmp_amount
+    #         tmp_amount = amount
+    #         print("锁仓合约余额差：", x)
     amount = platon.getBalance(account)
     print(account, amount)
     amount = platon.getBalance(web3.restrictingAddress)
@@ -374,7 +381,7 @@ if __name__ == '__main__':
     # print(amount)
     # print(Web3.fromWei(2035626000000000000, 'ether'))
     # platon.gasPrice
-    # withdrewStaking(url, node_id1, pri_key)
+    # withdrewStaking(url, node_id, pri_key)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
     # get_VerifierList(url)
@@ -386,7 +393,7 @@ if __name__ == '__main__':
     # fff()
     # get_listGovernParam(url)
     # getDelegateReward(url, account)
-    # get_VerifierList(url)
+    # getValidatorList(url)
     # withdraw_delegate_reward(url, pri_key)
     # node_config = LoadFile(os.path.abspath(os.path.join(BASE_DIR, "deploy/node/node-32.yml"))).get_data()
     # noconsensus_node_config_list = node_config.get("noconsensus", [])
@@ -396,15 +403,22 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
-    # amount = Web3.toWei(1000, 'ether')
-    # amount = 6167000000000000000000
+    # amount = Web3.toWei(10000, 'ether')
+    # print(amount)
+    # amount = 9167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
     # for pri_key in privateKey:
-    # withdraw_delegate(url, 14, node_id, amount, pri_key)
+    # withdraw_delegate(url, 71, node_id, amount, pri_key)
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    # get_candinfo(url, node_id1)
-    # getDelegateInfo(url, 127, account, node_id)
+    # get_candinfo(url, node_id)
+    # getDelegateInfo(url, 9, account, node_id)
+    getDelegateInfo(url, 64, account, '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255')
+    getDelegateInfo(url, 562, account, '7c31d0e2f716324c9051c322be59dd86194f28ad7b71e3bc3837062708b7207e82bed0d6e24691b9107549787b541e3c917ec7503e0ba3addd1340075188bad6')
+    getDelegateInfo(url, 555, account, 'bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775')
+    getDelegateInfo(url, 548, account, 'd80caefe38ec4bfcb8bf99793f63da63662d0acf34c8adeb96ab89a3c6b96b4cf862d405febfa708d28f64895e755e1f60c2821124915f369746a78834a8b906')
+    getDelegateReward(url, account)
+    # getRelatedListByDelAddr(url, account)
     get_RestrictingPlan(url, account)
-    get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')
+    # get_RestrictingPlan(url, 'atp1s668hqh6hsanndfjq4wrqn5c7cdtexdtap2gz4')

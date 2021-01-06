@@ -32,7 +32,8 @@ class TestConfig:
         self.is_need_static = is_need_static
         self.log_level = 5
         self.syncmode = "full"
-        self.append_cmd = ""
+        self.append_cmd = ''
+        # self.append_cmd = '--issue1625 /home/platon/test.json'
 
         # maximum number of threads
         self.max_worker = 30
@@ -44,7 +45,6 @@ class TestConfig:
         self.deploy_path = conf.DEPLOY_PATH
         self.remote_supervisor_tmp = "{}/tmp/supervisor_{}/".format(self.deploy_path, conf_tmp.dir)
         self.remote_compression_tmp_path = "{}/tmp/env_{}/".format(self.deploy_path, conf_tmp.dir)
-
 
         # log related
         self.bug_log = abspath("./bug_log")

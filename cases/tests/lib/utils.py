@@ -19,6 +19,7 @@ def decorator_sleep(func):
             time.sleep(5)
             result = func()
         return result
+
     return wrap
 
 
@@ -65,6 +66,7 @@ def upload_platon(node: Node, platon_bin):
     node.run_ssh("chmod +x {}".format(node.remote_bin_file))
 
     node.restart()
+
 
 def get_blockhash(node, blocknumber=None):
     """

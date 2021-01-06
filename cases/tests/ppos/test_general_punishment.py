@@ -1495,19 +1495,46 @@ def test_VP_GPFV_021(client_new_node_obj_list_reset):
         delegate_balance1)
 
 
-def test_test_VP_GPFV_003_01(clients_consensus):
+def test_test_VP_GPFV_003_01(client_consensus, client_new_node):
     """
-    废弃
+    模拟场景
     """
     pass
-    # client = clients_consensus[0]
-    # client1 = clients_consensus[1]
-    # economic = client.economic
-    # node = client.node
-    # print('node', node.node_mark)
-    # log.info("balance: {}".format(node.eth.getBalance('lax12jn6835z96ez93flwezrwu4xpv8e4zatc4kfru')))
-    # node.stop()
-    # economic.wait_settlement(client1.node, 3)
-    # result = client1.node.ppos.getCandidateInfo(node.node_id)
-    # print(result)
-    # log.info("balance: {}".format(client1.node.eth.getBalance('lax12jn6835z96ez93flwezrwu4xpv8e4zatc4kfru')))
+    client = client_new_node
+    client1 = client_consensus
+    economic = client.economic
+    node = client.node
+    print('node', node.node_mark)
+    # create pledge address
+    pledge_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 4)
+    delegate_address, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 100)
+    print(delegate_address)
+
+    result = client.staking.create_staking(0, pledge_address, pledge_address, amount=economic.create_staking_limit * 3, reward_per=10000)
+    assert_code(result, 0)
+
+    result = client.delegate.delegate(0, delegate_address, amount=economic.delegate_limit * 50)
+    assert_code(result, 0)
+    print(node.ppos.getCandidateInfo(node.node_id))
+    economic.wait_settlement(node, 1)
+    node.stop()
+    client1.economic.wait_settlement(client1.node)
+    result = check_node_in_list(client.node.node_id, client1.ppos.getCandidateList)
+    print(result)
+    result = client1.node.ppos.getCandidateInfo(node.node_id)
+    print(result)
+    client1.economic.wait_settlement(client1.node)
+    result = check_node_in_list(client.node.node_id, client1.ppos.getCandidateList)
+    print(result)
+    result = client1.node.ppos.getCandidateInfo(node.node_id)
+    print(result)
+    client1.economic.wait_settlement(client1.node)
+    node.start()
+    result = check_node_in_list(client.node.node_id, client1.ppos.getCandidateList)
+    print(result)
+    result = client1.node.ppos.getCandidateInfo(node.node_id)
+    print(result)
+    result = client1.delegate.withdraw_delegate_reward(delegate_address)
+    assert_code(result, 0)
+
+
