@@ -44,7 +44,6 @@ class PipConfig:
     FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
 
 
-
 class EconomicConfig:
     # Year zero lock_pu release amount
     RELEASE_ZERO = 62215742.48691650

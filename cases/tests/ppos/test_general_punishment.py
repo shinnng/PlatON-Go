@@ -1499,7 +1499,6 @@ def test_test_VP_GPFV_003_01(client_consensus, client_new_node):
     """
     模拟场景
     """
-    pass
     client = client_new_node
     client1 = client_consensus
     economic = client.economic

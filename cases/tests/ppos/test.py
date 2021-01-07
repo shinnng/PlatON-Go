@@ -272,8 +272,8 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'atp1zpunl3yfp42yazqmqvkna54nrjuu6khfnhhwg2'
-    pri_key = '4e79261e16440b9cc8b4e225c555308afe7aaa2765ad9032d9fb1d90cc530720'
+    account = 'atp1des5cqfsrsd6nyyp6h6ekghv5xdw0crqrppl8u'
+    pri_key = '4903b235e023e3e5ca6141bde591bd2834aa98251627895cee19c351e603a685'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     pri_key1 = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -403,8 +403,8 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
-    # amount = Web3.toWei(10000, 'ether')
-    # print(amount)
+    amount = Web3.toWei(3000, 'ether')
+    print(amount)
     # amount = 9167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
     # for pri_key in privateKey:
@@ -412,13 +412,13 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    # get_candinfo(url, node_id)
+    get_candinfo(url, node_id)
     # getDelegateInfo(url, 9, account, node_id)
-    getDelegateInfo(url, 64, account, '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255')
-    getDelegateInfo(url, 562, account, '7c31d0e2f716324c9051c322be59dd86194f28ad7b71e3bc3837062708b7207e82bed0d6e24691b9107549787b541e3c917ec7503e0ba3addd1340075188bad6')
-    getDelegateInfo(url, 555, account, 'bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775')
-    getDelegateInfo(url, 548, account, 'd80caefe38ec4bfcb8bf99793f63da63662d0acf34c8adeb96ab89a3c6b96b4cf862d405febfa708d28f64895e755e1f60c2821124915f369746a78834a8b906')
-    getDelegateReward(url, account)
+    # getDelegateInfo(url, 64, account, '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255')
+    # getDelegateInfo(url, 562, account, '7c31d0e2f716324c9051c322be59dd86194f28ad7b71e3bc3837062708b7207e82bed0d6e24691b9107549787b541e3c917ec7503e0ba3addd1340075188bad6')
+    # getDelegateInfo(url, 555, account, 'bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775')
+    # getDelegateInfo(url, 548, account, 'd80caefe38ec4bfcb8bf99793f63da63662d0acf34c8adeb96ab89a3c6b96b4cf862d405febfa708d28f64895e755e1f60c2821124915f369746a78834a8b906')
+    # getDelegateReward(url, account)
     # getRelatedListByDelAddr(url, account)
     get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp1s668hqh6hsanndfjq4wrqn5c7cdtexdtap2gz4')

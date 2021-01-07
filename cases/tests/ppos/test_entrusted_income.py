@@ -4093,6 +4093,7 @@ def test_EI_BC_090(clients_noconsensus, client_consensus):
     for i in delegate_address_list:
         restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
         print("2", restricting_info)
+        print(i, node.eth.getBalance(i))
     print(node.eth.blockNumber)
     block_number = client.ppos.getCandidateInfo(opt_client.node.node_id)['Ret']['StakingBlockNum']
     # for i in delegate_address_list:
@@ -4135,7 +4136,7 @@ def test_EI_BC_090(clients_noconsensus, client_consensus):
     assert_code(result, 0)
 
     log.info(f'正常锁仓委托地址: {delegate_other_address}, Restricting: {node.ppos.getRestrictingInfo(delegate_other_address)}')
-
+    economic.wait_consensus(node)
     # 定义两个操作列表
     addressList = delegate_address_list
     print(f'addressList: ', addressList)
@@ -4144,15 +4145,22 @@ def test_EI_BC_090(clients_noconsensus, client_consensus):
     # 1、异常锁仓额度质押节点-超过正常额度-剩余质押金额低于最低门槛，节点退出
     address = addressList[0]
     client = clients_noconsensus[1]
+    print(client.node.node_mark)
     benifit_address, _ = economic.account.generate_account(node.web3, 0)
+    amount4 = node.web3.toWei(3000, 'ether')
+    plan_2 = [{'Epoch': 100, 'Amount': amount4}]
+    result = client.restricting.createRestrictingPlan(address, plan_2, economic.account.account_with_money['address'])
+    assert_code(result, 0)
     log.info(f'address1: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
-    result = client.staking.create_staking(1, benifit_address, address, amount=client.node.web3.toWei(19167, 'ether'))
+    result = client.staking.create_staking(1, benifit_address, address, amount=client.node.web3.toWei(22167, 'ether'))
     assert_code(result, 0)
     log.info(f'address1: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
     print("质押节点信息：", client.node.ppos.getCandidateInfo(client.node.node_id))
     # 2、异常锁仓额度质押节点-超过正常额度-剩余质押金额高于最低门槛，节点不退出
     address = addressList[1]
     client = clients_noconsensus[2]
+    print(client.node.node_id)
+    print(client.node.node_mark)
     benifit_address, _ = economic.account.generate_account(node.web3, 0)
     log.info(f'address2: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
     result = client.staking.create_staking(1, benifit_address, address, amount=client.node.web3.toWei(19167, 'ether'))
@@ -4164,13 +4172,14 @@ def test_EI_BC_090(clients_noconsensus, client_consensus):
     # 3、锁仓委托多个节点- 超过正常额度
     address = addressList[2]
     client = clients_noconsensus[3]
+    print(client.node.node_mark)
     benifit_address, _ = economic.account.generate_account(node.web3, 0)
-    log.info(f'address2: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+    log.info(f'address3: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
     result = client.staking.create_staking(0, benifit_address, address)
     assert_code(result, 0)
-    result = client.staking.increase_staking(1, address, amount=client.node.web3.toWei(19167, 'ether'))
+    result = client.staking.increase_staking(1, address, amount=client.node.web3.toWei(5000, 'ether'))
     assert_code(result, 0)
-    log.info(f'address2: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
+    log.info(f'address3: {address}, Balance: {opt_client.node.eth.getBalance(address)}, Restricting: {node.ppos.getRestrictingInfo(address)}')
     print("质押节点信息：", client.node.ppos.getCandidateInfo(client.node.node_id))
     #
     # # 4、锁仓委托多个节点- 未超过正常额度
@@ -4275,20 +4284,22 @@ def test_upgrade_proposal(all_clients, client_consensus):
 
         # 发送升级提案
     validator_list = opt_client.ppos.getVerifierList()['Ret']
-    print(validator_list)
+    # print(validator_list)
     validator_id = [i['NodeId'] for i in validator_list]
 
     # operate_index = randint(0, len(validator_id))
     opt_client = get_client_by_nodeid(validator_id[0], all_clients)
     opt_pip = opt_client.pip
-    print(opt_pip.node.node_mark)
-    active_version = 3584
-    # active_version = 3840
-    print(opt_pip.node.ppos.getVerifierList())
-    print(opt_pip.node.ppos.getCandidateList())
-    result = opt_pip.submitVersion(opt_pip.node.node_id, str(time.time()), active_version, 2,
-                                   opt_pip.node.staking_address, transaction_cfg=opt_pip.cfg.transaction_cfg)
+    print(consensus_clients[0].node.node_id)
+    # active_version = 3584
+    active_version = 3840
+    # print(opt_pip.node.ppos.getVerifierList())
+    # print(opt_pip.node.ppos.getCandidateList())
+    print(consensus_clients[0].node.staking_address, consensus_clients[0].node.eth.getBalance(consensus_clients[0].node.staking_address))
+    result = consensus_clients[0].pip.submitVersion(consensus_clients[0].node.node_id, str(time.time()), active_version, 2,
+                                                    consensus_clients[0].node.staking_address, transaction_cfg=consensus_clients[0].pip.cfg.transaction_cfg)
     assert result == 0
+    print(consensus_clients[0].node.staking_address, consensus_clients[0].node.eth.getBalance(consensus_clients[0].node.staking_address))
     pip_info = opt_pip.get_effect_proposal_info_of_vote()
     log.info(f'pip_info: {pip_info}')
 
