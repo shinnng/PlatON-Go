@@ -264,7 +264,8 @@ def fff(url):
 
 if __name__ == '__main__':
     # url = 'http://192.168.10.224:6790'
-    url = 'http://192.168.120.121:6790'
+    # url = 'http://192.168.120.121:6790'
+    url = 'http://192.168.120.124:6790'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
@@ -341,14 +342,13 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = 'd80caefe38ec4bfcb8bf99793f63da63662d0acf34c8adeb96ab89a3c6b96b4cf862d405febfa708d28f64895e755e1f60c2821124915f369746a78834a8b906'
+    node_id = '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = '25af23c768bb57bbb5b72e349cf23bbb371e7359a3c0436cc3c22f28edbfa3429a511cd1f05783f4b385f84cd0649884fd36b8d3018b0a108ed7e7b189f41566'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
     # for i in list:
     #     print(i)
     #     createRestrictingPlan(url, i, plan, pri_key)
-    # createRestrictingPlan(url, account, plan, pri_key1)
     # time.sleep(2)
     # get_RestrictingPlan(url, account)
     # fff(url)
@@ -403,14 +403,15 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
-    amount = Web3.toWei(3000, 'ether')
-    print(amount)
+    # amount = Web3.toWei(3000, 'ether')
+    # print(amount)
     # amount = 9167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
     # for pri_key in privateKey:
     # withdraw_delegate(url, 71, node_id, amount, pri_key)
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
+    # createRestrictingPlan(url, account, plan, pri_key1)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
     get_candinfo(url, node_id)
     # getDelegateInfo(url, 9, account, node_id)
