@@ -36,7 +36,7 @@ def createRestrictingPlan(url, account, plan, pri_key):
     print(result)
 
 
-def createstaking(url, typ, pri_key, amount, reward_per=1000):
+def createstaking(url, typ, benifit_address, pri_key, amount, reward_per=1000):
     web3 = connect_web3(url)
     admin = Admin(web3)
     ppos = Ppos(web3)
@@ -47,7 +47,8 @@ def createstaking(url, typ, pri_key, amount, reward_per=1000):
     bls_proof = admin.getSchnorrNIZKProve()
     bls_pubkey = admin.nodeInfo['blsPubKey']
     node_id = admin.nodeInfo['id']
-    benifit_address = Account.privateKeyToAccount(pri_key, MIANNETHRP).address
+    if benifit_address is None:
+        benifit_address = Account.privateKeyToAccount(pri_key, MIANNETHRP).address
     result = ppos.createStaking(typ, benifit_address, node_id, 'external_id', 'node_name', 'website', 'details',
                                 amount, program_version, version_sign, bls_pubkey, bls_proof, pri_key, reward_per)
     print(f"create staking result = {result}")
@@ -342,7 +343,7 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255'
+    node_id = 'bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = '25af23c768bb57bbb5b72e349cf23bbb371e7359a3c0436cc3c22f28edbfa3429a511cd1f05783f4b385f84cd0649884fd36b8d3018b0a108ed7e7b189f41566'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -379,7 +380,7 @@ if __name__ == '__main__':
     print(web3.restrictingAddress, amount)
     # amount = platon.getBalance(web3.stakingAddress)
     # print(amount)
-    # print(Web3.fromWei(2035626000000000000, 'ether'))
+    # print(Web3.fromWei(1000, 'ether'))
     # platon.gasPrice
     # withdrewStaking(url, node_id, pri_key)
     # stakingnum = 335
@@ -403,8 +404,8 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
-    # amount = Web3.toWei(3000, 'ether')
-    # print(amount)
+    amount = Web3.toWei(10000, 'ether')
+    print(amount)
     # amount = 9167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
     # for pri_key in privateKey:
@@ -413,7 +414,7 @@ if __name__ == '__main__':
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createRestrictingPlan(url, account, plan, pri_key1)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    get_candinfo(url, node_id)
+    # get_candinfo(url, node_id)
     # getDelegateInfo(url, 9, account, node_id)
     # getDelegateInfo(url, 64, account, '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255')
     # getDelegateInfo(url, 562, account, '7c31d0e2f716324c9051c322be59dd86194f28ad7b71e3bc3837062708b7207e82bed0d6e24691b9107549787b541e3c917ec7503e0ba3addd1340075188bad6')
