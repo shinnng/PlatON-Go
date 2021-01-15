@@ -2049,51 +2049,47 @@ def test_RO_T_001(new_genesis_env, client_noconsensus):
     economic.wait_settlement(node, 1)
 
 
-def test2223(client_new_node):
+def test2223(new_genesis_env, client_new_node):
     """
     调试脚本使用
     """
+    genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
+    genesis.config.cbft.period = 30000
+    genesis.economicModel.common.maxEpochMinutes = 9
+    genesis.economicModel.common.additionalCycleTime = 40
+    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.14.0.json"
+    genesis.to_file(new_file)
+    new_genesis_env.deploy_all(new_file)
+
     client = client_new_node
     economic = client.economic
     node = client.node
-    # address = 'atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9'
-    # node_id = '6cda52721a11a5034ae0dfc03ebe0a60a797e0240f9bba427957abeeb2e367c09ed099c6871bf17158c5d694c4d5ccad363b38055e345898ff02a88e17d66149'
-    #
-    print(client.node.ppos.getValidatorList())
-    # # create account
-    # address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
-    # address2, _ = economic.account.generate_account(node.web3, 0)
-    # # create pledge
-    # result = client.staking.create_staking(0, address1, address1, reward_per=80)
-    # assert_code(result, 0)
-    # economic.wait_settlement(node, 1)
-    # time.sleep(1)
-    # result = client.staking.edit_candidate(address1, address1, reward_per=580)
-    # print(result)
-    # print(client.ppos.getCandidateInfo(node.node_id))
-    # economic.wait_consensus(node, 4)
-    # for i in range(160):
-    #     result = client.staking.edit_candidate(address1, address1, reward_per=1080)
-    #     print(result)
-    #     time.sleep(1)
-    #     print(client.ppos.getCandidateInfo(node.node_id))
-    # # client.staking.edit_candidate(address1, address1, reward_per=1080)
-    # # economic.wait_settlement(node)
-    # time.sleep(1)
-    # print(client.ppos.getCandidateInfo(node.node_id))
-    # result = client.staking.increase_staking(0, address, node_id=node_id)
-    # assert_code(result, 0)
-    # print("getCandidateList", client.ppos.getCandidateList())
-    # print("getVerifierList", client.ppos.getVerifierList())
-    # print("getValidatorList", client.ppos.getValidatorList())
-    # print(client.node.web3.toWei(500000, 'ether'))
-    # staking_addres, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
-    # client.staking.create_staking(0,staking_addres,staking_addres,transaction_cfg=)
-# hx = '0xd7d479481b480b149339908d2e267a03b02396d9a84d6774c7d5d76f3434cf80'
-# result = client.node.eth.analyzeReceiptByHash(hx)
-# result = client.ppos.getCandidateList()
-# print(result)
-# client.economic.env.deploy_all()
+    log.info("node ip : {}".format(node.node_mark))
+    node.ppos.need_analyze = False
+
+    staking_addres, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 4)
+    entrust_addres, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 100)
+    tx_hash = client.staking.create_staking(0, staking_addres, staking_addres, amount=economic.create_staking_limit * 3,
+                                            reward_per=1000)
+    print("质押节点tx:", tx_hash)
+    time.sleep(1)
+    tx_hash = client.delegate.delegate(0, entrust_addres, amount=Web3.toWei(99.5, 'ether'))
+    print("委托节点tx:", tx_hash)
+    economic.wait_settlement(node, 1)
+
+    nonce = node.eth.getTransactionCount(entrust_addres)
+    cfg = {"nonce": nonce}
+    cfg1 = {"nonce": nonce + 1}
+    tx_hash = client.delegate.delegate(0, entrust_addres, tansaction_cfg=cfg)
+    print("委托节点tx1:", tx_hash)
+    tx_hash = client.delegate.delegate(0, entrust_addres, tansaction_cfg=cfg1)
+    print("委托节点tx2:", tx_hash)
+    time.sleep(1)
+    print(node.eth.getBalance(entrust_addres))
+    economic.wait_settlement(node)
+    tx_hash = client.delegate.withdraw_delegate_reward(entrust_addres)
+    print("领取委托收益tx：", tx_hash)
+    print(node.eth.getBalance(entrust_addres))
 
 
 def test_IT_SD2222(global_test_env):
@@ -2111,7 +2107,7 @@ def test_IT_SD2222(global_test_env):
     address1, _ = global_test_env.account.generate_account(node.web3, 0)
     print('address1', address1, node.eth.getBalance(address1))
     transfer_amount = node.web3.toWei(1, 'ether')
-    gasPrice = 1 * 10**8
+    gasPrice = 1 * 10 ** 8
     print('gasPrice', gasPrice)
     result = global_test_env.account.sendTransaction(node.web3, '', address, address1, gasPrice,
                                                      21000, transfer_amount)

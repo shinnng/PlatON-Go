@@ -1,6 +1,6 @@
 import os
 import time
-from random import randint, shuffle
+from random import randint, shuffle, uniform
 
 from alaya import HTTPProvider, Web3, WebsocketProvider, Account
 from alaya.admin import Admin
@@ -8,6 +8,7 @@ from alaya.eth import Eth
 from alaya.middleware import geth_poa_middleware
 from alaya.packages.platon_keys.utils.address import MIANNETHRP
 from alaya.ppos import Ppos
+from alaya.pip import Pip
 from hexbytes import HexBytes
 from alaya.packages.platon_account.account import Account
 # from alaya.packages.platon_keys
@@ -36,7 +37,7 @@ def createRestrictingPlan(url, account, plan, pri_key):
     print(result)
 
 
-def createstaking(url, typ, benifit_address, pri_key, amount, reward_per=1000):
+def createstaking(url, typ, pri_key, amount, benifit_address=None, reward_per=1000):
     web3 = connect_web3(url)
     admin = Admin(web3)
     ppos = Ppos(web3)
@@ -72,7 +73,8 @@ def delegate(url, typ, node_id, amount, pri_key):
     web3 = connect_web3(url)
     ppos = Ppos(web3)
     result = ppos.delegate(typ, node_id, amount, pri_key)
-    print(result)
+    print("委托结果：", result)
+    # return result
 
 
 def withdraw_delegate(url, staking_blocknum, node_id, amount, pri_key):
@@ -177,12 +179,21 @@ def getDelegateInfo(url, staking_blocknum, del_address, node_id):
     ppos = Ppos(web3)
     result = ppos.getDelegateInfo(staking_blocknum, del_address, node_id)
     print(result)
+    return result
 
 
 def getRelatedListByDelAddr(url, del_address):
     web3 = connect_web3(url)
     ppos = Ppos(web3)
     result = ppos.getRelatedListByDelAddr(del_address)
+    return result
+    # print(result)
+
+
+def getlistProposal(url):
+    web3 = connect_web3(url)
+    pip = Pip(web3)
+    result = pip.listProposal()
     print(result)
 
 
@@ -200,73 +211,22 @@ def create_account(url, chain_id=201030):
     return address, prikey
 
 
-# def get_listGovernParam(url, module=None, from_address=None):
-#     web3 = connect_web3(url)
-#     ppos = Ppos(web3)
-#     # ppos.web3.platon
-#     if module is None:
-#         module = ""
-#     data = rlp.encode([rlp.encode(int(2106)), rlp.encode(module)])
-#     raw_data = ppos.call_obj(ppos, from_address, Web3.pipAddress, data)
-#     data = str(raw_data, encoding="utf-8")
-#     if data == "":
-#         return ""
-#     print(json.loads(data))
-
-#
-# def create_address(url):
-#     """
-#     创建新钱包地址
-#     """
-#     web3 = connect_web3(url)
-#     platon = Eth(web3)
-#     account = platon.account.create(net_type=web3.net_type)
-#     address = account.address
-#     prikey = account.privateKey.hex()[2:]
-#     account = {
-#         "address": address,
-#         "nonce": 0,
-#         "balance": 0,
-#         "prikey": prikey,
-#     }
-#     accounts = {}
-#     raw_accounts = LoadFile(ACCOUNT_FILE).get_data()
-#     print(raw_accounts)
-#     for account1 in raw_accounts:
-#         accounts[account1['address']] = account1
-#     print(accounts)
-#     accounts[address] = account
-#     # todo delete debug
-#     accounts = list(accounts.values())
-#     with open(os.path.join(BASE_DIR, "deploy/tmp/accounts.yml"), mode="w", encoding="UTF-8") as f:
-#         yaml.dump(accounts, f, Dumper=yaml.RoundTripDumper)
-#
-#
-# def cycle_sendTransaction(url):
-#     """
-#
-#     """
-#
-# with open(TMP_ADDRES, 'a', encoding='utf-8') as f:
-#     f.write("2")
-
-
-def fff(url):
+def get_nodeId_list(url):
     web3 = connect_web3(url)
-    platon = Eth(web3)
-    # print(platon.g)
-    a = Web3.fromWei(6657754010695187165780, 'ether')
-    print(a)
-    # result = platon.getTransactionCount(from_address)
-    # result = platon.getBalance(from_address)
-    # print(platon.blockNumber)
-    # print(result)
+    ppos = Ppos(web3)
+    candidate_list = ppos.getCandidateList()['Ret']
+    nodeid_list = []
+    for candidate in candidate_list:
+        nodeid = candidate['NodeId']
+        if candidate['StakingAddress'] != 'atx1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4xerq62':
+            nodeid_list.append(nodeid)
+    return nodeid_list
 
 
 if __name__ == '__main__':
-    # url = 'http://192.168.10.224:6790'
+    url = 'http://192.168.10.224:6790'
     # url = 'http://192.168.120.121:6790'
-    url = 'http://192.168.120.124:6790'
+    # url = 'http://10.1.1.60:6789'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
@@ -274,9 +234,9 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'atp1des5cqfsrsd6nyyp6h6ekghv5xdw0crqrppl8u'
-    pri_key = '4903b235e023e3e5ca6141bde591bd2834aa98251627895cee19c351e603a685'
-    account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
+    account = 'atp1k0aumpg2r6cawq4uqejpfw6m3n5v877pl4vgkj'
+    pri_key = '4fe61a44da26bf1a09771f6b26d22a40e03250dc1ef2141208611485f0ea79d1'
+    account1 = 'atx1999r47ahhuc4xhjdhppvgkyw3z03gu765vtx2u'
     pri_key1 = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
@@ -340,12 +300,12 @@ if __name__ == '__main__':
     #         {'Epoch': 600, 'Amount': amount1},
     #         {'Epoch': 700, 'Amount': amount1},
     #         {'Epoch': 800, 'Amount': amount2}]
-    plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
+    plan = [{'Epoch': 32, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = 'bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775'
+    node_id = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
-    node_id1 = '25af23c768bb57bbb5b72e349cf23bbb371e7359a3c0436cc3c22f28edbfa3429a511cd1f05783f4b385f84cd0649884fd36b8d3018b0a108ed7e7b189f41566'
+    node_id1 = '09ac1c54b6d4e87465eba8c17b149fc2b0add867f69253230c7ce843970ddbed57d79dac993cf89ca597dfe6bc63935e7429947b71f575a0ad63551c10e4a2ac'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
     # for i in list:
     #     print(i)
@@ -390,7 +350,7 @@ if __name__ == '__main__':
     # StakingBlockNum = 515
     # get_candidatelist(url)
     # addresss = 'lat13l39glde394a6kkrm5aenj4ty7m7565x8sgtrf'
-    # print(Web3.fromWei(1000000000000000000000, 'ether'))
+    # print(Web3.fromWei(999999999999999936000, 'ether'))
     # fff()
     # get_listGovernParam(url)
     # getDelegateReward(url, account)
@@ -404,8 +364,8 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
-    amount = Web3.toWei(10000, 'ether')
-    print(amount)
+    # amount = Web3.toWei(8.773190798799, 'ether')
+    # print(amount)
     # amount = 9167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
     # for pri_key in privateKey:
@@ -413,14 +373,40 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createRestrictingPlan(url, account, plan, pri_key1)
-    # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
+    # createstaking(url, 0, pri_key, Web3.toWei(10000, 'ether'), benifit_address='atx1l6tmfpjqfey373yrulxkr8egvgplgnx5g66s4u')
     # get_candinfo(url, node_id)
     # getDelegateInfo(url, 9, account, node_id)
     # getDelegateInfo(url, 64, account, '7038eb30c06683c97282d0d7acbf939c15bcfc390eb461983445c2d58328d88b85a3d4c79867c18a5ed9442a13062c4b5a9f9e03ea7026e000c9b13c2a1d3255')
     # getDelegateInfo(url, 562, account, '7c31d0e2f716324c9051c322be59dd86194f28ad7b71e3bc3837062708b7207e82bed0d6e24691b9107549787b541e3c917ec7503e0ba3addd1340075188bad6')
     # getDelegateInfo(url, 555, account, 'bc9dabae54a13202ec765c1537c57b9f6659161596eae7c0344a606e9396c63c96a2a76aadc320100e9a56c5acdb8faddfb61733bddeff7b9f261ac54a46d775')
     # getDelegateInfo(url, 548, account, 'd80caefe38ec4bfcb8bf99793f63da63662d0acf34c8adeb96ab89a3c6b96b4cf862d405febfa708d28f64895e755e1f60c2821124915f369746a78834a8b906')
-    # getDelegateReward(url, account)
-    # getRelatedListByDelAddr(url, account)
-    get_RestrictingPlan(url, account)
+    addresslist = ['atp1k0aumpg2r6cawq4uqejpfw6m3n5v877pl4vgkj',
+                   'atp1des5cqfsrsd6nyyp6h6ekghv5xdw0crqrppl8u',
+                   'atp1kqyfg9ju4fppl090xwf5nxjkg7zj7yc3r43r4x',
+                   'atp1e7q4z8dkns6vpk8v27f2hghgz8mr242zcl5aze',
+                   'atp1540hmathq6fm5ynm5f4fp4ny96nkrk6x75r9kl',
+                   'atp1nufdg2rvche4upfan94kfwvn62mcr22h5sxef6',
+                   'atp1zpunl3yfp42yazqmqvkna54nrjuu6khfnhhwg2']
+    for i in addresslist:
+        getDelegateReward(url, account)
+        # 查询地址所有委托信息
+        result = getRelatedListByDelAddr(url, account)
+        # print(result)
+        amount_add = 0
+        for i in result['Ret']:
+            resutl = getDelegateInfo(url, i['StakingBlockNum'], account, i['NodeId'])
+            amount_add = amount_add + int(resutl['Ret']['RestrictingPlan'])
+        print(amount_add)
+        get_RestrictingPlan(url, account)
+    # getlistProposal(url)
     # get_RestrictingPlan(url, 'atp1s668hqh6hsanndfjq4wrqn5c7cdtexdtap2gz4')
+    # 循环委托节点
+    # nodeid_list = get_nodeId_list(url)
+    # for nodeid in nodeid_list:
+    #     print(nodeid)
+    #     amount_tmp = uniform(100, 1000)
+    #     # amount_tmp = 500
+    #     print(amount_tmp)
+    #     delegate(url, 1, nodeid, Web3.toWei(amount_tmp, 'ether'), pri_key)
+        # time.sleep(1)
+    # delegate(url, 1, nodeid_list[4], Web3.toWei(1000, 'ether'), pri_key)

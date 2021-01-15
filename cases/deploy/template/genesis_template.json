@@ -20,7 +20,7 @@
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
             "maxValidators": 20,
-            "unStakeFreezeDuration": 5,
+            "unStakeFreezeDuration": 20,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
         },
@@ -31,7 +31,7 @@
             "maxEvidenceAge": 1,
             "zeroProduceCumulativeTime": 1,
             "zeroProduceNumberThreshold": 1,
-            "zeroProduceFreezeDuration":1
+            "zeroProduceFreezeDuration":15
         },
         "gov": {
             "versionProposalVoteDurationSeconds": 1600,
