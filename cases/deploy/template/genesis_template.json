@@ -8,7 +8,7 @@
             "amount": 10,
             "period": 10000,
             "validatorMode": "ppos"
-        },  "genesisVersion": 3330
+        },  "genesisVersion": 3840
     },
     "economicModel": {
         "common": {
@@ -19,8 +19,8 @@
         "staking": {
             "stakeThreshold": 10000000000000000000000,
             "operatingThreshold": 1000000000000000000,
-            "maxValidators": 20,
-            "unStakeFreezeDuration": 20,
+            "maxValidators": 5,
+            "unStakeFreezeDuration": 2,
             "rewardPerMaxChangeRange": 500,
             "rewardPerChangeInterval": 2
         },
@@ -31,7 +31,7 @@
             "maxEvidenceAge": 1,
             "zeroProduceCumulativeTime": 1,
             "zeroProduceNumberThreshold": 1,
-            "zeroProduceFreezeDuration":15
+            "zeroProduceFreezeDuration":1
         },
         "gov": {
             "versionProposalVoteDurationSeconds": 1600,
