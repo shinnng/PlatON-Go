@@ -111,7 +111,6 @@ def client_verifier(global_running_env, staking_cfg) -> Client:
     """
     all_clients = get_clients(global_running_env, staking_cfg)
     verifier_list = get_pledge_list(all_clients[0].ppos.getVerifierList)
-    log.info('verifierlist{}'.format(verifier_list))
     for client in all_clients:
         if client.node.node_id in verifier_list:
             return client

@@ -63,7 +63,7 @@ def upload_platon(node: Node, platon_bin):
     node.run_ssh("rm -rf {}".format(node.remote_bin_file))
     node.upload_file(platon_bin, node.remote_bin_file)
     node.run_ssh("chmod +x {}".format(node.remote_bin_file))
-
+    log.info(f"Node {node.node_mark} upload platon succeed")
     node.restart()
 
 def get_blockhash(node, blocknumber=None):
@@ -155,15 +155,14 @@ def get_pledge_list(func, nodeid=None) -> list:
     :return:
     """
     validator_info = func().get('Ret')
-    print(func())
-    if validator_info == "Retreiving verifier list failed:The validator does not exist":
+    log.info(f'validator_info: {validator_info}')
+    if validator_info == "Getting verifierList is failed:The validator is not exist":
         time.sleep(10)
         validator_info = func().get('Ret')
     if validator_info == "Getting candidateList is failed:CandidateList info is not found":
         time.sleep(10)
-        validator_info = func().get('Ret')
+        validator_info == func().get('Ret')
     if not nodeid:
-        print(validator_info)
         validator_list = []
         for info in validator_info:
             validator_list.append(info.get('NodeId'))
@@ -265,7 +264,7 @@ def wait_block_number(node, block, interval=1):
         print_t += 1
         if print_t == 10:
             # Print once every 10 seconds to avoid printing too often
-            log.info('The current block height is {}, waiting until {}'.format(node.block_number, block))
+            log.info('{}: The current block height is {}, waiting until {}'.format(node.node_mark, node.block_number, block))
             print_t = 0
         if node.block_number > block:
             return

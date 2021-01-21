@@ -266,6 +266,7 @@ class TestEnvironment:
             genesis_file = self.cfg.genesis_tmp
         log.info("deploy all node")
         self.deploy_nodes(self.get_all_nodes(), genesis_file)
+        time.sleep(10)
         log.info("deploy success")
 
     def prepare_all(self):

@@ -59,7 +59,7 @@ def get_proposal_result(pip, proposal_type, code):
 def vote(pip, pip_id, vote_option=PipConfig.vote_option_yeas):
     result = pip.vote(pip.node.node_id, pip_id, vote_option,
                       pip.node.staking_address, transaction_cfg=pip.cfg.transaction_cfg)
-    log.info(f'Node {pip.node.node_id} vote param proposal result {result}')
+    log.info(f'Node {pip.node.node_mark} vote param proposal result {result}')
     return result
 
 
@@ -93,12 +93,14 @@ def make_0mb_slash(slash_client, check_client):
     构造零出块处罚场景
     """
     slash_node = slash_client.node
+    print(f'slash_client: {slash_client.node.node_mark}, check_client: {check_client.node.node_mark}')
     pledge_amount, block_reward, slash_blocks = get_out_block_penalty_parameters(slash_client, slash_node, 'Released')
-    log.info(f'slashing param : pledge_amount ({pledge_amount}), block_reward ({block_reward}), slash_blocks ({slash_blocks})')
+    log.info(
+        f'slashing param : pledge_amount ({pledge_amount}), block_reward ({block_reward}), slash_blocks ({slash_blocks})')
     log.info("make zero produce block")
-    start_num, end_num = verify_low_block_rate_penalty(slash_client, check_client, block_reward, slash_blocks, pledge_amount, 'Released')
+    start_num, end_num = verify_low_block_rate_penalty(slash_client, check_client, block_reward, slash_blocks,
+                                                       pledge_amount, 'Released')
     log.info('check Verifier Lists')
-    # assert check_node_in_list(slash_node.node_id, check_client.ppos.getCandidateList) is False
     assert check_node_in_list(slash_node.node_id, check_client.ppos.getVerifierList) is False
     assert check_node_in_list(slash_node.node_id, check_client.ppos.getValidatorList) is False
     slash_client.node.start()
@@ -502,3 +504,98 @@ class TestSlashing:
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         assert version_declare(pip) == 0
 
+    @pytest.mark.P1
+    def test_all_process_of_pip_after_slashed(self, verifiers, new_genesis_env):
+        """
+        @describe: 节点投票后被处罚，升级提案生效后，节点投票时声明的版本被回退
+        @issues: 1666
+        @step:
+        - 1. 节点发起升级提案
+        - 2. 节点进行投票后，被零出块处罚，不解质押
+        - 3. 提案生效后，节点解冻结
+        @expect:
+        - 1. 节点解冻结后，可被选入验证人
+        """
+        # init: 修改依赖参数的值，并重新部署环境
+        genesis = to_genesis(new_genesis_env.genesis_config)
+        genesis.economicModel.slashing.slashBlocksReward = 0
+        new_genesis_env.set_genesis(genesis.to_dict())
+        new_genesis_env.deploy_all()
+        pips = get_pips(verifiers)
+        pip = pips[0]
+        # step1: 发起升级提案，并进行投票
+        pip_id = version_proposal(pip, pip.cfg.version5, 10)
+        for pip in pips[:3]:
+            upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+            assert vote(pip, pip_id, pip.cfg.vote_option_yeas) == 0
+        # step2: 构造零出块处罚，等待提案生效，并且处罚冻结期结束
+        start_block, end_block = make_0mb_slash(verifiers[1], verifiers[0])
+        assert start_block < pip.pip.getProposal(pip_id)['Ret']['EndVotingBlock']
+        vote_info = pip.get_accuverifiers_count(pip_id)
+        assert vote_info[0] == 4  # all verifiers
+        assert vote_info[1] == 3  # all yeas vote
+        wait_proposal_active(pip, pip_id)
+        wait_block_number(pip.node, end_block)
+        # step3: 检查提案生效后，检查节点是否被选举
+        pip.economic.wait_settlement(pip.node)
+        assert check_node_in_list(pip.node.node_id, pip.node.ppos.getCandidateList) is True
+        assert check_node_in_list(pip.node.node_id, pip.node.ppos.getValidatorList) is True
+        assert check_node_in_list(pip.node.node_id, pip.node.ppos.getVerifierList) is True
+
+    def test_resync_block_after_upgrade(self, verifiers, new_genesis_env):
+        """
+        @describe: 链升级后，节点重新同步区块
+        @step:
+        - 1. 节点发起升级提案，投票并等待提案生效
+        - 2. 节点清理数据库，重新初始化，并重新同步区块
+        @expect:
+        - 1. 块高可正常同步到提升生效后的块高
+        """
+        pips = get_pips(verifiers)
+        pip = pips[0]
+        # step1: 节点发起升级提案，投票并等待提案生效
+        pip_id = version_proposal(pip, pip.cfg.version5, 5)
+        for pip in pips:
+            upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+            assert vote(pip, pip_id, pip.cfg.vote_option_yeas) == 0
+        wait_proposal_active(pip, pip_id)
+        # step2: 节点清理数据库，重新初始化，并重新同步区块
+        block_number = pip.node.block_number
+        pip.node.clean_db()
+        pip.node.init()
+        pip.node.restart()
+        wait_block_number(pip.node, block_number)
+
+    def test_low_version_cause_panic(self, verifiers, new_genesis_env):
+        """
+        @describe: 链升级后，节点未进行升级，节点panic
+        @step:
+        - 1. 链升级后，节点未进行升级
+        @expect:
+        - 1. 节点panic
+        """
+        pips = get_pips(verifiers)
+        pip = pips[0]
+        # step1: 链升级后，节点未进行升级
+        pip_id = version_proposal(pip, pip.cfg.version5, 5)
+        for pip in pips[1:]:
+            upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+            assert vote(pip, pip_id, pip.cfg.vote_option_yeas) == 0
+        end_block = pip.pip.getProposal(pip_id)['Ret']['ActiveBlock'] - 1
+        wait_proposal_active(pips[1], pip_id)
+        log.info(f'current active version: {pips[1].pip.getActiveVersion()}')
+        # step2: 断言节点panic
+        # wait_block_number(pip.node, end_block)
+        time.sleep(3)
+        assert pip.pip.web3.isConnected() is False
+
+    def test_debug(self, all_clients, new_genesis_env):
+        pips = get_pips(all_clients)
+        pip = pips[0]
+        # step1: 链升级后，节点未进行升级
+        pip_id = version_proposal(pip, pip.cfg.version4, 20)
+        for pip in pips:
+            upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+            print(vote(pip, pip_id, pip.cfg.vote_option_yeas))
+        wait_proposal_active(pips[1], pip_id)
+        log.info(f'current active version: {pips[1].pip.getActiveVersion()}')
