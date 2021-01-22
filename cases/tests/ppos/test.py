@@ -2,15 +2,15 @@ import os
 import time
 from random import randint, shuffle
 
-from alaya import HTTPProvider, Web3, WebsocketProvider, Account
-from alaya.admin import Admin
-from alaya.eth import Eth
-from alaya.middleware import geth_poa_middleware
-from alaya.packages.platon_keys.utils.address import MIANNETHRP
-from alaya.ppos import Ppos
+from client_sdk_python import HTTPProvider, Web3, WebsocketProvider, Account
+from client_sdk_python.admin import Admin
+from client_sdk_python.eth import Eth
+from client_sdk_python.middleware import geth_poa_middleware
+from client_sdk_python.packages.platon_keys.utils.address import MIANNETHRP
+from client_sdk_python.ppos import Ppos
 from hexbytes import HexBytes
-from alaya.packages.platon_account.account import Account
-# from alaya.packages.platon_keys
+from client_sdk_python.packages.platon_account.account import Account
+# from client_sdk_python.packages.platon_keys
 # from conf.settings import TMP_ADDRES, ACCOUNT_FILE, BASE_DIR
 from numpy.ma import arange
 

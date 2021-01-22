@@ -1,5 +1,5 @@
 import pytest
-from alaya.eth import Eth
+from client_sdk_python.eth import Eth
 import allure
 
 from eth_utils import (
@@ -13,7 +13,7 @@ from eth_utils import (
     is_string,
 )
 from hexbytes import HexBytes
-from alaya.exceptions import (
+from client_sdk_python.exceptions import (
     InvalidAddress,
 )
 

@@ -6,8 +6,8 @@ import time
 
 import allure
 import pytest
-from alaya import Web3
-from alaya.eth import Eth
+from client_sdk_python import Web3
+from client_sdk_python.eth import Eth
 from hexbytes import HexBytes
 
 from common.log import log

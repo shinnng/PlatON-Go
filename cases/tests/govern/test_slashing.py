@@ -589,7 +589,7 @@ class TestSlashing:
         time.sleep(3)
         assert pip.pip.web3.isConnected() is False
 
-    def test_debug(self, all_clients, new_genesis_env):
+    def test_debug(self, all_clients):
         pips = get_pips(all_clients)
         pip = pips[0]
         # step1: 链升级后，节点未进行升级

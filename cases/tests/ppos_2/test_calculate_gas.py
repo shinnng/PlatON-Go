@@ -1,7 +1,7 @@
 from tests.lib.utils import *
 import rlp
 import pytest
-from alaya.packages.platon_account.internal.transactions import bech32_address_bytes
+from client_sdk_python.packages.platon_account.internal.transactions import bech32_address_bytes
 
 
 @pytest.mark.P3

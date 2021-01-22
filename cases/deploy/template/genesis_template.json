@@ -9,7 +9,8 @@
             "period": 10000,
             "validatorMode": "ppos"
         },
-        "genesisVersion": 3840
+        "genesisVersion": 3840,
+        "addressHRP": "atp"
     },
     "economicModel": {
         "common": {

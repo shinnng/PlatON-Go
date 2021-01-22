@@ -18,6 +18,7 @@ class Config:
     eip155Block: int
     cbft: Cbft
     genesisVersion: int
+    addressHRP: str
 
 
 @dataclass

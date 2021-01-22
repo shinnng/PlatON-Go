@@ -4,9 +4,9 @@ from decimal import Decimal
 
 import allure
 import pytest
-from alaya import Web3
+from client_sdk_python import Web3
 from dacite import from_dict
-from alaya.packages.platon_account.internal.transactions import bech32_address_bytes
+from client_sdk_python.packages.platon_account.internal.transactions import bech32_address_bytes
 
 from common.key import get_pub_key, mock_duplicate_sign
 from common.log import log
