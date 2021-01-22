@@ -353,7 +353,7 @@ def NodeDeployment(clients_noconsensus):
 
     result = client1.staking.create_staking(0, address1, address1, reward_per=80)
     assert_code(result, 0)
-    time.sleep(1)
+    time.sleep(3)
     result = client2.staking.create_staking(0, address2, address2, reward_per=80)
     assert_code(result, 0)
 

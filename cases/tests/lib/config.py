@@ -53,7 +53,7 @@ class EconomicConfig:
     # Built in node Amount of pledge
     DEVELOPER_STAKING_AMOUNT = 1500000000000000000000000
     # PlatON Foundation Address
-    FOUNDATION_ADDRESS = "atp1m6n2wj6cmnnqnmhhaytyf6x75607t7rh6y9kyu"
+    FOUNDATION_ADDRESS = "atp1h9nactzucjq3xx2xy88hv4fcuw9nyr96hf3adk"
     # Lock account account address
     FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
     # Pledged contract address
