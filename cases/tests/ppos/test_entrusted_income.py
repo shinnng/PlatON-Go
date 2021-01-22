@@ -4401,13 +4401,13 @@ def test_upgrade_proposal(all_clients, client_consensus):
     opt_client = get_client_by_nodeid(validator_id[0], all_clients)
     opt_pip = opt_client.pip
     print(consensus_clients[0].node.node_id)
-    # active_version = 3584
-    active_version = 3840
+    active_version = 3584
+    # active_version = 3840
     # print(opt_pip.node.ppos.getVerifierList())
     # print(opt_pip.node.ppos.getCandidateList())
     print(consensus_clients[0].node.staking_address,
           consensus_clients[0].node.eth.getBalance(consensus_clients[0].node.staking_address))
-    result = consensus_clients[0].pip.submitVersion(consensus_clients[0].node.node_id, '202015', active_version, 2,
+    result = consensus_clients[0].pip.submitVersion(consensus_clients[0].node.node_id, '202014', active_version, 2,
                                                     consensus_clients[0].node.staking_address,
                                                     transaction_cfg=consensus_clients[0].pip.cfg.transaction_cfg)
     assert result == 0
