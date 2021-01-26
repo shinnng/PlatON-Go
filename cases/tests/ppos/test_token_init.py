@@ -5,6 +5,7 @@ from decimal import Decimal
 import allure
 import pytest
 from client_sdk_python import Web3
+from client_sdk_python.packages.platon_keys.utils.address import address_bytes_to_bech32_address
 from dacite import from_dict
 from client_sdk_python.packages.platon_account.internal.transactions import bech32_address_bytes
 
@@ -49,17 +50,17 @@ def test_IT_IA_002_to_007(new_genesis_env):
             "balance": surplus_amount
         }
     }
-    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.0.json"
+    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.1.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
 
     # Verify the amount of each built-in account
-    foundation_louckup = node.eth.getBalance(node.web3.restrictingAddress, 0)
-    log.info('Initial lock up contract address： {} amount：{}'.format(node.web3.restrictingAddress,foundation_louckup))
+    foundation_louckup = node.eth.getBalance(node.ppos.restrictingAddress, 0)
+    log.info('Initial lock up contract address： {} amount：{}'.format(node.ppos.restrictingAddress,foundation_louckup))
     incentive_pool = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS, 0)
     log.info('Incentive pool address：{} amount：{}'.format(EconomicConfig.INCENTIVEPOOL_ADDRESS, incentive_pool))
-    staking = node.eth.getBalance(node.web3.stakingAddress, 0)
-    log.info('Address of pledge contract：{} amount：{}'.format(node.web3.stakingAddress, staking))
+    staking = node.eth.getBalance(node.ppos.stakingAddress, 0)
+    log.info('Address of pledge contract：{} amount：{}'.format(node.ppos.stakingAddress, staking))
     foundation = node.eth.getBalance(EconomicConfig.FOUNDATION_ADDRESS, 0)
     log.info('PlatON Foundation address：{} amount：{}'.format(EconomicConfig.FOUNDATION_ADDRESS, foundation))
     remain = node.eth.getBalance(EconomicConfig.REMAIN_ACCOUNT_ADDRESS, 0)
@@ -2114,3 +2115,52 @@ def test_IT_SD2222(global_test_env):
     log.info("result: {}".format(result))
     time.sleep(2)
     print('address1', address1, node.eth.getBalance(address1))
+
+
+def create_account(node, HRP):
+    account = node.eth.account.create(net_type=HRP)
+    address = account.address
+    prikey = account.privateKey.hex()[2:]
+    print(address, prikey)
+    return address, prikey
+
+
+def test_hrp_address(new_genesis_env, client_consensus):
+    """
+    更改钱包地址前缀
+    """
+    node = new_genesis_env.get_rand_node()
+    community_amount = Web3.toWei(500000, 'ether')
+    platon_fund = Web3.toWei(2500000, 'ether')
+    genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
+    genesis.economicModel.innerAcc.cdfBalance = community_amount
+    genesis.config.addressHRP = 'lxg'
+    surplus_amount = str(Web3.toWei(105000000, 'ether') - community_amount - platon_fund - Web3.toWei(2000000, 'ether'))
+    HRP = genesis.config.addressHRP
+    print(HRP)
+    platon_fund_account, _ = create_account(node, HRP)
+    print(platon_fund_account)
+    genesis.economicModel.innerAcc.platonFundAccount = platon_fund_account
+    cdf_account, _ = create_account(node, HRP)
+    print(cdf_account)
+    surplus_account, _ = create_account(node, HRP)
+    print(surplus_account)
+    genesis.economicModel.innerAcc.cdfAccount = cdf_account
+    address_bytes = bytes.fromhex('1000000000000000000000000000000000000003')
+    incite_account = address_bytes_to_bech32_address(address_bytes, HRP)
+    print(incite_account)
+    genesis.alloc = {
+        incite_account: {
+            "balance": "2000000000000000000000000"
+        },
+        surplus_account: {
+            "balance": surplus_amount
+        }
+    }
+    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.1.json"
+    genesis.to_file(new_file)
+    new_genesis_env.deploy_all(new_file)
+
+    client_consensus.economic.wait_settlement(node)
+
+    assert node.eth.blockNumber > 0

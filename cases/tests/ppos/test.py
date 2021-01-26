@@ -6,7 +6,8 @@ from client_sdk_python import HTTPProvider, Web3, WebsocketProvider, Account
 from client_sdk_python.admin import Admin
 from client_sdk_python.eth import Eth
 from client_sdk_python.middleware import geth_poa_middleware
-from client_sdk_python.packages.platon_keys.utils.address import MIANNETHRP
+# from client_sdk_python.packages.platon_keys.utils.address import MIANNETHRP
+from client_sdk_python.packages.platon_keys.utils.address import address_bytes_to_bech32_address
 from client_sdk_python.ppos import Ppos
 from hexbytes import HexBytes
 from client_sdk_python.packages.platon_account.account import Account
@@ -178,18 +179,8 @@ def getDelegateInfo(url, staking_blocknum, del_address, node_id):
     print(result)
 
 
-def create_account(url, chain_id=201030):
-    web3 = connect_web3(url)
-    platon = Eth(web3)
-    if chain_id == 201030:
-        HRP = 'atx'
-    else:
-        HRP = 'atp'
-    account = platon.account.create(net_type=HRP)
-    address = account.address
-    prikey = account.privateKey.hex()[2:]
-    print(f"create account = {address}, {prikey}")
-    return address, prikey
+def create_account(HRP='atp'):
+    address_bytes_to_bech32_address()
 
 
 # def get_listGovernParam(url, module=None, from_address=None):
@@ -257,14 +248,14 @@ def fff(url):
 
 if __name__ == '__main__':
     # url = 'http://192.168.10.224:6790'
-    # url = 'http://192.168.10.221:6790'
+    url = 'http://192.168.10.221:6790'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
     # url = 'http://154.85.35.163:80'
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
-    url = 'https://openapi.alaya.network/rpc'
+    # url = 'https://openapi.alaya.network/rpc'
     account = 'atp1zu6j8d4rz03lafgcfrdxc075fx6p85633utaq5'
     pri_key = 'a872ee498a5a92b87b1780b1d3d71dd0cfce2980f59960b76318f5d409908303'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -272,7 +263,7 @@ if __name__ == '__main__':
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
     # epoch2 = 20
-    # create_account(url)
+    create_account(url, 'lxh')
     amount1 = Web3.toWei(833, 'ether')
     amount2 = Web3.toWei(837, 'ether')
     # list = ['atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9',
@@ -404,7 +395,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    get_candinfo(url, node_id)
+    # get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
     # get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')

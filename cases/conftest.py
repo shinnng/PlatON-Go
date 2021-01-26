@@ -62,6 +62,7 @@ def pytest_addoption(parser):
     parser.addoption("--cantDeploy", action="store_true", default=False, dest="cantDeploy",
                      help="deploy switch default to can deploy")
 
+
 @pytest.fixture(scope="session", autouse=False)
 def global_test_env(request, worker_id):
     log.info("start global_test_env>>>>>>>>>>>>>>")
