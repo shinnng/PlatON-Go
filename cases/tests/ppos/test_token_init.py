@@ -55,7 +55,7 @@ def test_IT_IA_002_to_007(new_genesis_env):
 
     # Verify the amount of each built-in account
     foundation_louckup = node.eth.getBalance(node.web3.restrictingAddress, 0)
-    log.info('Initial lock up contract address： {} amount：{}'.format(node.web3.restrictingAddress,foundation_louckup))
+    log.info('Initial lock up contract address： {} amount：{}'.format(node.web3.restrictingAddress, foundation_louckup))
     incentive_pool = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS, 0)
     log.info('Incentive pool address：{} amount：{}'.format(EconomicConfig.INCENTIVEPOOL_ADDRESS, incentive_pool))
     staking = node.eth.getBalance(node.web3.stakingAddress, 0)

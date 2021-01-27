@@ -617,7 +617,8 @@ def test_IV_038(client_new_node):
     assert candidate_info['RestrictingPlan'] == economic.create_staking_limit
     assert candidate_info['Released'] == 0
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
-    assert restricting_info['balance'] == economic.create_staking_limit - amount1
+    print(restricting_info)
+    assert restricting_info['balance'] == economic.create_staking_limit
     assert restricting_info['Pledge'] == economic.create_staking_limit
     assert restricting_info['debt'] == amount1
 
@@ -653,7 +654,7 @@ def test_IV_039(client_new_node, gas_type):
     assert candidate_info['RestrictingPlan'] == node.web3.toWei(5000, 'ether')
     assert candidate_info['Released'] == node.web3.toWei(5000, 'ether')
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
-    assert restricting_info['balance'] == node.web3.toWei(5000, 'ether') - amount1
+    assert restricting_info['balance'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['Pledge'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['debt'] == amount1
     balance1 = node.eth.getBalance(staking_address)
@@ -787,7 +788,7 @@ def test_IV_043(client_new_node, gas_type):
     economic.wait_settlement(node)
     for i in range(4):
         print('number', i)
-        balance_tmp = balance_tmp - node.web3.toWei(1000, 'ether')
+        balance_tmp = balance_tmp
         debt_amount_tmp = debt_amount_tmp + node.web3.toWei(1000, 'ether')
         restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
         print(restricting_info)
