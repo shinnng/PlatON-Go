@@ -502,3 +502,25 @@ class TestSlashing:
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         assert version_declare(pip) == 0
 
+    def test_debug(self, verifiers):
+        pips = get_pips(verifiers)
+        pip = pips[0]
+        log.info(f'0.13.0 version: {pips[1].pip.getActiveVersion()}')
+
+        time.sleep(30)
+        for pip in pips[0:3]:
+            upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
+        pip_id = version_proposal(pip, 3584, 5)
+        for pip in pips[0:3]:
+            print(vote(pip, pip_id, pip.cfg.vote_option_yeas))
+        wait_proposal_active(pips[1], pip_id)
+        log.info(f'0.14.0 version: {pips[1].pip.getActiveVersion()}')
+
+        time.sleep(300)
+        pip_id = version_proposal(pip, 3840, 5)
+        for pip in pips:
+            upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN1)
+        for pip in pips:
+            print(vote(pip, pip_id, pip.cfg.vote_option_yeas))
+        wait_proposal_active(pips[1], pip_id)
+        log.info(f'0.15.0 version: {pips[1].pip.getActiveVersion()}')
