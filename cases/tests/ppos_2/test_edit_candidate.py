@@ -272,11 +272,11 @@ def test_MPI_014(client_new_node):
     illegal_nodeID = "7ee3276fd6b9c7864eb896310b5393324b6db785a2528c00cc28ca8c" \
                      "3f86fc229a86f138b1f1c8e3a942204c03faeb40e3b22ab11b8983c35dc025de42865990"
     address, pri_key = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                         10 ** 18 * 10000000)
+                                                                         10 ** 18 * 200000)
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
-    result = client_new_node.ppos.editCandidate(address, illegal_nodeID, external_id,
-                                                node_name, website, details, pri_key, reward_per=0)
+    result = client_new_node.ppos.editCandidate(pri_key, illegal_nodeID, address, external_id,
+                                                node_name, website, details, reward_per=0)
     log.info(result)
     assert_code(result, 301102)
 
@@ -337,8 +337,8 @@ def test_MPI_017(client_new_node):
     address, pri_key = client_new_node.economic.account.generate_account(client_new_node.node.web3,
                                                                          10 ** 18 * 10000000)
 
-    result = client_new_node.ppos.editCandidate(address, client_new_node.node.node_id,
-                                                external_id, node_name, website, details, pri_key, reward_per=0)
+    result = client_new_node.ppos.editCandidate(pri_key, client_new_node.node.node_id, address,
+                                                external_id, node_name, website, details, reward_per=0)
     log.info(result)
     assert_code(result, 301102)
 
@@ -432,7 +432,7 @@ def test_MPI_018(new_genesis_env, clients_noconsensus):
 
 
 @pytest.mark.P1
-def test_MPI_019(clients_noconsensus):
+def test_MPI_019(clients_noconsensus, reset_environment):
     """
     非验证人连续修改委托分红奖励
     """

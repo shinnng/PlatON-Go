@@ -265,7 +265,7 @@ class Economic:
         if proportion_ratio is None:
             proportion_ratio = self.genesis.economicModel.slashing.duplicateSignReportReward
         penalty_reward = int(Decimal(str(amount)) * Decimal(str(penalty_ratio / 10000)))
-        print(penalty_reward)
+        # print(penalty_reward)
         proportion_reward = int(Decimal(str(penalty_reward)) * Decimal(str(proportion_ratio / 100)))
         incentive_pool_reward = penalty_reward - proportion_reward
         return proportion_reward, incentive_pool_reward

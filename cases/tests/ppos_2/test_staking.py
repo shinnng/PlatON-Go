@@ -51,7 +51,7 @@ def test_IV_003(client_consensus):
 @pytest.mark.P1
 def test_IV_004(client_consensus):
     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3,
-                                                                    10 ** 18 * 10000000)
+                                                                    client_new_node.economic.create_staking_limit * 4)
     result = client_consensus.delegate.delegate(0, address)
     log.info(result)
     assert_code(result, 301107)
@@ -86,7 +86,7 @@ def test_IV_006_007_008(client_consensus):
     result = client_consensus.staking.create_staking(0, StakingAddress, StakingAddress)
     assert_code(result, 0)
     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3,
-                                                                    10 ** 18 * 10000000)
+                                                                    client_new_node.economic.create_staking_limit * 4)
     result = client_consensus.delegate.delegate(0, address)
     log.info(result)
     assert_code(result, 0)
@@ -96,7 +96,7 @@ def test_IV_006_007_008(client_consensus):
 @pytest.mark.P3
 def test_IV_009(client_consensus):
     address1, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3,
-                                                                     10 ** 18 * 10000000)
+                                                                     client_new_node.economic.create_staking_limit * 4)
     StakingAddress = client_consensus.economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS
     result = client_consensus.staking.edit_candidate(StakingAddress, address1)
     log.info(result)
@@ -114,7 +114,7 @@ def test_IV_014_015_019_024(client_new_node):
     024：Use the correct version signature
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     log.info("Generate address:{}".format(address))
     result = client_new_node.staking.create_staking(0, address, address)
     log.info(result)
@@ -134,7 +134,7 @@ def test_IV_016(client_new_node):
     illegal_nodeID = "7ee3276fd6b9c7864eb896310b5393324b6db785a2528c00cc28ca8c" \
                      "3f86fc229a86f138b1f1c8e3a942204c03faeb40e3b22ab11b8983c35dc025de42865990"
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     result = client_new_node.staking.create_staking(0, address, address, node_id=illegal_nodeID)
     log.info(result)
     assert_code(result, 301003)
@@ -149,7 +149,7 @@ def test_IV_017(client_new_node):
     """
     INCENTPEPOOL_ADDRESS = EconomicConfig.INCENTIVEPOOL_ADDRESS
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     result = client_new_node.staking.create_staking(0, INCENTPEPOOL_ADDRESS, address)
     assert_code(result, 0)
 
@@ -164,7 +164,7 @@ def test_IV_018(client_new_node):
     """
     FOUNDATION_ADDRESS = client_new_node.economic.cfg.FOUNDATION_ADDRESS
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     result = client_new_node.staking.create_staking(0, FOUNDATION_ADDRESS, address)
     assert_code(result, 0)
 
@@ -177,7 +177,7 @@ def test_IV_020_21(client_new_node):
     021:gas is insufficient
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     amount = client_new_node.economic.create_staking_limit
     result = client_new_node.staking.create_staking(0, address, address, amount=amount - 1)
     log.info(result)
@@ -201,7 +201,7 @@ def test_IV_025(client_new_node, client_consensus):
     :return:
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     program_version_sign = client_consensus.node.program_version_sign
     result = client_new_node.staking.create_staking(0, address, address, program_version_sign=program_version_sign)
     log.info(result)
@@ -211,8 +211,7 @@ def test_IV_025(client_new_node, client_consensus):
 @allure.title("BlsPublicKey is too long")
 @pytest.mark.P2
 def test_IV_026_01(client_new_node):
-    address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+    address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3, client_new_node.economic.create_staking_limit * 4)
     blspubkey = client_new_node.node.blspubkey + "00000000"
     log.info(blspubkey)
     status = 0
@@ -228,7 +227,7 @@ def test_IV_026_01(client_new_node):
 @pytest.mark.P2
 def test_IV_026_02(client_new_node):
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     blspubkey = client_new_node.node.blspubkey[0:10]
     log.info(blspubkey)
     status = 0
@@ -244,7 +243,7 @@ def test_IV_026_02(client_new_node):
 @pytest.mark.P2
 def test_IV_026_03(client_new_node):
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     program_version = 0000
     result = client_new_node.staking.create_staking(0, address, address, program_version=program_version)
     assert_code(result, 301003)
@@ -263,7 +262,7 @@ def test_IV_027(client_new_node):
     bls_proof = client_new_node.node.schnorr_NIZK_prove
     amount = client_new_node.economic.create_staking_limit
     address, pri_key = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                         10 ** 18 * 10000000)
+                                                                         client_new_node.economic.create_staking_limit * 4)
 
     result = client_new_node.ppos.createStaking(0, address, client_new_node.node.node_id,
                                                 external_id, node_name, website, details, amount,
@@ -334,7 +333,7 @@ def test_IV_030(client_new_node):
     :return:
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
     log.info("Into the next grandchild")
@@ -355,12 +354,12 @@ def test_IV_031(client_new_node):
     :return:
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   client_new_node.economic.create_staking_limit * 4)
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
 
     address1, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                    10 ** 18 * 10000000)
+                                                                    client_new_node.economic.create_staking_limit * 4)
     result = client_new_node.staking.create_staking(0, address1, address1)
     log.info(result)
     assert_code(result, 301101)
@@ -797,7 +796,7 @@ def test_IV_043(client_new_node, gas_type):
         economic.wait_settlement(node)
 
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
-    assert restricting_info['balance'] == 0
+    assert restricting_info['balance'] == balance_tmp
     assert restricting_info['debt'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['plans'] is None
 
@@ -1169,30 +1168,38 @@ def test_IV_049(new_genesis_env, clients_noconsensus):
             print('report_address_balance', report_address_balance)
             incentive_pool_balance = client1.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
             print('incentive_pool_balance', incentive_pool_balance)
-            staking_address_balance = client1.node.eth.getBalance(staking_address)
-            print('staking_address_balance', staking_address_balance)
             # Report verifier Duplicate Sign
             result = verification_duplicate_sign(client, 1, 1, report_address, current_block)
             assert_code(result, 0)
+            incentive_pool_balance1 = client1.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+            print('incentive_pool_balance1', incentive_pool_balance1)
+            print(client1.node.eth.blockNumber)
             break
         else:
             # wait consensus block
             economic.wait_consensus(node)
 
     candidate_info1 = node.ppos.getCandidateInfo(node.node_id)['Ret']
+    print(candidate_info1)
+    assert candidate_info1['RestrictingPlan'] + proportion_reward + incentive_pool_reward == candidate_info['Shares']
     assert candidate_info1['Released'] == 0
     assert candidate_info1['RestrictingPlan'] == candidate_info['RestrictingPlan'] - node.web3.toWei(1200, 'ether')
 
-    client1.economic.wait_settlement(client1.node, 3)
+    client1.economic.wait_settlement(client1.node)
+    staking_address_balance = client1.node.eth.getBalance(staking_address)
+    print('staking_address_balance', staking_address_balance)
+    print(client1.node.eth.blockNumber)
+    restricting_info1 = client1.ppos.getRestrictingInfo(staking_address)['Ret']
+    print(restricting_info1)
+    client1.economic.wait_settlement(client1.node, 2)
+    print(client1.node.ppos.getRestrictingInfo(staking_address))
     report_address_balance1 = client1.node.eth.getBalance(report_address)
     print('report_address_balance', report_address_balance1)
-    incentive_pool_balance1 = client1.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
-    print('incentive_pool_balance', incentive_pool_balance1)
     staking_address_balance1 = client1.node.eth.getBalance(staking_address)
     print('staking_address', staking_address_balance1)
     assert report_address_balance + proportion_reward - report_address_balance1 < client1.node.web3.toWei(0.01, 'ether')
-    assert incentive_pool_balance + incentive_pool_reward == incentive_pool_balance1
-    assert staking_address_balance + candidate_info['RestrictingPlan'] - node.web3.toWei(1200, 'ether') == staking_address_balance1
+    # assert incentive_pool_balance + incentive_pool_reward == incentive_pool_balance1
+    assert staking_address_balance + restricting_info1['balance'] == staking_address_balance1
 
 
 @pytest.mark.P2
@@ -1268,5 +1275,5 @@ def test_IV_050(client_new_node, client_consensus):
     print(restricting_info)
     assert restricting_info['balance'] == node.web3.toWei(4000, 'ether')
     assert restricting_info['Pledge'] == node.web3.toWei(500, 'ether')
-    assert delegate_address_balance + economic.delegate_limit * 1000 == delegate_address_balance1
+    assert delegate_address_balance + economic.delegate_limit * 1000 - delegate_address_balance1 < node.web3.toWei(0.001, 'ether')
 

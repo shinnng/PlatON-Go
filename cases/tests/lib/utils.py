@@ -392,7 +392,9 @@ def get_the_dynamic_parameter_gas_fee(data):
     :return:
     """
     zero_number = 0
+    print(data)
     byte_group_length = len(data)
+    print(byte_group_length)
     for i in data:
         if i == 0:
             zero_number = zero_number + 1

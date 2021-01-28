@@ -776,7 +776,7 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     print(balance1)
     assert info['Pledge'] == pledge_amount - punishment_amonut, 'ErrMsg: restricting Pledge amount {}'.format(
         info['Pledge'])
-    assert info['balance'] == 0
+    assert info['balance'] == pledge_amount - punishment_amonut
     assert balance == balance1
     # create Restricting Plan again
     staking_amount = von_amount(economic.create_staking_limit, 2)

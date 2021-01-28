@@ -119,11 +119,11 @@ def test_DI_007(client_new_node):
     :return:
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   10 ** 18 * 200000)
 
     client_new_node.staking.create_staking(0, address, address)
     address1, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                    10 ** 18 * 10000000)
+                                                                    10 ** 18 * 200000)
 
     fig = {"gas": 1}
     status = 0
@@ -499,9 +499,9 @@ def test_DI_029_030(client_new_node):
     030:Lock periodic query information
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   10 ** 18 * 20000)
     address_delegate, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                            10 ** 18 * 10000000)
+                                                                            10 ** 18 * 20000)
 
     client_new_node.staking.create_staking(0, address, address)
     result = client_new_node.delegate.delegate(0, address_delegate)
@@ -525,9 +525,9 @@ def test_DI_031(client_new_node):
     The delegate message no longer exists
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   10 ** 18 * 200000)
     address_delegate, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                            10 ** 18 * 10000000)
+                                                                            10 ** 18 * 200000)
 
     client_new_node.staking.create_staking(0, address, address)
     result = client_new_node.delegate.delegate(0, address_delegate)
@@ -552,9 +552,9 @@ def test_DI_032_033(client_new_node):
     033The delegate information is still locked
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   10 ** 18 * 200000)
     address_delegate, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                            10 ** 18 * 10000000)
+                                                                            10 ** 18 * 200000)
 
     client_new_node.staking.create_staking(0, address, address)
     result = client_new_node.delegate.delegate(0, address_delegate)
@@ -585,9 +585,9 @@ def test_DI_034(client_new_node):
     The entrusted candidate has withdrawn of his own accord
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                   10 ** 18 * 10000000)
+                                                                   10 ** 18 * 200000)
     address_delegate, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
-                                                                            10 ** 18 * 10000000)
+                                                                            10 ** 18 * 200000)
 
     client_new_node.staking.create_staking(0, address, address)
     result = client_new_node.delegate.delegate(0, address_delegate)

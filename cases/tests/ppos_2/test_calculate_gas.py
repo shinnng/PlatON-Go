@@ -12,11 +12,12 @@ def test_staking_gas(client_new_node):
     details = "details"
     node = client_new_node.node
     economic = client_new_node.economic
-    benifit_address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
-    balance1 = node.eth.getBalance(benifit_address)
+    address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+    # print(benifit_address)
+    balance1 = node.eth.getBalance(address)
     log.info(balance1)
     program_version_sign_ = node.program_version_sign[2:]
-    benifit_address = bech32_address_bytes(benifit_address)
+    benifit_address = bech32_address_bytes(address)
     # result = client_new_node.ppos.createStaking(0, benifit_address, node.node_id, external_id,
     #                                             node_name, website,
     #                                             details, economic.create_staking_limit,
@@ -26,20 +27,20 @@ def test_staking_gas(client_new_node):
     #
     # assert_code(result, 0)
 
-    data = HexBytes(rlp.encode([rlp.encode(int(1000)), rlp.encode(0), rlp.encode(benifit_address),
+    data = rlp.encode([rlp.encode(int(1000)), rlp.encode(0), rlp.encode(benifit_address),
                                 rlp.encode(bytes.fromhex(node.node_id)), rlp.encode(external_id), rlp.encode(node_name),
                                 rlp.encode(website), rlp.encode(details),
                                 rlp.encode(economic.create_staking_limit), rlp.encode(600), rlp.encode(node.program_version),
                                 rlp.encode(bytes.fromhex(program_version_sign_)), rlp.encode(bytes.fromhex(node.blspubkey)),
-                                rlp.encode(bytes.fromhex(node.schnorr_NIZK_prove))])).hex()
-    esgas = node.eth.estimateGas({"from": benifit_address, "to": node.web3.stakingAddress, "data": data})
+                                rlp.encode(bytes.fromhex(node.schnorr_NIZK_prove))])
+    esgas = node.eth.estimateGas({"from": address, "to": node.web3.stakingAddress, "data": data})
     print('esgas', esgas)
     gas = get_the_dynamic_parameter_gas_fee(data) + 21000 + 6000 + 32000
     log.info('gas: {}'.format(gas))
-    gasPrice = node.web3.platon.gasPrice
+    gasPrice = node.eth.gasPrice
     log.info(gasPrice)
     time.sleep(2)
-    balance2 = node.eth.getBalance(benifit_address)
+    balance2 = node.eth.getBalance(address)
     log.info(balance2)
     assert esgas == gas
     # assert (balance1 - economic.create_staking_limit) - gas * gasPrice == balance2
@@ -132,24 +133,30 @@ def test_edit_candidate_gas(client_new_node):
     node_name = "node_name"
     website = "website"
     details = "details"
+    reward_per = 0
     client = client_new_node
     node = client.node
+    node.ppos.need_quota_gas = False
     economic = client.economic
     benifit_address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
     result = client.staking.create_staking(0, benifit_address, benifit_address)
     assert_code(result, 0)
     balance1 = node.eth.getBalance(benifit_address)
     log.info(balance1)
-    result = client.ppos.editCandidate(benifit_address, node.node_id, external_id, node_name, website, details,
-                                       pri_key, reward_per=0)
+    result = client.ppos.editCandidate(pri_key, node.node_id, benifit_address, external_id, node_name, website, details,
+                                       reward_per=reward_per)
     assert_code(result, 0)
     balance2 = node.eth.getBalance(benifit_address)
     log.info(balance2)
-    data = rlp.encode(
-        [rlp.encode(int(1001)), rlp.encode(bech32_address_bytes(benifit_address)),
-         rlp.encode(bytes.fromhex(node.node_id)),
-         rlp.encode("external_id"), rlp.encode("node_name"), rlp.encode("website"), rlp.encode("details"),
-         rlp.encode(0)])
+    rlp_benifit_address = rlp.encode(bech32_address_bytes(benifit_address)) if benifit_address else b''
+    rlp_external_id = rlp.encode(external_id) if external_id else b''
+    rlp_node_name = rlp.encode(node_name) if node_name else b''
+    rlp_website = rlp.encode(website) if website else b''
+    rlp_details = rlp.encode(details) if details else b''
+    rlp_reward_per = rlp.encode(0) if reward_per else b''
+    data = rlp.encode([rlp.encode(int(1001)), rlp_benifit_address, rlp.encode(bytes.fromhex(node.node_id)),
+                                rlp_reward_per,
+                                rlp_external_id, rlp_node_name, rlp_website, rlp_details])
     gas = get_the_dynamic_parameter_gas_fee(data) + 21000 + 6000 + 12000
     log.info(gas)
 
