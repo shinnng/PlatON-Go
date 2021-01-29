@@ -36,22 +36,22 @@ def createRestrictingPlan(url, account, plan, pri_key):
     result = ppos.createRestrictingPlan(account, plan, pri_key)
     print(result)
 
-
-def createstaking(url, typ, pri_key, amount, reward_per=1000):
-    web3 = connect_web3(url)
-    admin = Admin(web3)
-    ppos = Ppos(web3)
-    print("==== create staking =====")
-    # w3 = Web3(HTTPProvider(node_url), chain_id=chain_id)
-    program_version = admin.getProgramVersion()['Version']
-    version_sign = admin.getProgramVersion()['Sign']
-    bls_proof = admin.getSchnorrNIZKProve()
-    bls_pubkey = admin.nodeInfo['blsPubKey']
-    node_id = admin.nodeInfo['id']
-    benifit_address = Account.privateKeyToAccount(pri_key, MIANNETHRP).address
-    result = ppos.createStaking(typ, benifit_address, node_id, 'external_id', 'node_name', 'website', 'details',
-                                amount, program_version, version_sign, bls_pubkey, bls_proof, pri_key, reward_per)
-    print(f"create staking result = {result}")
+#
+# def createstaking(url, typ, pri_key, amount, reward_per=1000):
+#     web3 = connect_web3(url)
+#     admin = Admin(web3)
+#     ppos = Ppos(web3)
+#     print("==== create staking =====")
+#     # w3 = Web3(HTTPProvider(node_url), chain_id=chain_id)
+#     program_version = admin.getProgramVersion()['Version']
+#     version_sign = admin.getProgramVersion()['Sign']
+#     bls_proof = admin.getSchnorrNIZKProve()
+#     bls_pubkey = admin.nodeInfo['blsPubKey']
+#     node_id = admin.nodeInfo['id']
+#     benifit_address = Account.privateKeyToAccount(pri_key, MIANNETHRP).address
+#     result = ppos.createStaking(typ, benifit_address, node_id, 'external_id', 'node_name', 'website', 'details',
+#                                 amount, program_version, version_sign, bls_pubkey, bls_proof, pri_key, reward_per)
+#     print(f"create staking result = {result}")
 
 
 def increase_staking(url, type, node_id, amount, pri_key):
@@ -256,14 +256,14 @@ if __name__ == '__main__':
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'atp1zu6j8d4rz03lafgcfrdxc075fx6p85633utaq5'
+    account = 'lxg12qq5vp2s7e35v47jnsz0mr52wgqcdddsmdd322'
     pri_key = 'a872ee498a5a92b87b1780b1d3d71dd0cfce2980f59960b76318f5d409908303'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
-    pri_key1 = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
+    pri_key1 = 'ad296b67d8e9bd226189efd9ae2f637645360e784c725bf03d1a1a0fe5d45ec6'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
     # epoch2 = 20
-    create_account(url, 'lxh')
+    # create_account(url)
     amount1 = Web3.toWei(833, 'ether')
     amount2 = Web3.toWei(837, 'ether')
     # list = ['atx1r8pvmt7hk6lk8uk7dtnfyrpcy9l8rfjry34uq9',
@@ -332,14 +332,15 @@ if __name__ == '__main__':
     # for i in list:
     #     print(i)
     #     createRestrictingPlan(url, i, plan, pri_key)
-    # createRestrictingPlan(url, account, plan, pri_key1)
+    createRestrictingPlan(url, account, plan, pri_key1)
     # time.sleep(2)
     # get_RestrictingPlan(url, account)
     # fff(url)
     # sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
-    # web3 = connect_web3(url)
-    # platon = Eth(web3)
-    # print(platon.blockNumber)
+    web3 = connect_web3(url)
+    ppos = Ppos(web3)
+    platon = Eth(web3)
+    print(platon.blockNumber)
     # # print(platon.gasPrice)
     # tmp_amount = 0
     # tmp_amount1 = 0
@@ -359,8 +360,8 @@ if __name__ == '__main__':
     #         print("锁仓合约余额差：", x)
     # amount = platon.getBalance(account)
     # print(account, amount)
-    # amount = platon.getBalance(web3.restrictingAddress)
-    # print(web3.restrictingAddress, amount)
+    amount = platon.getBalance(ppos.restrictingAddress)
+    print(ppos.restrictingAddress, amount)
     # amount = platon.getBalance(web3.stakingAddress)
     # print(amount)
     # print(Web3.fromWei(2035626000000000000, 'ether'))
@@ -368,7 +369,7 @@ if __name__ == '__main__':
     # withdrewStaking(url, node_id1, pri_key)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
-    # get_VerifierList(url)
+    get_VerifierList(url)
     # get_candidatelist(url)
     # StakingBlockNum = 515
     # get_candidatelist(url)
@@ -397,5 +398,5 @@ if __name__ == '__main__':
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
     # get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
-    # get_RestrictingPlan(url, account)
+    get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')

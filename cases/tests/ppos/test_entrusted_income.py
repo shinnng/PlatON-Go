@@ -28,8 +28,8 @@ def create_staking_node(client):
     node = client.node
     staking_address, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 3))
     benifit_address, _ = economic.account.generate_account(node.web3)
-    result = client.staking.create_staking(0, staking_address, staking_address,
-                                           amount=von_amount(economic.create_staking_limit, 2), reward_per=1000)
+    print(benifit_address)
+    result = client.staking.create_staking(0, benifit_address, staking_address, amount=economic.create_staking_limit * 2, reward_per=1000)
     assert_code(result, 0)
     return staking_address
 

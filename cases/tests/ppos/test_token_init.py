@@ -99,6 +99,7 @@ def test_IT_SD_004_to_006(client_consensus, value):
     """
     value = client_consensus.node.web3.toWei(value, 'ether')
     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3, value)
+    print(address)
     balance = client_consensus.node.eth.getBalance(address)
     log.info("transaction address：{},account：{}".format(address, balance))
     assert balance == value, "ErrMsg:Transfer amount {}".format(balance)
@@ -2158,9 +2159,9 @@ def test_hrp_address(new_genesis_env, client_consensus):
     new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.1.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
-    # for i in range(5):
-    #     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3)
-    #     print(address, _)
+    for i in range(5):
+        address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3)
+        print(address, _)
     # client_consensus.economic.wait_settlement(node)
     #
     # assert node.eth.blockNumber > 0
