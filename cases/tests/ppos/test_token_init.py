@@ -20,6 +20,8 @@ from tests.lib import (EconomicConfig,
                        get_governable_parameter_value,
                        get_pledge_list, HexBytes,
                        wait_block_number, rlp)
+from client_sdk_python.packages.platon_account.account import Account
+
 
 
 @pytest.mark.P0
@@ -2117,8 +2119,8 @@ def test_IT_SD2222(global_test_env):
     print('address1', address1, node.eth.getBalance(address1))
 
 
-def create_account(node, HRP):
-    account = node.eth.account.create(net_type=HRP)
+def create_account(HRP):
+    account = Account.create(net_type=HRP)
     address = account.address
     prikey = account.privateKey.hex()[2:]
     print(address, prikey)
@@ -2129,7 +2131,7 @@ def test_hrp_address(new_genesis_env, client_consensus):
     """
     更改钱包地址前缀
     """
-    node = new_genesis_env.get_rand_node()
+    # node = new_genesis_env.get_rand_node()
     community_amount = Web3.toWei(500000, 'ether')
     platon_fund = Web3.toWei(2500000, 'ether')
     genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
@@ -2137,14 +2139,10 @@ def test_hrp_address(new_genesis_env, client_consensus):
     genesis.config.addressHRP = 'lxg'
     surplus_amount = str(Web3.toWei(105000000, 'ether') - community_amount - platon_fund - Web3.toWei(2000000, 'ether'))
     HRP = genesis.config.addressHRP
-    print(HRP)
-    platon_fund_account, _ = create_account(node, HRP)
-    print(platon_fund_account)
+    platon_fund_account, _ = create_account(HRP)
     genesis.economicModel.innerAcc.platonFundAccount = platon_fund_account
-    cdf_account, _ = create_account(node, HRP)
-    print(cdf_account)
-    surplus_account, _ = create_account(node, HRP)
-    print(surplus_account)
+    cdf_account, _ = create_account(HRP)
+    surplus_account, _ = create_account(HRP)
     genesis.economicModel.innerAcc.cdfAccount = cdf_account
     address_bytes = bytes.fromhex('1000000000000000000000000000000000000003')
     incite_account = address_bytes_to_bech32_address(address_bytes, HRP)
@@ -2160,7 +2158,9 @@ def test_hrp_address(new_genesis_env, client_consensus):
     new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.1.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
-
-    client_consensus.economic.wait_settlement(node)
-
-    assert node.eth.blockNumber > 0
+    # for i in range(5):
+    #     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3)
+    #     print(address, _)
+    # client_consensus.economic.wait_settlement(node)
+    #
+    # assert node.eth.blockNumber > 0
