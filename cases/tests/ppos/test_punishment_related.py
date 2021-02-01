@@ -63,7 +63,7 @@ def test_VP_PV_001_to_003(client_consensus, repor_type, reset_environment):
     report_amount1 = node.eth.getBalance(report_address)
     log.info("report account amount:{} ".format(report_amount1))
     # view Incentive pool account
-    incentive_pool_account1 = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    incentive_pool_account1 = node.eth.getBalance(economic.account.raw_accounts[1]['address'])
     log.info("incentive pool account1 amount:{} ".format(incentive_pool_account1))
     # Wait for the consensus round to end
     economic.wait_consensus(node)
@@ -79,7 +79,7 @@ def test_VP_PV_001_to_003(client_consensus, repor_type, reset_environment):
     report_amount2 = node.eth.getBalance(report_address)
     log.info("report account amount:{} ".format(report_amount2))
     # view Incentive pool account again
-    incentive_pool_account2 = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    incentive_pool_account2 = node.eth.getBalance(economic.account.raw_accounts[1]['address'])
     log.info("incentive pool account1 amount:{} ".format(incentive_pool_account2))
     # assert account reward
     assert report_amount1 + proportion_reward - report_amount2 < node.web3.toWei(1,'ether'), "ErrMsg:report amount {}".format(

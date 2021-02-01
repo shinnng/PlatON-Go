@@ -354,7 +354,7 @@ def assert_code(result, code):
     if isinstance(result, int):
         assert result == code, "code error，expect：{}，actually:{}".format(code, result)
     else:
-        assert result.get('Code') == code, "code error，expect：{}，actually:{}".format(code, result)
+        assert result.get('code') == code or result.get('Code') == code, "code error，expect：{}，actually:{}".format(code, result)
 
 
 def von_amount(amonut, base):

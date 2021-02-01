@@ -1372,7 +1372,7 @@ class TestGas:
         data = rlp.encode([rlp.encode(int(1004)), rlp.encode(0), rlp.encode(bytes.fromhex(client1.node.node_id)),
                            rlp.encode(10 ** 18 * 1000)])
         gas = (21000 + 6000 + 16000 + get_the_dynamic_parameter_gas_fee(data)) * client1.node.eth.gasPrice
-        transaction_data = {"to": client1.node.web3.stakingAddress, "data": data, "from": address1}
+        transaction_data = {"to": client1.node.ppos.stakingAddress, "data": data, "from": address1}
         estimated_gas = client1.node.eth.estimateGas(transaction_data)
         assert gas == estimated_gas * client1.node.eth.gasPrice
         assert balance_address1 - gas - delegate_amount == balance_address1_1

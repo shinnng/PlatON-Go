@@ -2,6 +2,7 @@ import os
 import time
 from random import randint, shuffle
 
+# from alaya import HTTPProvider, Web3, WebsocketProvider, Account
 from client_sdk_python import HTTPProvider, Web3, WebsocketProvider, Account
 from client_sdk_python.admin import Admin
 from client_sdk_python.eth import Eth
@@ -9,6 +10,7 @@ from client_sdk_python.middleware import geth_poa_middleware
 # from client_sdk_python.packages.platon_keys.utils.address import MIANNETHRP
 from client_sdk_python.packages.platon_keys.utils.address import address_bytes_to_bech32_address
 from client_sdk_python.ppos import Ppos
+from client_sdk_python.pip import Pip
 from hexbytes import HexBytes
 from client_sdk_python.packages.platon_account.account import Account
 # from client_sdk_python.packages.platon_keys
@@ -233,6 +235,11 @@ def create_account(HRP='atp'):
 # with open(TMP_ADDRES, 'a', encoding='utf-8') as f:
 #     f.write("2")
 
+def submitVersion(url, nodeid, pip_id, new_version, rounds, pri_key):
+    web3 = connect_web3(url)
+    pip = Pip(web3)
+    resutl = pip.submitVersion(nodeid, pip_id, new_version, rounds, pri_key)
+    print(resutl)
 
 def fff(url):
     web3 = connect_web3(url)
@@ -248,7 +255,7 @@ def fff(url):
 
 if __name__ == '__main__':
     # url = 'http://192.168.10.224:6790'
-    url = 'http://192.168.10.221:6790'
+    url = 'http://192.168.9.221:6789'
     # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
@@ -325,22 +332,23 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '79f86478381b2472b009f790dd0b8b32f65169cd3a447e43eafb0f359f9edb16ef4d15e45cec54adc5e691ddf43d6ec29066b8dc90457482cf9189caebc9d99f'
+    node_id = 'aef93e9cb7c4488de216f8ed12cad9ddecfd2150ae4cc6a5045ba286ce26276910cf8c6e4df633c2964160cc3bca8015cff2c55a41294e979767d5b0effb48b0'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
     # for i in list:
     #     print(i)
     #     createRestrictingPlan(url, i, plan, pri_key)
-    createRestrictingPlan(url, account, plan, pri_key1)
+    # createRestrictingPlan(url, account, plan, pri_key1)
     # time.sleep(2)
     # get_RestrictingPlan(url, account)
     # fff(url)
     # sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
-    web3 = connect_web3(url)
-    ppos = Ppos(web3)
-    platon = Eth(web3)
-    print(platon.blockNumber)
+    # web3 = connect_web3(url)
+    # ppos = Ppos(web3)
+    # platon = Eth(web3)
+    # print(web3.is)
+    # print(platon.blockNumber)
     # # print(platon.gasPrice)
     # tmp_amount = 0
     # tmp_amount1 = 0
@@ -360,8 +368,8 @@ if __name__ == '__main__':
     #         print("锁仓合约余额差：", x)
     # amount = platon.getBalance(account)
     # print(account, amount)
-    amount = platon.getBalance(ppos.restrictingAddress)
-    print(ppos.restrictingAddress, amount)
+    # amount = platon.getBalance(ppos.restrictingAddress)
+    # print(ppos.restrictingAddress, amount)
     # amount = platon.getBalance(web3.stakingAddress)
     # print(amount)
     # print(Web3.fromWei(2035626000000000000, 'ether'))
@@ -369,7 +377,7 @@ if __name__ == '__main__':
     # withdrewStaking(url, node_id1, pri_key)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
-    get_VerifierList(url)
+    # get_VerifierList(url)
     # get_candidatelist(url)
     # StakingBlockNum = 515
     # get_candidatelist(url)
@@ -396,7 +404,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    # get_candinfo(url, node_id)
+    get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
-    get_RestrictingPlan(url, account)
+    # get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')

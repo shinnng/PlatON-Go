@@ -41,7 +41,7 @@ def test_IV_001_002_010(global_test_env, client_consensus):
 @allure.title("Verify the validity of human parameters")
 @pytest.mark.P1
 def test_IV_003(client_consensus):
-    StakingAddress = EconomicConfig.DEVELOPER_FOUNDATAION_ADDRESS
+    StakingAddress = client_consensus.economic.account.raw_accounts[2]['address']
     result = client_consensus.staking.create_staking(0, StakingAddress, StakingAddress)
     log.info("Staking result:{}".format(result))
     assert_code(result, 301101)
@@ -749,7 +749,8 @@ def test_IV_042(client_new_node, gas_type):
     assert_code(result, 0)
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
     assert restricting_info['balance'] == node.web3.toWei(5000, 'ether')
-    result = client_new_node.staking.create_staking(2, benifit_address, staking_address, amount=node.web3.toWei(9000, 'ether'))
+    result = client_new_node.staking.create_staking(2, benifit_address, staking_address,
+                                                    amount=node.web3.toWei(9000, 'ether'))
     assert_code(result, 301100)
 
 
@@ -1191,7 +1192,8 @@ def test_IV_049(new_genesis_env, clients_noconsensus):
     print('staking_address', staking_address_balance1)
     assert report_address_balance + proportion_reward - report_address_balance1 < client1.node.web3.toWei(0.01, 'ether')
     assert incentive_pool_balance + incentive_pool_reward == incentive_pool_balance1
-    assert staking_address_balance + candidate_info['RestrictingPlan'] - node.web3.toWei(1200, 'ether') == staking_address_balance1
+    assert staking_address_balance + candidate_info['RestrictingPlan'] - node.web3.toWei(1200,
+                                                                                         'ether') == staking_address_balance1
 
 
 @pytest.mark.P2
@@ -1258,7 +1260,8 @@ def test_IV_050(client_new_node, client_consensus):
 
     candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
     block_number = candidate_info['StakingBlockNum']
-    result = client.delegate.withdrew_delegate(block_number, delegate_address, node.node_id, amount=economic.delegate_limit * 1500)
+    result = client.delegate.withdrew_delegate(block_number, delegate_address, node.node_id,
+                                               amount=economic.delegate_limit * 1500)
     assert_code(result, 0)
 
     delegate_address_balance1 = node.eth.getBalance(delegate_address)
@@ -1268,4 +1271,3 @@ def test_IV_050(client_new_node, client_consensus):
     assert restricting_info['balance'] == node.web3.toWei(4000, 'ether')
     assert restricting_info['Pledge'] == node.web3.toWei(500, 'ether')
     assert delegate_address_balance + economic.delegate_limit * 1000 == delegate_address_balance1
-

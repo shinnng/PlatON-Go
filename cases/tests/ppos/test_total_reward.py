@@ -28,7 +28,7 @@ def calculate_reward(block_reward, staking_reward, block_num, reward):
 
 
 def calculate_pool_balance(node, economic):
-    return node.eth.getBalance(node.web3.delegateRewardAddress, calculate_switch_block(node, economic))
+    return node.eth.getBalance(node.ppos.delegateRewardAddress, calculate_switch_block(node, economic))
 
 
 def get_ben_balance(node, economic, ben_address):
@@ -62,7 +62,8 @@ def test_DG_TR_001(client_consensus, reset_environment):
     log.info("first candidate info:{}".format(candidate_info))
     assert_reward_per(candidate_info, 0)
     economic.wait_settlement(node, 1)
-    result = client_consensus.staking.edit_candidate(economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS, economic.cfg.INCENTIVEPOOL_ADDRESS, reward_per=reward)
+    print(economic.account.raw_accounts)
+    result = client_consensus.staking.edit_candidate(economic.account.raw_accounts[2]['address'], economic.account.raw_accounts[1]['address'], reward_per=reward)
     assert_code(result, 0)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("second candidate info:{}".format(candidate_info))
@@ -73,7 +74,7 @@ def test_DG_TR_001(client_consensus, reset_environment):
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("last candidate info:{}".format(candidate_info))
     assert_reward_total(candidate_info, 0, calculate_pool_balance(node, economic))
-    assert node.eth.getBalance(economic.cfg.INCENTIVEPOOL_ADDRESS) - edit_after_balance == 0
+    assert node.eth.getBalance(economic.account.raw_accounts[1]['address']) - edit_after_balance == 0
 
 
 @pytest.mark.P0
@@ -91,13 +92,13 @@ def test_DG_TR_002(client_consensus, reset_environment):
     assert candidate_info["Ret"]["RewardPer"] == 0
     log.info("editing built in nodes")
     economic.wait_settlement(node, 1)
-    result = client_consensus.staking.edit_candidate(economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS, economic.cfg.INCENTIVEPOOL_ADDRESS,
+    result = client_consensus.staking.edit_candidate(economic.account.raw_accounts[2]['address'], economic.account.raw_accounts[1]['address'],
                                                      reward_per=reward)
     assert_code(result, 0)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("Verify the modification")
     assert_reward_per(candidate_info, 0)
-    assert candidate_info["Ret"]["BenefitAddress"] == economic.cfg.INCENTIVEPOOL_ADDRESS
+    assert candidate_info["Ret"]["BenefitAddress"] == economic.account.raw_accounts[1]['address']
     log.info("waiting for a settlement cycle")
     economic.wait_settlement(node)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
@@ -570,7 +571,7 @@ def test_DG_TR_012(client_new_node, reset_environment):
     block_reward, staking_reward = economic.get_current_year_reward(node)
     candidate_info = client_new_node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, delegate_reward, calculate_pool_balance(node, economic))
-    assert node.eth.getBalance(node.web3.delegateRewardAddress, calculate_switch_block(node, economic)) == delegate_reward
+    assert node.eth.getBalance(node.ppos.delegateRewardAddress, calculate_switch_block(node, economic)) == delegate_reward
 
     economic.wait_settlement(node)
     block_num = economic.get_number_blocks_in_interval(node)
@@ -622,7 +623,7 @@ def test_DG_TR_013(client_new_node, reset_environment):
 
     economic.wait_settlement(node)
     switch_block = calculate_switch_block(node, economic)
-    assert node.eth.getBalance(node.web3.delegateRewardAddress, switch_block) == 0
+    assert node.eth.getBalance(node.ppos.delegateRewardAddress, switch_block) == 0
     candidate_info = client_new_node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, 0, calculate_pool_balance(node, economic))
     end_balance_two = node.eth.getBalance(ben_address, switch_block)

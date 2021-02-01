@@ -1,16 +1,14 @@
 import time
-import pytest
-import allure
-import rlp
-from client_sdk_python.utils.transactions import send_obj_transaction
-from dacite import from_dict
-from client_sdk_python.packages.platon_account.internal.transactions import bech32_address_bytes
-
-from common.key import get_pub_key, mock_duplicate_sign
-from common.log import log
-from client_sdk_python import Web3
 from decimal import Decimal
-from tests.lib import EconomicConfig, Genesis, StakingConfig, Staking, check_node_in_list, assert_code, von_amount, \
+
+import pytest
+import rlp
+from client_sdk_python import Web3
+from client_sdk_python.packages.platon_account.internal.transactions import bech32_address_bytes
+from dacite import from_dict
+
+from common.log import log
+from tests.lib import EconomicConfig, Genesis, assert_code, von_amount, \
     get_governable_parameter_value, get_the_dynamic_parameter_gas_fee
 
 
@@ -25,7 +23,7 @@ def test_LS_FV_001(client_consensus):
     # Reset environment
     client_consensus.economic.env.deploy_all()
     # view Lock in contract amount
-    lock_up_amount = client_consensus.node.eth.getBalance(client_consensus.node.web3.restrictingAddress)
+    lock_up_amount = client_consensus.node.eth.getBalance(client_consensus.node.ppos.restrictingAddress)
     log.info("Lock in contract amount: {}".format(lock_up_amount))
     # view Lockup plan
     result = client_consensus.ppos.getRestrictingInfo(EconomicConfig.INCENTIVEPOOL_ADDRESS)
@@ -103,7 +101,7 @@ def test_LS_UPV_002_1(client_new_node):
         plan_list.append(v)
     rlp_list = rlp.encode(plan_list)
     data = rlp.encode([rlp.encode(int(4000)), rlp.encode(account), rlp_list])
-    transaction_data = {"to": node.web3.restrictingAddress, "data": data, "from": address}
+    transaction_data = {"to": node.ppos.restrictingAddress, "data": data, "from": address}
     estimate_gas = node.eth.estimateGas(transaction_data)
     print(estimate_gas)
     dynamic_gas = get_the_dynamic_parameter_gas_fee(data)
@@ -1833,8 +1831,9 @@ def test_LS_EV_022(client_new_node):
     economic = client.economic
     node = client.node
     status = True
+    client.ppos.need_quota_gas = False
     # create account
-    amount1 = von_amount(economic.create_staking_limit, 2)
+    amount1 = economic.create_staking_limit * 2
     amount2 = EconomicConfig.fixed_gas * node.eth.gasPrice
     address1, address2 = create_lock_release_amount(client, amount1, amount2)
     # create Restricting Plan
@@ -2424,7 +2423,7 @@ def test_LS_UPV_020(client_new_node, amount):
 def test_LS_UPV_021(clients_noconsensus, client_consensus):
     """
     多个锁仓释放期零出块处罚后
-    :param client_new_node:
+    :param :
     :return:
     """
     clinet = clients_noconsensus[0]
@@ -2494,7 +2493,7 @@ def test_LS_UPV_021(clients_noconsensus, client_consensus):
         print(restricting_info)
         balance1 = clinet1.node.eth.getBalance(address2)
         print(address2, balance1)
-        print(clinet1.node.web3.restrictingAddress, clinet1.node.eth.getBalance(clinet1.node.web3.restrictingAddress))
+        print(clinet1.node.ppos.restrictingAddress, clinet1.node.eth.getBalance(clinet1.node.ppos.restrictingAddress))
         economic.wait_settlement(clinet1.node)
 
 
@@ -2534,7 +2533,7 @@ def test_LS_UPV_022(client_new_node, client_consensus):
     result = clinet.restricting.createRestrictingPlan(address2, plan, address1)
     assert_code(result, 0)
     time.sleep(3)
-    print(node.web3.restrictingAddress, node.eth.getBalance(node.web3.restrictingAddress))
+    print(node.ppos.restrictingAddress, node.eth.getBalance(node.ppos.restrictingAddress))
     restricting_info1 = clinet1.node.ppos.getRestrictingInfo(address2)['Ret']
     print(restricting_info1)
     result = clinet.staking.create_staking(1, address3, address2)
@@ -2556,7 +2555,7 @@ def test_LS_UPV_022(client_new_node, client_consensus):
         # block_reward, staking_reward = clinet.economic.get_current_year_reward(node)
         amount = clinet.node.ppos.getRestrictingInfo(address2)
         print(address2, amount)
-        print(node.web3.restrictingAddress, node.eth.getBalance(node.web3.restrictingAddress))
+        print(node.ppos.restrictingAddress, node.eth.getBalance(node.ppos.restrictingAddress))
         # result = clinet.delegate.delegate(1, address2, amount=amount)
         # assert_code(result, 0)
         clinet.economic.wait_settlement(node)
@@ -2609,7 +2608,7 @@ def test_LS_UPV_023(client_new_node):
     # result = clinet.restricting.createRestrictingPlan(address1, plan1, address1)
     # assert_code(result, 0)
     time.sleep(3)
-    print(node.web3.restrictingAddress, node.eth.getBalance(node.web3.restrictingAddress))
+    print(node.ppos.restrictingAddress, node.eth.getBalance(node.ppos.restrictingAddress))
     restricting_info111 = clinet.node.ppos.getRestrictingInfo(address1)['Ret']
     print("address1", restricting_info111)
     restricting_info1 = clinet.node.ppos.getRestrictingInfo(address2)['Ret']
@@ -2628,20 +2627,20 @@ def test_LS_UPV_023(client_new_node):
             clinet.economic.wait_settlement(node)
             restricting_info2 = clinet.node.ppos.getRestrictingInfo(address2)['Ret']
             print(restricting_info2)
-            print(node.web3.restrictingAddress, node.eth.getBalance(node.web3.restrictingAddress))
+            print(node.ppos.restrictingAddress, node.eth.getBalance(node.ppos.restrictingAddress))
             # assert restricting_info1['balance'] - int(Decimal(str(amount1)) * Decimal(str(2))) == restricting_info2['balance']
             staking_blocknum = node.ppos.getCandidateInfo(node.node_id)['Ret']['StakingBlockNum']
             result = clinet.delegate.withdrew_delegate(staking_blocknum, address2, amount=restricting_info2['Pledge'])
             assert_code(result, 0)
             print("赎回委托后账号余额:", node.eth.getBalance(address2))
-            print(node.web3.restrictingAddress, node.eth.getBalance(node.web3.restrictingAddress))
+            print(node.ppos.restrictingAddress, node.eth.getBalance(node.ppos.restrictingAddress))
             # assert restricting_info1['balance'] - int(Decimal(str(amount1)) * Decimal(str(3))) == restricting_info2['balance']
         else:
             RestrictingInfo = clinet.node.ppos.getRestrictingInfo(address2)
             print(RestrictingInfo)
             balance = node.eth.getBalance(address2)
             print(address2, balance)
-            print(node.web3.restrictingAddress, node.eth.getBalance(node.web3.restrictingAddress))
+            print(node.ppos.restrictingAddress, node.eth.getBalance(node.ppos.restrictingAddress))
 
 
 def test_LS_UPV_024(client_new_node, client_consensus):
