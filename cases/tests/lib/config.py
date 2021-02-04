@@ -30,7 +30,7 @@ class PipConfig:
     vote_option_nays = 2
     vote_option_Abstentions = 3
     version1 = 1537
-    version2 = 3840
+    version2 = 3841
     version3 = 3849
     version4 = 4096
     version5 = 4097

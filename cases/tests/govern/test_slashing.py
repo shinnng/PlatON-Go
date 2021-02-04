@@ -2,7 +2,7 @@ import time
 from typing import List
 import pytest
 from common.log import log
-from tests.lib import check_node_in_list, upload_platon, wait_block_number
+from tests.lib import check_node_in_list, upload_platon, wait_block_number, assert_code
 from tests.lib.genesis import to_genesis
 from tests.ppos.test_general_punishment import verify_low_block_rate_penalty, get_out_block_penalty_parameters
 from tests.lib.client import Client, get_client_by_nodeid
@@ -66,7 +66,7 @@ def vote(pip, pip_id, vote_option=PipConfig.vote_option_yeas):
 def votes(pip_id, pips, vote_options):
     assert len(pips) == len(vote_options)
     for pip, vote_option in zip(pips, vote_options):
-        assert vote(pip, pip_id, vote_option) == 0
+        assert_code(vote(pip, pip_id, vote_option), 0)
     return True
 
 
@@ -236,13 +236,13 @@ class TestSlashing:
         pip = pips[0]
         make_0mb_slash(verifiers[0], verifiers[1])
         # step2：提交各类提案，提案失败
-        assert version_proposal(pip, pip.cfg.version5, 5) == 302022
-        assert param_proposal(pip, 'slashing', 'slashBlocksReward', '10') == 302022
-        assert text_proposal(pip) == 302022
+        assert_code(version_proposal(pip, pip.cfg.version5, 5), 302022)
+        assert_code(param_proposal(pip, 'slashing', 'slashBlocksReward', '10'), 302022)
+        assert_code(text_proposal(pip), 302022)
         pip_id = version_proposal(pips[1], pips[1].cfg.version5, 5)
         bn = pip.node.eth.blockNumber
         wait_block_number(pip.node, bn + 5)
-        assert cancel_proposal(pip, pip_id, 2) == 302022
+        assert_code(cancel_proposal(pip, pip_id, 2), 302022)
 
     @pytest.mark.P1
     def test_version_vote_at_0mb_freezing(self, verifiers):
@@ -264,7 +264,7 @@ class TestSlashing:
         pip = pips[1]
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         make_0mb_slash(verifiers[1], verifiers[0])
-        assert vote(pip, pip_id) == 302022
+        assert_code(vote(pip, pip_id), 302022)
         # step3：检查提案和投票信息是否正确
         # pip = pips[1]
         # all_verifiers = pip.get_accu_verifiers_of_proposal(pip_id)
@@ -292,7 +292,7 @@ class TestSlashing:
         pip = pips[1]
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         make_0mb_slash(verifiers[1], verifiers[0])
-        assert vote(pip, pip_id) == 302022
+        assert_code(vote(pip, pip_id), 302022)
 
     @pytest.mark.P1
     def test_txt_vote_at_0mb_freezing(self, verifiers):
@@ -314,7 +314,7 @@ class TestSlashing:
         pip = pips[1]
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         make_0mb_slash(verifiers[1], verifiers[0])
-        assert vote(pip, pip_id) == 302022
+        assert_code(vote(pip, pip_id), 302022)
 
     @pytest.mark.P1
     def test_cancel_vote_at_0mb_freezing(self, verifiers):
@@ -337,7 +337,7 @@ class TestSlashing:
         pip = pips[1]
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
         make_0mb_slash(verifiers[1], verifiers[0])
-        assert vote(pip, pip_id) == 302022
+        assert_code(vote(pip, pip_id), 302022)
 
     @pytest.mark.P1
     def test_submit_declare_at_0mb_freezing(self, verifiers, new_genesis_env):
@@ -371,10 +371,10 @@ class TestSlashing:
         wait_proposal_active(pip, pip_id)
         # step4：更新零出块节点二进制，进行版本声明
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
-        assert version_declare(pip) == 302023
+        assert_code(version_declare(pip), 302023)
         # step5: 等待零出块冻结结束，进行版本声明
         wait_block_number(pip.node, end_block)
-        assert version_declare(pip) == 0
+        assert_code(version_declare(pip), 0)
 
     @pytest.mark.P1
     def test_proposal_multiple_voting(self, verifiers, new_genesis_env):
@@ -402,7 +402,7 @@ class TestSlashing:
         start_block, end_block = make_0mb_slash(verifiers[0], verifiers[1])
         wait_block_number(pip.node, end_block)
         # step3：检查提案和投票信息是否正确
-        assert vote(pip, pip_id) == 302027
+        assert_code(vote(pip, pip_id), 302027)
         vote_info = pip.get_accuverifiers_count(pip_id)
         assert vote_info[0] == 4  # all verifiers
         assert vote_info[1] == 1  # all yeas vote
@@ -462,7 +462,7 @@ class TestSlashing:
         # step1: 发起参数提案，投票使提案生效
         pips = get_pips(verifiers)
         pip = pips[0]
-        assert param_proposal(pip, 'slashing', 'zeroProduceFreezeDuration', value) == code
+        assert_code(param_proposal(pip, 'slashing', 'zeroProduceFreezeDuration', value), code)
 
     @pytest.mark.P1
     def test_all_process_of_pip_after_slashed(self, verifiers, new_genesis_env):
@@ -496,13 +496,13 @@ class TestSlashing:
         upload_platon(pips[1].node, pip.cfg.PLATON_NEW_BIN)
         upload_platon(pips[2].node, pip.cfg.PLATON_NEW_BIN)
         upload_platon(pips[3].node, pip.cfg.PLATON_NEW_BIN)
-        assert vote(pips[1], pip_id, pips[1].cfg.vote_option_yeas) == 0
-        assert vote(pips[2], pip_id, pips[2].cfg.vote_option_yeas) == 0
-        assert vote(pips[3], pip_id, pips[3].cfg.vote_option_yeas) == 0
+        assert_code(vote(pips[1], pip_id, pips[1].cfg.vote_option_yeas), 0)
+        assert_code(vote(pips[2], pip_id, pips[2].cfg.vote_option_yeas), 0)
+        assert_code(vote(pips[3], pip_id, pips[3].cfg.vote_option_yeas), 0)
         # step3: 在提案生效后进行版本声明
         wait_proposal_active(pip, pip_id)
         upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
-        assert version_declare(pip) == 0
+        assert_code(version_declare(pip), 0)
 
     @pytest.mark.P1
     def test_all_process_of_pip_after_slashed(self, verifiers, new_genesis_env):
@@ -527,7 +527,7 @@ class TestSlashing:
         pip_id = version_proposal(pip, pip.cfg.version5, 10)
         for pip in pips[:3]:
             upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
-            assert vote(pip, pip_id, pip.cfg.vote_option_yeas) == 0
+            assert_code(vote(pip, pip_id, pip.cfg.vote_option_yeas), 0)
         # step2: 构造零出块处罚，等待提案生效，并且处罚冻结期结束
         start_block, end_block = make_0mb_slash(verifiers[1], verifiers[0])
         assert start_block < pip.pip.getProposal(pip_id)['Ret']['EndVotingBlock']
@@ -557,7 +557,7 @@ class TestSlashing:
         pip_id = version_proposal(pip, pip.cfg.version5, 5)
         for pip in pips:
             upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
-            assert vote(pip, pip_id, pip.cfg.vote_option_yeas) == 0
+            assert_code(vote(pip, pip_id, pip.cfg.vote_option_yeas), 0)
         wait_proposal_active(pip, pip_id)
         # step2: 节点清理数据库，重新初始化，并重新同步区块
         block_number = pip.node.block_number
@@ -580,7 +580,7 @@ class TestSlashing:
         pip_id = version_proposal(pip, pip.cfg.version5, 5)
         for pip in pips[1:]:
             upload_platon(pip.node, pip.cfg.PLATON_NEW_BIN)
-            assert vote(pip, pip_id, pip.cfg.vote_option_yeas) == 0
+            assert_code(vote(pip, pip_id, pip.cfg.vote_option_yeas), 0)
         end_block = pip.pip.getProposal(pip_id)['Ret']['ActiveBlock'] - 1
         wait_proposal_active(pips[1], pip_id)
         log.info(f'current active version: {pips[1].pip.getActiveVersion()}')

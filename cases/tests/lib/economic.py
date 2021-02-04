@@ -172,8 +172,8 @@ class Economic:
     def get_switchpoint_by_settlement(self, node: Node, number=0):
         """
         Get the last block of the current billing cycle
-        :param node: node object
-        :param number: number of billing cycles
+        :param node: node object
+        :param number: number of billing cycles
         :return:
         """
         block_number = self.settlement_size * number
@@ -189,8 +189,8 @@ class Economic:
     def get_front_settlement_switchpoint(self, node: Node, number=0):
         """
         Get a block height before the current billing cycle
-        :param node: node object
-        :param number: number of billing cycles
+        :param node: node object
+        :param number: number of billing cycles
         :return:
         """
         block_num = self.settlement_size * (number + 1)
@@ -201,8 +201,8 @@ class Economic:
     def wait_settlement(self, node: Node, settlement=0):
         """
         Waiting for a billing cycle to settle
-        :param node:
-        :param number: number of billing cycles
+        :param node:
+        :param number: number of billing cycles
         :return:
         """
         end_block = self.get_switchpoint_by_settlement(node, settlement)

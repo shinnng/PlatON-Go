@@ -307,13 +307,10 @@ class TestNoProposalVE:
             result = replace_version_declare(pip, pip.cfg.PLATON_NEW_BIN0, pip.cfg.version0)
             assert_code(result, 0)
             verifier_node_version(pip, pip.cfg.version0)
-
             result = wrong_verisonsign_declare(pip, noproposal_pips[1])
             assert_code(result, 302024)
-
             result = wrong_verison_declare(pip, pip.cfg.version3)
             assert_code(result, 302024)
-
             result = wrong_verison_declare(pip, pip.cfg.version2)
             assert_code(result, 302024)
 
@@ -1177,13 +1174,10 @@ class TestNoProposalCA:
             result = replace_version_declare(pip, pip.cfg.PLATON_NEW_BIN0, pip.cfg.version0)
             assert_code(result, 0)
             verifier_node_version(pip, pip.cfg.version0)
-
             result = wrong_verisonsign_declare(pip, client_verifier.pip)
             assert_code(result, 302024)
-
-            result = wrong_verison_declare(pip, pip.cfg.version2)
-            assert_code(result, 302024)
-
+            # result = wrong_verison_declare(pip, pip.cfg.version2)
+            # assert_code(result, 302024)
             result = wrong_verison_declare(pip, pip.cfg.version3)
             assert_code(result, 302024)
 

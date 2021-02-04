@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#   @Time    : 2019/12/30 20:19
-#   @Author  : PlatON-Developer
-#   @Site    : https://github.com/PlatONnetwork/
+#   @Time    : 2019/12/30 20:19
+#   @Author  : PlatON-Developer
+#   @Site    : https://github.com/PlatONnetwork/
 
 from common.log import log
 
