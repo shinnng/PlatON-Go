@@ -797,9 +797,10 @@ def test_IV_043(client_new_node, gas_type):
         economic.wait_settlement(node)
 
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
-    assert restricting_info['balance'] == 0
+    assert restricting_info['balance'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['debt'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['plans'] is None
+    assert restricting_info['Pledge'] == node.web3.toWei(5000, 'ether')
 
 
 @pytest.mark.P2
