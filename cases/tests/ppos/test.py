@@ -14,7 +14,7 @@ from hexbytes import HexBytes
 accounts = {}
 
 
-def connect_web3(url, chain_id=201030):
+def connect_web3(url, chain_id=201018):
     if "ws" in url:
         w3 = Web3(WebsocketProvider(url), chain_id=chain_id)
     else:
@@ -251,13 +251,13 @@ if __name__ == '__main__':
     # url = 'http://192.168.10.224:6790'
     # url = 'http://192.168.9.221:6789'
     # url = 'http://192.168.120.141:6789'
-    url = 'http://10.1.1.51:6789'
+    # url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
     # url = 'http://154.85.35.163:80'
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
-    # url = 'https://openapi.alaya.network/rpc'
+    url = 'https://openapi.alaya.network/rpc'
     account = '0x1000000000000000000000000000000000000002'
     pri_key = 'a872ee498a5a92b87b1780b1d3d71dd0cfce2980f59960b76318f5d409908303'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
@@ -327,7 +327,7 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '69459663f66b97aa22530a90ae16f28ee02e78ec00107e2da28e094db811c2bceeb86b52de14b0744a623c2fb01d331c999b8c3a78fe60fc82cf5cc28854019e'
+    node_id = '77861e48684ab9b35b6aafdbbb9028da0ff0bbe669f0485a8f387fa5ae83c2c9d54fabf3c027684b1371cad8f21b37981c053a5ff54eb8db2914f28ece651575'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -372,8 +372,8 @@ if __name__ == '__main__':
     # withdrewStaking(url, node_id1, pri_key)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
-    resutl = get_VerifierList(url)['Ret']
-    print(len(resutl))
+    # resutl = get_VerifierList(url)['Ret']
+    # print(len(resutl))
     # get_candidatelist(url)
     # StakingBlockNum = 515
     # get_candidatelist(url)
@@ -400,7 +400,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    # get_candinfo(url, node_id)
+    get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
     # get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')
