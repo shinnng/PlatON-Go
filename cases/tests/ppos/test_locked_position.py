@@ -731,7 +731,7 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     # Change configuration parameters
     genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
     genesis.economicModel.slashing.slashBlocksReward = 5
-    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.14.0.json"
+    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.15.1.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
 
@@ -774,7 +774,7 @@ def test_LS_RV_019(new_genesis_env, clients_noconsensus):
     print(balance1)
     assert info['Pledge'] == pledge_amount - punishment_amonut, 'ErrMsg: restricting Pledge amount {}'.format(
         info['Pledge'])
-    assert info['balance'] == 0
+    assert info['balance'] == pledge_amount - punishment_amonut
     assert balance == balance1
     # create Restricting Plan again
     staking_amount = von_amount(economic.create_staking_limit, 2)
@@ -1904,7 +1904,7 @@ def test_LS_IV_002(client_new_node):
     node = client.node
     status = True
     # create account
-    address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
+    address1, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
     address2, _ = economic.account.generate_account(node.web3,
                                                     economic.create_staking_limit + EconomicConfig.fixed_gas * node.eth.gasPrice)
     # create Restricting Plan

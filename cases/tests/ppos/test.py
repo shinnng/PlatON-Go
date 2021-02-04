@@ -1,24 +1,15 @@
-import os
-import time
-from random import randint, shuffle
-
-# from alaya import HTTPProvider, Web3, WebsocketProvider, Account
-from client_sdk_python import HTTPProvider, Web3, WebsocketProvider, Account
-from client_sdk_python.admin import Admin
+from alaya import HTTPProvider, Web3, WebsocketProvider
+# from client_sdk_python import HTTPProvider, Web3, WebsocketProvider, Account
 from client_sdk_python.eth import Eth
 from client_sdk_python.middleware import geth_poa_middleware
+# from client_sdk_python.packages.platon_keys
 # from client_sdk_python.packages.platon_keys.utils.address import MIANNETHRP
 from client_sdk_python.packages.platon_keys.utils.address import address_bytes_to_bech32_address
-from client_sdk_python.ppos import Ppos
 from client_sdk_python.pip import Pip
+from client_sdk_python.ppos import Ppos
 from hexbytes import HexBytes
-from client_sdk_python.packages.platon_account.account import Account
-# from client_sdk_python.packages.platon_keys
-# from conf.settings import TMP_ADDRES, ACCOUNT_FILE, BASE_DIR
-from numpy.ma import arange
 
-from common.load_file import LoadFile
-from conf.settings import BASE_DIR
+# from conf.settings import TMP_ADDRES, ACCOUNT_FILE, BASE_DIR
 
 accounts = {}
 
@@ -136,7 +127,8 @@ def get_candidatelist(url):
     web3 = connect_web3(url)
     ppos = Ppos(web3)
     result = ppos.getCandidateList()
-    print(result)
+    # print(result)
+    return result
 
 
 def get_VerifierList(url):
@@ -164,7 +156,8 @@ def get_RestrictingPlan(url, address):
     web3 = connect_web3(url)
     ppos = Ppos(web3)
     result = ppos.getRestrictingInfo(address)
-    print(result)
+    # print(result)
+    return result
 
 
 def getDelegateReward(url, address):
@@ -255,18 +248,19 @@ def fff(url):
 
 if __name__ == '__main__':
     # url = 'http://192.168.10.224:6790'
-    url = 'http://192.168.9.221:6789'
-    # url = 'http://10.1.1.51:6789'
+    # url = 'http://192.168.9.221:6789'
+    # url = 'http://192.168.120.141:6789'
+    url = 'http://10.1.1.51:6789'
     # url = 'http://192.168.120.121:6789'
     # url = 'http:// 47.241.4.217:6789'
     # url = 'http://154.85.35.163:80'
     # url = 'http://154.85.34.8:6789'
     # url = 'http://192.168.21.186:6771'
     # url = 'https://openapi.alaya.network/rpc'
-    account = 'lxg12qq5vp2s7e35v47jnsz0mr52wgqcdddsmdd322'
+    account = '0x1000000000000000000000000000000000000002'
     pri_key = 'a872ee498a5a92b87b1780b1d3d71dd0cfce2980f59960b76318f5d409908303'
     account1 = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
-    pri_key1 = 'ad296b67d8e9bd226189efd9ae2f637645360e784c725bf03d1a1a0fe5d45ec6'
+    pri_key1 = 'f51ca759562e1daf9e5302d121f933a8152915d34fcbc27e542baf256b5e4b74'
     # from_address = 'atx1zkrxx6rf358jcvr7nruhyvr9hxpwv9unj58er9'
     # epoch1 = 10
     # epoch2 = 20
@@ -332,7 +326,7 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = 'aef93e9cb7c4488de216f8ed12cad9ddecfd2150ae4cc6a5045ba286ce26276910cf8c6e4df633c2964160cc3bca8015cff2c55a41294e979767d5b0effb48b0'
+    node_id = '77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -343,7 +337,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # get_RestrictingPlan(url, account)
     # fff(url)
-    # sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
+    sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
     # web3 = connect_web3(url)
     # ppos = Ppos(web3)
     # platon = Eth(web3)
@@ -404,7 +398,78 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    get_candinfo(url, node_id)
+    # get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
     # get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')
+    list = ["atp1eshshnxuva6f4zqmwj9xszfj65y5vhalr7nyed",
+            "atp166ue9gzupre59qsj9xvdxjwrzdrheentp9xlue",
+            "atp13fd8zf6gp8jjn46uvlr5q5ayz73qgpzrzcwfdv",
+            "atp15ftdv7s5sn7tswnqwegaxrdzhh9cezyaeuv7us",
+            "atp1sp0uwm79fnva0x86kzj979psk7f8zpa9zark8j",
+            "atp1std7ff5cjdezwe6pz7eq278jpmcaq2mef6d4e6",
+            "atp1uyu68y0ygk5gzhg8402qmtg8hj8qwc4je3a2ym",
+            "atp1hgerqd2erw89a6f0n9cch6azdm3mlkn7lnq0gp",
+            "atp16wrzwyktqc09kjeydnq4jdtuuu793ced6jwyh2",
+            "atp1wt9j640hw046jt86ttp7h0mvv66ctkplazxdxx",
+            "atp1gkaqpw6q0syy8865yg7f9zd5fmt9mec4k4kx2z",
+            "atp1d8paww9mxjar5rrek4mken8ca448xyp2hxsmx0",
+            "atp1u9xc3rejevx4ux5p6fl5ghlgml5sa7mnnrwfkv",
+            "atp1t0p4xrxq3rw24709rqvudc4ydph5gv43nfe9gj",
+            "atp1fklu5nnuvjwhx50vz44y32upf69glx40yux69x",
+            "atp1pv4eep9vzyy4rekyfs5xnve3kv20hhgqkdpnnm",
+            "atp1jp7m5g4lwmk36932hxnxeupul93kcdwtlfq4p4",
+            "atp1zsjz0zapqxe82amc98208x5992nnclvgynhhe4",
+            "atp12jsctngpm8tn30scuc0dmpg9ncsc82rlz9vwjj",
+            "atp1tql5puw2kf84d7czgh7lucrpd9vhm77h8fc5j6",
+            "atp1g60w9nkqehx0w32hc8lhncyar3u9tgdhtyrpgp",
+            "atp143u7s2rxqslvqsw8ehuj362kqfjsjlv8d3vjv8",
+            "atp19kls6uhznrfcc2yg2q79sdcjfu780e6fhhg472",
+            "atp1fj30cwd58djru06h8wwdrcdwh8w0p8qvjytck3",
+            "atp1k5fh43wnd0gw339glgeyusjdzfm8cxdcw0nhgq",
+            "atp1j6uj6dl06rjqxw73aknejalp78u04ru4ljwswf",
+            "atp1guuc25qpqjghellen7uzhpetfdgevcx038nw4f",
+            "atp1nvuk3v90cttx3zt5vzy7rnh4kny7tcy9uzftjh",
+            "atp1mu0aws2g65hw0z77gzukzed83j3tcjuz366wn3",
+            "atp1cwar0uy0lgz3vmfnu5ffagkrmqslpsh82v0vpc",
+            "atp12k5nrdn29msfalhfe6jqw8y66m7fq4r5an376z",
+            "atp1rknphx8hdq7rnkphy9j4p3cfa8y604fu5cxzew",
+            "atp1m6l2jjr39qwf6kuwea5cfa0mn9nv96yt5kxxzx",
+            "atp1krv3qnd08ke4y52ylvurdfxen7aq7wehlzqm9n",
+            "atp18xtt0sqrg9qcd83u6659nhhdcs7kxzmyr3f44w",
+            "atp1t32d3ellldszx5j240ru9qp568umpve9ps7pnk",
+            "atp175z4sfjg33r0svp9cdra8hpasgfuxeug4h8fps",
+            "atp1vxc0074lv8y3078v3ms9r0trktqqcgpu36xuz9",
+            "atp1x8fv9scyvsmfnkf3utzpszrs52hv7e5z07z8sx",
+            "atp18c6mfgzy68pfwqu4cnu4nwtl367qmsjy3j20d5",
+            "atp1t5e4qzgygkhtj8tjgn72qtqtfu88jdmemsd59t",
+            "atp1x2xgnxd3939h9yh07ay3xm7dh6peunsyae3mtz",
+            "atp1y4z8ny5c0nhy6uan4nzx2mzv8jp9ntq7quxvgp",
+            "atp1q3ffp495wavsuljmgrg3ds06z9ykpgepqa3ypx",
+            "atp1npnfxe5gfcczw2659p4pk2ezwrprgvmjruhzfq",
+            "atp1225wvv6ug5y28dp0rrr8w9nxedkm8hcglfnk0d",
+            "atp1s3rfmcmm4zdz529rvwuagfvqrq5c44e2ja46kz",
+            "atp1fnehxk8jcwaquerf4trx03l9na7a56yyfcjklh"]
+    # fix_account = []
+    # for i in list:
+    #     restricting_info = get_RestrictingPlan(url, i)['Ret']
+    #     pledge = restricting_info['Pledge']
+    #     debt = restricting_info['debt']
+    #     balance = restricting_info['balance']
+    #     if pledge > balance:
+    #         print(i, balance, debt, pledge, pledge - balance)
+            # fix_account.append(i)
+
+    # print(fix_account)
+    # staking_address_list = []
+    # candidatelist = get_candidatelist(url)['Ret']
+    # for i in candidatelist:
+    #     staking_address = i['StakingAddress']
+    #     staking_address_list.append(staking_address)
+    # for j in list:
+    #     for k in staking_address_list:
+    #         if k == j:
+    #             # fix_account.append(i)
+    #             print(j)
+
+    # print(fix_account)

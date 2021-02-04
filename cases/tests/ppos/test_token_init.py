@@ -23,7 +23,6 @@ from tests.lib import (EconomicConfig,
 from client_sdk_python.packages.platon_account.account import Account
 
 
-
 @pytest.mark.P0
 def test_IT_IA_002_to_007(new_genesis_env):
     """
@@ -58,7 +57,7 @@ def test_IT_IA_002_to_007(new_genesis_env):
 
     # Verify the amount of each built-in account
     foundation_louckup = node.eth.getBalance(node.ppos.restrictingAddress, 0)
-    log.info('Initial lock up contract address： {} amount：{}'.format(node.ppos.restrictingAddress,foundation_louckup))
+    log.info('Initial lock up contract address： {} amount：{}'.format(node.ppos.restrictingAddress, foundation_louckup))
     incentive_pool = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS, 0)
     log.info('Incentive pool address：{} amount：{}'.format(EconomicConfig.INCENTIVEPOOL_ADDRESS, incentive_pool))
     staking = node.eth.getBalance(node.ppos.stakingAddress, 0)
@@ -190,7 +189,7 @@ def test_IT_SD_007(global_test_env):
 
 
 @pytest.mark.P0
-def test_IT_SD_008(global_test_env):
+def test_IT_SD_008(global_test_env,client_consensus):
     """
     二次分配：普通账户转platON基金会账户
     :return:
@@ -198,15 +197,14 @@ def test_IT_SD_008(global_test_env):
     node = global_test_env.get_rand_node()
     value = node.web3.toWei(1000, 'ether')
     address, _ = global_test_env.account.generate_account(node.web3, value)
-    balance = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
-    result = global_test_env.account.sendTransaction(node.web3, '', address, EconomicConfig.INCENTIVEPOOL_ADDRESS,
+    balance = node.eth.getBalance(client_consensus.economic.account.raw_accounts[1]['address'])
+    result = global_test_env.account.sendTransaction(node.web3, '', address, client_consensus.economic.account.raw_accounts[1]['address'],
                                                      node.eth.gasPrice, 21000, node.web3.toWei(100, 'ether'))
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
-    balance1 = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    balance1 = node.eth.getBalance(client_consensus.economic.account.raw_accounts[1]['address'])
     log.info("Account balance after transfer： {}".format(balance1))
     log.info("Transaction fee： {}".format(node.eth.gasPrice * 21000))
-    assert balance1 == balance + node.web3.toWei(100,
-                                                 'ether') + node.eth.gasPrice * 21000, "ErrMsg:Account balance after transfer：{}".format(
+    assert balance1 == balance + node.web3.toWei(100, 'ether') + node.eth.gasPrice * 21000, "ErrMsg:Account balance after transfer：{}".format(
         balance1)
 
 
@@ -220,11 +218,11 @@ def test_IT_SD_008_001(client_consensus):
     address, _ = client.economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 4))
     address_balance = node.eth.getBalance(address)
     print("Account {} balance：{}".format(address, address_balance))
-    first_balance1 = node.eth.getBalance(node.web3.stakingAddress)
-    first_balance2 = node.eth.getBalance(node.web3.restrictingAddress)
-    first_balance4 = node.eth.getBalance(node.web3.delegateRewardAddress)
-    first_balance5 = node.eth.getBalance(node.web3.penaltyAddress)
-    first_balance6 = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    first_balance1 = node.eth.getBalance(node.ppos.stakingAddress)
+    first_balance2 = node.eth.getBalance(node.ppos.restrictingAddress)
+    first_balance4 = node.eth.getBalance(node.ppos.delegateRewardAddress)
+    first_balance5 = node.eth.getBalance(node.ppos.penaltyAddress)
+    first_balance6 = node.eth.getBalance(economic.account.raw_accounts[1]['address'])
     log.info("Balance of Staking : {}".format(first_balance2))
     log.info("Balance of Restriction plan : {}".format(first_balance1))
     log.info("Balance of entrusted_dividend_contract : {}".format(first_balance5))
@@ -232,27 +230,27 @@ def test_IT_SD_008_001(client_consensus):
     log.info("Balance of Entrust reward pool : {}".format(first_balance6))
     # Transfer to the incentive pool
     log.info("Transfer amount：{}".format(node.web3.toWei(1000, 'ether')))
-    result = client.economic.account.sendTransaction(node.web3, '', address, node.web3.stakingAddress,
+    result = client.economic.account.sendTransaction(node.web3, '', address, node.ppos.stakingAddress,
                                                      node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
-    result = client.economic.account.sendTransaction(node.web3, '', address, node.web3.restrictingAddress,
+    result = client.economic.account.sendTransaction(node.web3, '', address, node.ppos.restrictingAddress,
                                                      node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
-    result = client.economic.account.sendTransaction(node.web3, '', address, node.web3.delegateRewardAddress,
+    result = client.economic.account.sendTransaction(node.web3, '', address, node.ppos.delegateRewardAddress,
                                                      node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
-    result = client.economic.account.sendTransaction(node.web3, '', address, node.web3.penaltyAddress,
+    result = client.economic.account.sendTransaction(node.web3, '', address, node.ppos.penaltyAddress,
                                                      node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
-    result = client.economic.account.sendTransaction(node.web3, '', address, EconomicConfig.INCENTIVEPOOL_ADDRESS,
+    result = client.economic.account.sendTransaction(node.web3, '', address, economic.account.raw_accounts[1]['address'],
                                                      node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
     assert result is not None, "ErrMsg:Transfer result {}".format(result)
     time.sleep(10)
-    second_balance1 = node.eth.getBalance(node.web3.stakingAddress)
-    second_balance2 = node.eth.getBalance(node.web3.restrictingAddress)
-    second_balance4 = node.eth.getBalance(node.web3.delegateRewardAddress)
-    second_balance5 = node.eth.getBalance(node.web3.penaltyAddress)
-    second_balance6 = node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    second_balance1 = node.eth.getBalance(node.ppos.stakingAddress)
+    second_balance2 = node.eth.getBalance(node.ppos.restrictingAddress)
+    second_balance4 = node.eth.getBalance(node.ppos.delegateRewardAddress)
+    second_balance5 = node.eth.getBalance(node.ppos.penaltyAddress)
+    second_balance6 = node.eth.getBalance(economic.account.raw_accounts[1]['address'])
     log.info("Balance of Staking : {}".format(second_balance2))
     log.info("Balance of Restriction plan : {}".format(second_balance1))
     log.info("Balance of entrusted_dividend_contract : {}".format(second_balance4))
@@ -264,22 +262,25 @@ def test_IT_SD_008_001(client_consensus):
     assert second_balance5 - first_balance5 == node.web3.toWei(1000, 'ether')
     assert second_balance6 - first_balance6 == 1000000010500000000000
 
-
-@pytest.mark.P1
-def test_IT_SD_008_002(client_new_node):
-    client = client_new_node
-    economic = client.economic
-    node = client.node
-    log.info("Current connection node： {}".format(node.node_mark))
-    balance = node.eth.getBalance(node.ppos.stakingAddress)
-    log.info("Pledge contract address balance：{}".format(balance))
-    address, _ = client.economic.account.generate_account(node.web3, economic.create_staking_limit)
-    client.economic.account.sendTransaction(node.web3, '', address, '0x1000000000000000000000000000000000000002',
-                                            node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
-    time.sleep(1)
-    balance1 = node.eth.getBalance(node.ppos.stakingAddress)
-    log.info("Pledge contract address balance1：{}".format(balance))
-    assert balance1 == balance + node.web3.toWei(1000, 'ether')
+#
+# @pytest.mark.P1
+# def test_IT_SD_008_002(client_new_node):
+#     """
+#     SDK不支持0x地址转账
+#     """
+#     client = client_new_node
+#     economic = client.economic
+#     node = client.node
+#     log.info("Current connection node： {}".format(node.node_mark))
+#     balance = node.eth.getBalance(node.ppos.stakingAddress)
+#     log.info("Pledge contract address balance：{}".format(balance))
+#     address, _ = client.economic.account.generate_account(node.web3, economic.create_staking_limit)
+#     client.economic.account.sendTransaction(node.web3, '', address, '0x1000000000000000000000000000000000000002',
+#                                             node.eth.gasPrice, 21000, node.web3.toWei(1000, 'ether'))
+#     time.sleep(1)
+#     balance1 = node.eth.getBalance(node.ppos.stakingAddress)
+#     log.info("Pledge contract address balance1：{}".format(balance))
+#     assert balance1 == balance + node.web3.toWei(1000, 'ether')
 
 
 def sendTransaction_input_nonce(client, data, from_address, to_address, gasPrice, gas, value, nonce,
@@ -423,7 +424,7 @@ def consensus_node_pledge_award_assertion(client, address):
     """
     blockNumber = client.node.eth.blockNumber
     log.info("Current block height：{}".format(blockNumber))
-    incentive_pool_balance = client.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    incentive_pool_balance = client.node.eth.getBalance(client.economic.account.raw_accounts[1]['address'])
     log.info("Balance of incentive pool：{}".format(incentive_pool_balance))
     CandidateInfo = client.ppos.getCandidateInfo(client.node.node_id)
     log.info("Pledgor node information：{}".format(CandidateInfo))
@@ -441,9 +442,10 @@ def consensus_node_pledge_award_assertion(client, address):
     # wait settlement block
     client.economic.wait_settlement(client.node)
     # view incentive pool amonut
-    incentive_pool_balance2 = client.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    incentive_pool_balance2 = client.node.eth.getBalance(client.economic.account.raw_accounts[1]['address'])
     log.info(
-        "incentive pool address：{} amount：{}".format(EconomicConfig.INCENTIVEPOOL_ADDRESS, incentive_pool_balance2))
+        "incentive pool address：{} amount：{}".format(client.economic.account.raw_accounts[1]['address'],
+                                                     incentive_pool_balance2))
     assert incentive_pool_balance2 - incentive_pool_balance < client.node.web3.toWei(1,
                                                                                      'ether'), "ErrMsg:Balance of incentive pool：{}".format(
         incentive_pool_balance2)
@@ -591,7 +593,9 @@ def test_AL_IE_003(clients_new_node):
                                                                            0].economic.create_staking_limit * 2)
     log.info("staking address: {}".format(address))
     # Free amount application pledge node
-    result = clients_new_node[0].staking.create_staking(0,clients_new_node[0].economic.account.raw_accounts[1]['address'], address)
+    result = clients_new_node[0].staking.create_staking(0,
+                                                        clients_new_node[0].economic.account.raw_accounts[1]['address'],
+                                                        address)
     assert_code(result, 0)
     consensus_node_pledge_award_assertion(clients_new_node[0], address)
 
@@ -615,7 +619,9 @@ def test_AL_IE_004(clients_new_node):
     result = clients_new_node[1].restricting.createRestrictingPlan(address, plan, address)
     assert_code(result, 0)
     # Lock in amount application pledge node
-    result = clients_new_node[1].staking.create_staking(1, clients_new_node[1].economic.account.raw_accounts[1]['address'], address)
+    result = clients_new_node[1].staking.create_staking(1,
+                                                        clients_new_node[1].economic.account.raw_accounts[1]['address'],
+                                                        address)
     assert_code(result, 0)
     consensus_node_pledge_award_assertion(clients_new_node[1], address)
 
@@ -627,12 +633,14 @@ def test_AL_BI_001(client_consensus):
     :param client_consensus:
     :return:
     """
-    incentive_pool_balance = client_consensus.node.eth.getBalance(client_consensus.economic.account.raw_accounts[1]['address'])
+    incentive_pool_balance = client_consensus.node.eth.getBalance(
+        client_consensus.economic.account.raw_accounts[1]['address'])
     log.info("incentive_pool_balance: {}".format(incentive_pool_balance))
     # create account
     address1, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3, 100)
     # view incentive account
-    incentive_pool_balance1 = client_consensus.node.eth.getBalance(client_consensus.economic.account.raw_accounts[1]['address'])
+    incentive_pool_balance1 = client_consensus.node.eth.getBalance(
+        client_consensus.economic.account.raw_accounts[1]['address'])
     log.info("incentive_pool_balance: {}".format(incentive_pool_balance1))
     assert incentive_pool_balance1 == incentive_pool_balance + 21000 * client_consensus.node.eth.gasPrice, "ErrMsg:incentive_pool balance: {}".format(
         incentive_pool_balance1)
@@ -700,14 +708,16 @@ def test_AL_BI_003(client_consensus):
     :return:
     """
     # view incentive account
-    incentive_pool_balance = client_consensus.node.eth.getBalance(client_consensus.economic.account.raw_accounts[1]['address'])
+    incentive_pool_balance = client_consensus.node.eth.getBalance(
+        client_consensus.economic.account.raw_accounts[1]['address'])
     log.info("incentive_pool_balance: {}".format(incentive_pool_balance))
 
     # wait settlement block
     client_consensus.economic.wait_settlement(client_consensus.node)
 
     # view incentive account again
-    incentive_pool_balance1 = client_consensus.node.eth.getBalance(client_consensus.economic.account.raw_accounts[1]['address'])
+    incentive_pool_balance1 = client_consensus.node.eth.getBalance(
+        client_consensus.economic.account.raw_accounts[1]['address'])
     log.info("incentive_pool_balance: {}".format(incentive_pool_balance1))
 
     assert incentive_pool_balance1 == incentive_pool_balance, "ErrMsg: incentive account: {}".format(
@@ -2089,6 +2099,8 @@ def test2223(client_new_node):
     # print(client.node.web3.toWei(500000, 'ether'))
     # staking_addres, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     # client.staking.create_staking(0,staking_addres,staking_addres,transaction_cfg=)
+
+
 # hx = '0xd7d479481b480b149339908d2e267a03b02396d9a84d6774c7d5d76f3434cf80'
 # result = client.node.eth.analyzeReceiptByHash(hx)
 # result = client.ppos.getCandidateList()
@@ -2110,7 +2122,7 @@ def test_IT_SD2222(global_test_env):
     address1, _ = global_test_env.account.generate_account(node.web3, 0)
     print('address1', address1, node.eth.getBalance(address1))
     transfer_amount = node.web3.toWei(1, 'ether')
-    gasPrice = 1 * 10**8
+    gasPrice = 1 * 10 ** 8
     print('gasPrice', gasPrice)
     result = global_test_env.account.sendTransaction(node.web3, '', address, address1, gasPrice,
                                                      21000, transfer_amount)

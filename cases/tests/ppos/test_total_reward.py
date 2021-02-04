@@ -68,7 +68,7 @@ def test_DG_TR_001(client_consensus, reset_environment):
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("second candidate info:{}".format(candidate_info))
     assert_reward_per(candidate_info, 0)
-    edit_after_balance = node.eth.getBalance(economic.cfg.INCENTIVEPOOL_ADDRESS)
+    edit_after_balance = node.eth.getBalance(economic.account.raw_accounts[1]['address'])
     log.info("Get the balance before editing：{}".format(edit_after_balance))
     client_consensus.economic.wait_settlement(node)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)

@@ -570,7 +570,7 @@ def get_account_amount(client):
     # view report amount
     first_report_amount = client.node.eth.getBalance(report_address)
     # view Incentive pool account
-    first_incentive_pool_account = client.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    first_incentive_pool_account = client.node.eth.getBalance(client.economic.account.raw_accounts[1]['address'])
     return report_address, first_report_amount, first_incentive_pool_account
 
 
@@ -580,7 +580,7 @@ def asster_income_account_amount(client, first_report_amount, first_incentive_po
     # view report amount
     second_report_amount = client.node.eth.getBalance(report_address)
     # view Incentive pool account
-    second_incentive_pool_account = client.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    second_incentive_pool_account = client.node.eth.getBalance(client.economic.account.raw_accounts[1]['address'])
     # asster amount reward
     log.info("first_report_amount {} ,proportion_reward {} , second_report_amount {}".format(first_report_amount,
                                                                                              proportion_reward,

@@ -1494,19 +1494,54 @@ def test_VP_GPFV_021(client_new_node_obj_list_reset):
         delegate_balance1)
 
 
-def test_test_VP_GPFV_003_01(clients_consensus):
+def test_test_VP_GPFV_003_01(new_genesis_env, clients_noconsensus):
     """
-    废弃
+    节点零出块一次性处罚完所有质押金额
     """
-    pass
-    # client = clients_consensus[0]
-    # client1 = clients_consensus[1]
-    # economic = client.economic
-    # node = client.node
-    # print('node', node.node_mark)
-    # log.info("balance: {}".format(node.eth.getBalance('lax12jn6835z96ez93flwezrwu4xpv8e4zatc4kfru')))
-    # node.stop()
-    # economic.wait_settlement(client1.node, 3)
-    # result = client1.node.ppos.getCandidateInfo(node.node_id)
-    # print(result)
-    # log.info("balance: {}".format(client1.node.eth.getBalance('lax12jn6835z96ez93flwezrwu4xpv8e4zatc4kfru')))
+    genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
+    genesis.economicModel.slashing.slashBlocksReward = 100
+    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.15.1.json"
+    genesis.to_file(new_file)
+    new_genesis_env.deploy_all(new_file)
+
+    client = clients_noconsensus[0]
+    client1 = clients_noconsensus[1]
+    economic = client.economic
+    node = client.node
+    print('node', node.node_mark)
+
+    pledge_address, _ = economic.account.generate_account(node.web3, economic.delegate_limit * 10)
+    amount1 = node.web3.toWei(833, 'ether')
+    amount2 = node.web3.toWei(837, 'ether')
+    plan = [{'Epoch': 1, 'Amount': amount1},
+            {'Epoch': 2, 'Amount': amount1},
+            {'Epoch': 3, 'Amount': amount1},
+            {'Epoch': 4, 'Amount': amount1},
+            {'Epoch': 5, 'Amount': amount1},
+            {'Epoch': 6, 'Amount': amount1},
+            {'Epoch': 7, 'Amount': amount1},
+            {'Epoch': 8, 'Amount': amount1},
+            {'Epoch': 9, 'Amount': amount1},
+            {'Epoch': 10, 'Amount': amount1},
+            {'Epoch': 11, 'Amount': amount1},
+            {'Epoch': 12, 'Amount': amount2}]
+    result = client.restricting.createRestrictingPlan(pledge_address, plan, economic.account.account_with_money['address'])
+    assert_code(result, 0)
+
+    result = client.staking.create_staking(2, pledge_address, pledge_address)
+    assert_code(result, 0)
+
+    economic.wait_settlement(node)
+
+    node.stop()
+
+    balance = client1.node.eth.getBalance(pledge_address)
+    restricting_info = client1.node.ppos.getRestrictingInfo(pledge_address)
+    print("处罚前锁仓计划：", restricting_info)
+
+    for i in range(12):
+        client1.economic.wait_settlement(client1.node)
+        balance1 = client1.node.eth.getBalance(pledge_address)
+        assert balance == balance1
+        restricting_info = client1.node.ppos.getRestrictingInfo(pledge_address)
+        log.info("处罚后第 {} 轮 锁仓计划: {}".format(i, restricting_info))

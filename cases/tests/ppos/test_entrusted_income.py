@@ -3791,7 +3791,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
                                                           economic.account.account_with_money['address'])
         assert_code(result, 0)
     print('非法委托钱包地址列表', delegate_address_list)
-    print('锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
+    print('锁仓合约余额', node.eth.getBalance(node.ppos.restrictingAddress))
     # for i in delegate_address_list:
     #     restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
     #     print("1", restricting_info)
@@ -3810,7 +3810,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
                                           amount=economic.create_staking_limit)
         assert_code(result, 0)
     print(node.eth.blockNumber)
-    print('委托后锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
+    print('委托后锁仓合约余额', node.eth.getBalance(node.ppos.restrictingAddress))
     economic.wait_settlement(node)
     # print('getCandidateList', node.ppos.getCandidateList())
     # print('getVerifierList', node.ppos.getVerifierList())
@@ -3828,7 +3828,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
         result = client.delegate.withdrew_delegate(block_number, i, node_id=opt_client.node.node_id,
                                                    amount=economic.create_staking_limit)
         assert_code(result, 0)
-    print('赎回委托后锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
+    print('赎回委托后锁仓合约余额', node.eth.getBalance(node.ppos.restrictingAddress))
     # economic.wait_settlement(node)
     for i in delegate_address_list:
         restricting_info = node.ppos.getRestrictingInfo(i)['Ret']
@@ -3842,7 +3842,7 @@ def test_EI_BC_089(clients_noconsensus, client_consensus):
                                                       economic.account.account_with_money['address'])
     assert_code(result, 0)
     print('锁仓计划正常锁仓地址', lock_other_address)
-    print('新增锁仓合约余额', node.eth.getBalance(node.web3.restrictingAddress))
+    print('新增锁仓合约余额', node.eth.getBalance(node.ppos.restrictingAddress))
     lock_other_client = clients_noconsensus[2]
     result = lock_other_client.staking.create_staking(1, lock_other_address, lock_other_address)
     assert_code(result, 0)

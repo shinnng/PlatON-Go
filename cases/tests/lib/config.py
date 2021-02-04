@@ -74,4 +74,4 @@ class EconomicConfig:
                     {"blockNumber": 11200, "amount": 15044304000000000000000000},
                     {"blockNumber": 12800, "amount": 7615018000000000000000000}
                     ]
-    fixed_gas = 50000
+    fixed_gas = 70000
