@@ -22,8 +22,8 @@ def test_MPI_001_002(client_new_node):
                                                                          10 ** 18 * 10000000)
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
-    result = client_new_node.ppos.editCandidate(pri_key, client_new_node.node.node_id, address, external_id,
-                                                node_name, website, details, reward_per=0)
+    result = client_new_node.ppos.editCandidate(address, client_new_node.node.node_id, external_id,
+                                                node_name, website, details, pri_key, reward_per=0)
     assert_code(result, 0)
     result = client_new_node.ppos.getCandidateInfo(client_new_node.node.node_id)
     log.info(result)
@@ -71,8 +71,8 @@ def test_MPI_004(client_consensus):
     """
     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3,
                                                                     10 ** 18 * 10000000)
-    INCENTIVEPOOL_ADDRESS = client_consensus.economic.cfg.INCENTIVEPOOL_ADDRESS
-    DEVELOPER_FOUNDATAION_ADDRESS = client_consensus.economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS
+    INCENTIVEPOOL_ADDRESS = client_consensus.economic.account.raw_accounts[1]['address']
+    DEVELOPER_FOUNDATAION_ADDRESS = client_consensus.economic.account.raw_accounts[2]['address']
 
     result = client_consensus.staking.edit_candidate(DEVELOPER_FOUNDATAION_ADDRESS, address)
     log.info(result)
@@ -93,7 +93,7 @@ def test_MPI_005_006(client_new_node):
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
                                                                    10 ** 18 * 10000000)
-    INCENTIVEPOOL_ADDRESS = client_new_node.economic.cfg.INCENTIVEPOOL_ADDRESS
+    INCENTIVEPOOL_ADDRESS = client_new_node.economic.account.raw_accounts[1]['address']
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
     log.info("Change to excitation pool address")

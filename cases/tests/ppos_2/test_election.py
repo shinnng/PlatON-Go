@@ -196,7 +196,7 @@ def test_CS_CL_004(clients_new_node, client_consensus):
     :return:
     """
     client = clients_new_node[0]
-    StakingAddress = EconomicConfig.DEVELOPER_FOUNDATAION_ADDRESS
+    StakingAddress = client.economic.account.raw_accounts[2]['address']
     # value = client_consensus.node.web3.toWei(1000000, "ether")
     result = client_consensus.staking.increase_staking(0, StakingAddress, amount=client.economic.create_staking_limit)
     assert_code(result, 0)

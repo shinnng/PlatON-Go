@@ -28,7 +28,7 @@ def test_IV_001_002_010(global_test_env, client_consensus):
         StakingAddress = node.get("StakingAddress")
         log.info(StakingAddress)
         assert client_consensus.node.web3.toChecksumAddress(StakingAddress) == \
-               client_consensus.economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS
+               client_consensus.economic.account.raw_accounts[2]['address']
     log.info(nodeid_list)
     consensus_node_list = global_test_env.consensus_node_list
     nodeid_list_ = [node.node_id for node in consensus_node_list]
@@ -60,7 +60,7 @@ def test_IV_004(client_consensus):
 @allure.title("The initial verifier holds an additional pledge")
 @pytest.mark.P1
 def test_IV_005(client_consensus):
-    StakingAddress = EconomicConfig.DEVELOPER_FOUNDATAION_ADDRESS
+    StakingAddress = client_consensus.economic.account.raw_accounts[2]['address']
     result = client_consensus.staking.increase_staking(0, StakingAddress)
     assert_code(result, 0)
 
@@ -73,7 +73,7 @@ def test_IV_006_007_008(client_consensus):
     007:The original verifier exits and re-pledges the pledge
     008:After the initial verifier quits, re-pledge and accept the entrustment
     """
-    StakingAddress = client_consensus.economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS
+    StakingAddress = client_consensus.economic.account.raw_accounts[2]['address']
     result = client_consensus.staking.withdrew_staking(StakingAddress)
     log.info(result)
     result = client_consensus.ppos.getCandidateInfo(client_consensus.node.node_id)
@@ -430,12 +430,12 @@ def test_IV_032_01(client_new_node):
     result = client.restricting.createRestrictingPlan(staking_address, plan,
                                                       economic.account.account_with_money['address'])
     assert_code(result, 0)
-    restricting_balance = node.eth.getBalance(node.web3.restrictingAddress)
-    staking_balance = node.eth.getBalance(node.web3.stakingAddress)
+    restricting_balance = node.eth.getBalance(node.ppos.restrictingAddress)
+    staking_balance = node.eth.getBalance(node.ppos.stakingAddress)
     result = client_new_node.staking.create_staking(2, benifit_address, staking_address)
     assert_code(result, 0)
-    restricting_balance1 = node.eth.getBalance(node.web3.restrictingAddress)
-    staking_balance1 = node.eth.getBalance(node.web3.stakingAddress)
+    restricting_balance1 = node.eth.getBalance(node.ppos.restrictingAddress)
+    staking_balance1 = node.eth.getBalance(node.ppos.stakingAddress)
     assert restricting_balance - economic.create_staking_limit == restricting_balance1
     assert staking_balance + economic.create_staking_limit == staking_balance1
 
@@ -444,8 +444,8 @@ def test_IV_032_01(client_new_node):
     assert candidate_info['RestrictingPlanHes'] == economic.create_staking_limit
     result = client.staking.withdrew_staking(staking_address)
     assert_code(result, 0)
-    restricting_balance2 = node.eth.getBalance(node.web3.restrictingAddress)
-    staking_balance2 = node.eth.getBalance(node.web3.stakingAddress)
+    restricting_balance2 = node.eth.getBalance(node.ppos.restrictingAddress)
+    staking_balance2 = node.eth.getBalance(node.ppos.stakingAddress)
     assert restricting_balance1 + economic.create_staking_limit == restricting_balance2
     assert staking_balance1 - economic.create_staking_limit == staking_balance2
     candidate_info = node.ppos.getCandidateInfo(node.node_id)['Code']
@@ -482,10 +482,10 @@ def test_IV_033_01(client_new_node):
     # 使用自有金额质押
     staking_address, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
     benifit_address, _ = economic.account.generate_account(node.web3, 0)
-    staking_balance = node.eth.getBalance(node.web3.stakingAddress)
+    staking_balance = node.eth.getBalance(node.ppos.stakingAddress)
     result = client_new_node.staking.create_staking(2, benifit_address, staking_address)
     assert_code(result, 0)
-    staking_balance1 = node.eth.getBalance(node.web3.stakingAddress)
+    staking_balance1 = node.eth.getBalance(node.ppos.stakingAddress)
     assert staking_balance + economic.create_staking_limit == staking_balance1
 
     candiate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
@@ -494,7 +494,7 @@ def test_IV_033_01(client_new_node):
 
     result = client.staking.withdrew_staking(staking_address)
     assert_code(result, 0)
-    staking_balance2 = node.eth.getBalance(node.web3.stakingAddress)
+    staking_balance2 = node.eth.getBalance(node.ppos.stakingAddress)
     assert staking_balance1 - economic.create_staking_limit == staking_balance2
 
     candiate_info = node.ppos.getCandidateInfo(node.node_id)
@@ -617,7 +617,7 @@ def test_IV_038(client_new_node):
     assert candidate_info['RestrictingPlan'] == economic.create_staking_limit
     assert candidate_info['Released'] == 0
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
-    assert restricting_info['balance'] == economic.create_staking_limit - amount1
+    assert restricting_info['balance'] == economic.create_staking_limit
     assert restricting_info['Pledge'] == economic.create_staking_limit
     assert restricting_info['debt'] == amount1
 
@@ -653,7 +653,7 @@ def test_IV_039(client_new_node, gas_type):
     assert candidate_info['RestrictingPlan'] == node.web3.toWei(5000, 'ether')
     assert candidate_info['Released'] == node.web3.toWei(5000, 'ether')
     restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
-    assert restricting_info['balance'] == node.web3.toWei(5000, 'ether') - amount1
+    assert restricting_info['balance'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['Pledge'] == node.web3.toWei(5000, 'ether')
     assert restricting_info['debt'] == amount1
     balance1 = node.eth.getBalance(staking_address)
@@ -788,7 +788,7 @@ def test_IV_043(client_new_node, gas_type):
     economic.wait_settlement(node)
     for i in range(4):
         print('number', i)
-        balance_tmp = balance_tmp - node.web3.toWei(1000, 'ether')
+        balance_tmp = balance_tmp
         debt_amount_tmp = debt_amount_tmp + node.web3.toWei(1000, 'ether')
         restricting_info = node.ppos.getRestrictingInfo(staking_address)['Ret']
         print(restricting_info)

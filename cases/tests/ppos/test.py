@@ -14,7 +14,7 @@ from hexbytes import HexBytes
 accounts = {}
 
 
-def connect_web3(url, chain_id=201018):
+def connect_web3(url, chain_id=201030):
     if "ws" in url:
         w3 = Web3(WebsocketProvider(url), chain_id=chain_id)
     else:
@@ -136,6 +136,7 @@ def get_VerifierList(url):
     ppos = Ppos(web3)
     result = ppos.getVerifierList()
     print(result)
+    return result
 
 
 def getValidatorList(url):
@@ -326,7 +327,7 @@ if __name__ == '__main__':
     plan = [{'Epoch': 200, 'Amount': Web3.toWei(1000, 'ether')}]
     # address = 'atp1xsp5qwy9hgj26yujead2jmjlknhp2s7cqyh37u'
     # address = 'atx1lmcpsdp8cw899lu3wzmr5hxxplze82s2y3k4h9'
-    node_id = '77fffc999d9f9403b65009f1eb27bae65774e2d8ea36f7b20a89f82642a5067557430e6edfe5320bb81c3666a19cf4a5172d6533117d7ebcd0f2c82055499050'
+    node_id = '69459663f66b97aa22530a90ae16f28ee02e78ec00107e2da28e094db811c2bceeb86b52de14b0744a623c2fb01d331c999b8c3a78fe60fc82cf5cc28854019e'
     # print(Web3.fromWei(1000000000000000000000, 'ether'))
     node_id1 = 'd3f54cf2fbcb06e372573079f432513f328dde846ceebcc8915ea1ea9abf91e4ffefe42dc42f411850c23e177e81271703bbc16add6754c7df1a9c6ac6cbe63f'
     # pri_key1 = 'd357920de1df4ecb00cbce60ded2d73f3f51fd1e9fb79b08f366e301e849bd9d'
@@ -337,7 +338,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # get_RestrictingPlan(url, account)
     # fff(url)
-    sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
+    # sendTransaction(url, account1, pri_key1, account, Web3.toWei(1, 'ether'), 201030)
     # web3 = connect_web3(url)
     # ppos = Ppos(web3)
     # platon = Eth(web3)
@@ -371,7 +372,8 @@ if __name__ == '__main__':
     # withdrewStaking(url, node_id1, pri_key)
     # stakingnum = 335
     # node_id = '8ec906e2fdb09c8a45dbc193afe36ae7542e6c8efc96f06c566bf504c7b509691ef119accb0f95d6c9e51e053bd15c6ac5a568bd6f708508100e58d4d7a9036b'
-    # get_VerifierList(url)
+    resutl = get_VerifierList(url)['Ret']
+    print(len(resutl))
     # get_candidatelist(url)
     # StakingBlockNum = 515
     # get_candidatelist(url)
