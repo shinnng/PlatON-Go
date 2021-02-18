@@ -2148,7 +2148,7 @@ def test_hrp_address(new_genesis_env, client_consensus):
     platon_fund = Web3.toWei(2500000, 'ether')
     genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
     genesis.economicModel.innerAcc.cdfBalance = community_amount
-    genesis.config.addressHRP = 'lxg'
+    genesis.config.addressHRP = 'uat'
     surplus_amount = str(Web3.toWei(105000000, 'ether') - community_amount - platon_fund - Web3.toWei(2000000, 'ether'))
     HRP = genesis.config.addressHRP
     platon_fund_account, _ = create_account(HRP)
@@ -2167,12 +2167,12 @@ def test_hrp_address(new_genesis_env, client_consensus):
             "balance": surplus_amount
         }
     }
-    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.15.1.json"
+    new_file = new_genesis_env.cfg.env_tmp + "/alaya_genesis_0.16.0.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
-    for i in range(5):
-        address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3)
-        print(address, _)
+    # for i in range(5):
+    #     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3)
+    #     print(address, _)
     # client_consensus.economic.wait_settlement(node)
     #
     # assert node.eth.blockNumber > 0

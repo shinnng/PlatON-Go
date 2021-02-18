@@ -17,7 +17,7 @@ STATIC_NODE_FILE = os.path.abspath(os.path.join(BASE_DIR, 'deploy/template/stati
 SUPERVISOR_FILE = os.path.abspath(os.path.join(BASE_DIR, "deploy/template/supervisor_template.conf"))
 ADDRESS_FILE = os.path.abspath(
     os.path.join(BASE_DIR, 'deploy/template/UTC--2019-08-23T12-33-18.192329788Z--2e95e3ce0a54951eb9a99152a6d5827872dfb4fd'))
-ACCOUNT_FILE = os.path.abspath(os.path.join(BASE_DIR, "deploy/accounts.yml"))
+ACCOUNT_FILE = os.path.abspath(os.path.join(BASE_DIR, "deploy/accounts.uat.yml"))
 LOG_FILE = os.path.abspath(os.path.join(BASE_DIR, "deploy/tmp/platon.log"))
 
 # cache file root directory
