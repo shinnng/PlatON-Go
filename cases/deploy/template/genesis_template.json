@@ -24,7 +24,8 @@
             "maxValidators": 5,
             "unStakeFreezeDuration": 2,
             "rewardPerMaxChangeRange": 500,
-            "rewardPerChangeInterval": 2
+            "rewardPerChangeInterval": 2,
+            "unDelegateFreezeDuration": 1
         },
         "slashing": {
             "slashFractionDuplicateSign": 100,
