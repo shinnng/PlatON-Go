@@ -392,7 +392,9 @@ if __name__ == '__main__':
     # delegate(url, 0, i, amount, pri_key)
     #     time.sleep(1)
     # getValidatorList(url)
-    # amount = Web3.toWei(1000, 'ether')
+    amount = Web3.toWei(500, 'ether')
+    # amount = Web3.fromWei(100000000000000000000, 'ether')
+    print(amount)
     # amount = 6167000000000000000000
     # delegate(url, 1, node_id, amount, pri_key)
     # for pri_key in privateKey:
@@ -400,7 +402,7 @@ if __name__ == '__main__':
     # time.sleep(2)
     # increase_staking(url, 1, node_id1, amount, pri_key)
     # createstaking(url, 1, pri_key, Web3.toWei(10000, 'ether'))
-    get_candinfo(url, node_id)
+    # get_candinfo(url, node_id)
     # getDelegateInfo(url, 127, account, node_id)
     # get_RestrictingPlan(url, account)
     # get_RestrictingPlan(url, 'atp10llx4zpnjv52sst2skwyzxsd29lzk45neyspuy')
