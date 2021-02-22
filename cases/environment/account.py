@@ -4,6 +4,7 @@ from client_sdk_python.personal import Personal
 from hexbytes import HexBytes
 import random
 import rlp
+import rlp
 import os
 
 
@@ -128,7 +129,7 @@ class Account:
 
         prikey = account.privateKey.hex()[2:]
         if balance != 0:
-            self.sendTransaction(web3, '', self.account_with_money['address'], address, web3.platon.gasPrice, 21000, balance)
+            self.sendTransaction(web3, '', self.account_with_money['address'], address, platon.gasPrice, 21000, balance)
         account = {
             "address": address,
             "nonce": 0,

@@ -63,7 +63,7 @@ def upload_platon(node: Node, platon_bin):
     node.run_ssh("rm -rf {}".format(node.remote_bin_file))
     node.upload_file(platon_bin, node.remote_bin_file)
     node.run_ssh("chmod +x {}".format(node.remote_bin_file))
-
+    log.info(f"Node {node.node_mark} upload platon succeed")
     node.restart()
 
 def get_blockhash(node, blocknumber=None):
@@ -155,6 +155,7 @@ def get_pledge_list(func, nodeid=None) -> list:
     :return:
     """
     validator_info = func().get('Ret')
+    log.info(f'validator_info: {validator_info}')
     if validator_info == "Getting verifierList is failed:The validator is not exist":
         time.sleep(10)
         validator_info = func().get('Ret')
@@ -263,7 +264,7 @@ def wait_block_number(node, block, interval=1):
         print_t += 1
         if print_t == 10:
             # Print once every 10 seconds to avoid printing too often
-            log.info('The current block height is {}, waiting until {}'.format(node.block_number, block))
+            log.info('{}: The current block height is {}, waiting until {}'.format(node.node_mark, node.block_number, block))
             print_t = 0
         if node.block_number > block:
             return
@@ -353,7 +354,7 @@ def assert_code(result, code):
     if isinstance(result, int):
         assert result == code, "code error，expect：{}，actually:{}".format(code, result)
     else:
-        assert result.get('Code') == code, "code error，expect：{}，actually:{}".format(code, result)
+        assert result.get('code') == code or result.get('Code') == code, "code error，expect：{}，actually:{}".format(code, result)
 
 
 def von_amount(amonut, base):
@@ -395,7 +396,7 @@ def get_the_dynamic_parameter_gas_fee(data):
         if i == 0:
             zero_number = zero_number + 1
     non_zero_number = byte_group_length - zero_number
-    dynamic_gas = non_zero_number * 68 + zero_number * 4
+    dynamic_gas = non_zero_number * 16 + zero_number * 4
     return dynamic_gas
 
 

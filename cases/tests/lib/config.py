@@ -30,18 +30,19 @@ class PipConfig:
     vote_option_nays = 2
     vote_option_Abstentions = 3
     version1 = 1537
-    version2 = 3328
-    version3 = 3337
-    version4 = 3584
-    version5 = 3585
-    version6 = 3593
-    version7 = 3840
+    version2 = 3841
+    version3 = 3849
+    version4 = 4096
+    version5 = 4097
+    version6 = 4105
+    version7 = 4352
     version8 = 591617
     version9 = 526081
-    version0 = 3329
-    transaction_cfg = {"gasPrice": 2100000000000000, "gas": 1000000}
+    version0 = 3840
+    transaction_cfg = {"gasPrice": 3000000000000000, "gas": 1000000}
     # Lock account account address
-    FOUNDATION_LOCKUP_ADDRESS = "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp3yp7hw"
+    FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
+
 
 
 class EconomicConfig:
@@ -52,17 +53,17 @@ class EconomicConfig:
     # Built in node Amount of pledge
     DEVELOPER_STAKING_AMOUNT = 1500000000000000000000000
     # PlatON Foundation Address
-    FOUNDATION_ADDRESS = "lax1fyeszufxwxk62p46djncj86rd553skpptsj8v6"
+    FOUNDATION_ADDRESS = "atp1m6n2wj6cmnnqnmhhaytyf6x75607t7rh6y9kyu"
     # Lock account account address
-    FOUNDATION_LOCKUP_ADDRESS = "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqp3yp7hw"
+    FOUNDATION_LOCKUP_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqpd3er4y"
     # Pledged contract address
-    STAKING_ADDRESS = "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzlh5ge3"
+    STAKING_ADDRESS = "atx1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzrzv4mm"
     # PlatON incentive pool account
-    INCENTIVEPOOL_ADDRESS = "lax1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrzpqayr"
+    INCENTIVEPOOL_ADDRESS = "atp1zqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr5jy24r"
     # Remaining total account
-    REMAIN_ACCOUNT_ADDRESS = "lax196278ns22j23awdfj9f2d4vz0pedld8au6xelj"
+    REMAIN_ACCOUNT_ADDRESS = "atp1zkrxx6rf358jcvr7nruhyvr9hxpwv9uncjmns0"
     # Developer Foundation Account
-    DEVELOPER_FOUNDATAION_ADDRESS = 'lax12jn6835z96ez93flwezrwu4xpv8e4zatc4kfru'
+    DEVELOPER_FOUNDATAION_ADDRESS = 'atp1ur2hg0u9wt5qenmkcxlp7ysvaw6yupt4vll2fq'
 
     release_info = [{"blockNumber": 1600, "amount": 55965742000000000000000000},
                     {"blockNumber": 3200, "amount": 49559492000000000000000000},
@@ -73,3 +74,4 @@ class EconomicConfig:
                     {"blockNumber": 11200, "amount": 15044304000000000000000000},
                     {"blockNumber": 12800, "amount": 7615018000000000000000000}
                     ]
+    fixed_gas = 70000

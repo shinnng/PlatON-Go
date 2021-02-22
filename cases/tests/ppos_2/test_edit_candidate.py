@@ -71,8 +71,8 @@ def test_MPI_004(client_consensus):
     """
     address, _ = client_consensus.economic.account.generate_account(client_consensus.node.web3,
                                                                     10 ** 18 * 10000000)
-    INCENTIVEPOOL_ADDRESS = client_consensus.economic.cfg.INCENTIVEPOOL_ADDRESS
-    DEVELOPER_FOUNDATAION_ADDRESS = client_consensus.economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS
+    INCENTIVEPOOL_ADDRESS = client_consensus.economic.account.raw_accounts[1]['address']
+    DEVELOPER_FOUNDATAION_ADDRESS = client_consensus.economic.account.raw_accounts[2]['address']
 
     result = client_consensus.staking.edit_candidate(DEVELOPER_FOUNDATAION_ADDRESS, address)
     log.info(result)
@@ -93,7 +93,7 @@ def test_MPI_005_006(client_new_node):
     """
     address, _ = client_new_node.economic.account.generate_account(client_new_node.node.web3,
                                                                    10 ** 18 * 10000000)
-    INCENTIVEPOOL_ADDRESS = client_new_node.economic.cfg.INCENTIVEPOOL_ADDRESS
+    INCENTIVEPOOL_ADDRESS = client_new_node.economic.account.raw_accounts[1]['address']
     result = client_new_node.staking.create_staking(0, address, address)
     assert_code(result, 0)
     log.info("Change to excitation pool address")
@@ -341,3 +341,303 @@ def test_MPI_017(client_new_node):
                                                 external_id, node_name, website, details, pri_key, reward_per=0)
     log.info(result)
     assert_code(result, 301102)
+
+
+def NodeDeployment(clients_noconsensus):
+    client1 = clients_noconsensus[0]
+    client2 = clients_noconsensus[1]
+    economic = client1.economic
+    node = client1.node
+    address1, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+    address2, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+
+    result = client1.staking.create_staking(0, address1, address1, reward_per=80)
+    assert_code(result, 0)
+    time.sleep(1)
+    result = client2.staking.create_staking(0, address2, address2, reward_per=80)
+    assert_code(result, 0)
+
+    economic.wait_settlement(node, 1)
+    time.sleep(1)
+    print(client1.node.ppos.getVerifierList())
+    result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+    # assert result
+    result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+    # assert not result
+    return address1, address2
+
+
+@allure.title("Non-validating nodes modify the commissioned dividend reward")
+@pytest.mark.P1
+def test_MPI_018(new_genesis_env, clients_noconsensus):
+    """
+    非验证人修改委托分红奖励
+    """
+    client1 = clients_noconsensus[0]
+    client2 = clients_noconsensus[1]
+    economic = client1.economic
+    node = client1.node
+    address1, address2 = NodeDeployment(clients_noconsensus)
+    # address1, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+    # address2, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+    #
+    # result = client1.staking.create_staking(0, address1, address1, reward_per=80)
+    # assert_code(result, 0)
+    # time.sleep(1)
+    # result = client2.staking.create_staking(0, address2, address2, reward_per=80)
+    # assert_code(result, 0)
+    #
+    # economic.wait_settlement(node, 1)
+    # time.sleep(1)
+    # print(client1.node.ppos.getVerifierList())
+    # result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+    # assert result
+    # result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+    # assert not result
+
+    result = client1.staking.edit_candidate(address1, reward_per=580)
+    assert_code(result, 0)
+    candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
+    assert candidate_info['RewardPer'] == 80
+    assert candidate_info['NextRewardPer'] == 580
+    result = client2.staking.edit_candidate(address2, address2, reward_per=580)
+    assert_code(result, 0)
+    candidate_info = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    assert candidate_info['RewardPer'] == 80
+    assert candidate_info['NextRewardPer'] == 580
+
+    economic.wait_settlement(node)
+
+    candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
+    print(candidate_info)
+    assert candidate_info['RewardPer'] == 580
+    assert candidate_info['NextRewardPer'] == 580
+
+    candidate_info1 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    print(candidate_info1)
+    assert candidate_info1['RewardPer'] == 80
+    assert candidate_info1['NextRewardPer'] == 580
+
+    result = client2.staking.increase_staking(0, address2, amount=economic.delegate_limit * 100)
+    assert_code(result, 0)
+    economic.wait_settlement(node)
+    result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+    assert not result
+    result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+    assert result
+    candidate_info3 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    print(candidate_info1)
+    assert candidate_info3['RewardPer'] == 580
+    assert candidate_info3['NextRewardPer'] == 580
+
+
+@pytest.mark.P1
+def test_MPI_019(clients_noconsensus):
+    """
+    非验证人连续修改委托分红奖励
+    """
+    client1 = clients_noconsensus[0]
+    client2 = clients_noconsensus[1]
+    economic = client1.economic
+    node = client1.node
+    address1, address2 = NodeDeployment(clients_noconsensus)
+    # address1, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+    # address2, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+    #
+    # result = client1.staking.create_staking(0, address1, address1, reward_per=80)
+    # assert_code(result, 0)
+    # time.sleep(1)
+    # result = client2.staking.create_staking(0, address2, address2, reward_per=80)
+    # assert_code(result, 0)
+    #
+    # economic.wait_settlement(node, 1)
+    # time.sleep(1)
+    # result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+    # assert result
+    # result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+    # assert not result
+
+    result = client2.staking.edit_candidate(address2, address2, reward_per=10001)
+    assert_code(result, 301007)
+
+    result = client2.staking.edit_candidate(address2, address2, reward_per=590)
+    assert_code(result, 301009)
+
+    result = client2.staking.edit_candidate(address2, address2, reward_per=580)
+    assert_code(result, 0)
+    result = client2.staking.edit_candidate(address2, address2, reward_per=1080)
+    assert_code(result, 301008)
+    candidate_info = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    print(candidate_info)
+    assert candidate_info['RewardPer'] == 80
+    assert candidate_info['NextRewardPer'] == 580
+    economic.wait_settlement(node)
+    candidate_info1 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    print(candidate_info1)
+    assert candidate_info1['RewardPer'] == 80
+    assert candidate_info1['NextRewardPer'] == 580
+    result = client2.staking.edit_candidate(address2, address2, reward_per=1080)
+    assert_code(result, 301008)
+    economic.wait_settlement(node, 1)
+    result = client2.staking.edit_candidate(address2, address2, reward_per=1080)
+    assert_code(result, 0)
+    candidate_info2 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    print(candidate_info2)
+    assert candidate_info2['RewardPer'] == 580
+    assert candidate_info2['NextRewardPer'] == 1080
+    economic.wait_settlement(node)
+    candidate_info3 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+    print(candidate_info3)
+    assert candidate_info3['RewardPer'] == 580
+    assert candidate_info3['NextRewardPer'] == 1080
+
+
+@pytest.mark.P1
+def test_MPI_020(clients_noconsensus):
+    """
+    非验证人修改分红比例，再增持质押金额
+    """
+    client1 = clients_noconsensus[0]
+    client2 = clients_noconsensus[1]
+    economic = client1.economic
+    node = client1.node
+    address1, address2 = NodeDeployment(clients_noconsensus)
+
+    result = client1.staking.edit_candidate(address1, address1, reward_per=580)
+    assert_code(result, 0)
+    candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
+    assert candidate_info['RewardPer'] == 80
+    assert candidate_info['NextRewardPer'] == 580
+
+    result = client2.staking.increase_staking(0, address2, amount=economic.delegate_limit * 100)
+    assert_code(result, 0)
+
+    economic.wait_settlement(node)
+
+    result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+    assert not result
+    result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+    assert result
+
+    candidate_info1 = node.ppos.getCandidateInfo(node.node_id)['Ret']
+    assert candidate_info1['RewardPer'] == 80
+    assert candidate_info1['NextRewardPer'] == 580
+
+    economic.wait_settlement(node)
+
+    result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+    assert not result
+    result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+    assert result
+
+    candidate_info1 = node.ppos.getCandidateInfo(node.node_id)['Ret']
+    assert candidate_info1['RewardPer'] == 80
+    assert candidate_info1['NextRewardPer'] == 580
+
+
+def test_MPI_022(client_new_node):
+    """
+    修改委托分红比例，再重新修改回原来的
+    """
+    client = client_new_node
+    economic = client.economic
+    node = client.node
+    address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+
+    result = client.staking.create_staking(0, address, address, reward_per=70)
+    assert_code(result, 0)
+    economic.wait_settlement(node, 1)
+    result = client.staking.edit_candidate(address, address, reward_per=75)
+    assert_code(result, 0)
+    time.sleep(3)
+    result = client.staking.edit_candidate(address, address, reward_per=70)
+    assert_code(result, 301008)
+
+#
+# @pytest.mark.P1
+# def test_MPI_021(clients_noconsensus):
+#     """
+#     犹豫期修改委托分红比例 (作废、犹豫期无法更改分红比例)
+#     """
+#     client1 = clients_noconsensus[0]
+#     client2 = clients_noconsensus[1]
+#     economic = client1.economic
+#     node = client1.node
+#     address1, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+#     address2, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+#
+#     result = client1.staking.create_staking(0, address1, address1, reward_per=80)
+#     assert_code(result, 0)
+#     time.sleep(2)
+#     result = client2.staking.create_staking(0, address2, address2, reward_per=80)
+#     assert_code(result, 0)
+#
+#     result = client1.staking.edit_candidate(address1, address1, reward_per=580)
+#     assert_code(result, 0)
+#     result = client2.staking.edit_candidate(address2, address2, reward_per=580)
+#     assert_code(result, 0)
+#
+#     candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
+#     print(candidate_info)
+#     assert candidate_info['RewardPer'] == 80
+#     assert candidate_info['NextRewardPer'] == 580
+#
+#     candidate_info1 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+#     print(candidate_info1)
+#     assert candidate_info1['RewardPer'] == 80
+#     assert candidate_info1['NextRewardPer'] == 580
+#
+#     economic.wait_settlement(node, 1)
+#     time.sleep(1)
+#     print(client1.node.ppos.getVerifierList())
+#     result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+#     assert result
+#     result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+#     assert not result
+#
+#     candidate_info = node.ppos.getCandidateInfo(node.node_id)['Ret']
+#     print(candidate_info)
+#     assert candidate_info['RewardPer'] == 580
+#     assert candidate_info['NextRewardPer'] == 580
+#
+#     candidate_info1 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+#     print(candidate_info1)
+#     assert candidate_info1['RewardPer'] == 80
+#     assert candidate_info1['NextRewardPer'] == 580
+#
+#     result = client2.staking.increase_staking(0, address2, amount=economic.delegate_limit * 100)
+#     assert_code(result, 0)
+#
+#     economic.wait_settlement(node)
+#
+#     result = check_node_in_list(client1.node.node_id, client1.ppos.getVerifierList)
+#     assert not result
+#     result = check_node_in_list(client2.node.node_id, client1.ppos.getVerifierList)
+#     assert result
+#
+#     candidate_info1 = node.ppos.getCandidateInfo(client2.node.node_id)['Ret']
+#     print(candidate_info1)
+#     assert candidate_info1['RewardPer'] == 580
+#     assert candidate_info1['NextRewardPer'] == 580
+
+
+def test_MPI_023(client_new_node):
+    """
+    调用修改接口，什么参数都不改
+    """
+    client = client_new_node
+    economic = client.economic
+    node = client.node
+    address, pri_key = economic.account.generate_account(node.web3, economic.create_staking_limit * 2)
+
+    result = client.staking.create_staking(0, address, address)
+    assert_code(result, 0)
+    print(node.ppos.getCandidateInfo(node.node_id))
+    economic.wait_settlement(node)
+    result = client.staking.edit_candidate(address, address)
+    assert_code(result, 0)
+    time.sleep(2)
+    print(node.ppos.getCandidateInfo(node.node_id))
+    # time.sleep(3)
+    # result = client.staking.edit_candidate(address, address, reward_per=70)
+    # assert_code(result, 301008)

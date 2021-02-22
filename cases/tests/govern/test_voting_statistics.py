@@ -10,7 +10,7 @@ from dacite import from_dict
 from tests.govern.conftest import proposal_vote, version_proposal_vote
 
 
-def submitvpandvote(clients, votingrounds=3, version=None):
+def submitvpandvote(clients, votingrounds=4, version=None):
     pip = clients[0].pip
     if version is None:
         version = pip.cfg.version5
@@ -133,20 +133,19 @@ class TestVotingStatisticsVP:
     @allure.title('Version proposal statistics function verification')
     def test_VS_EXV_001_VS_BL_1(self, new_genesis_env, clients_consensus, clients_noconsensus):
         new_genesis_env.deploy_all()
-        submitvpandvote(clients_consensus[0:-1])
+        submitvpandvote(clients_consensus[0:-1], 5)
         proposalinfo = clients_consensus[0].pip.get_effect_proposal_info_of_vote(clients_consensus[0].pip.cfg.version_proposal)
         log.info('Version proposal information {}'.format(proposalinfo))
         createstaking(clients_noconsensus[:3])
         wait_block_number(clients_consensus[0].node, proposalinfo.get('EndVotingBlock'))
         result = clients_consensus[0].pip.get_accuverifiers_count(proposalinfo.get('ProposalID'))
         log.info('Get proposal vote infomation {}'.format(result))
-        assert result == [4, 3, 0, 0]
-        assert clients_consensus[0].pip.get_status_of_proposal(proposalinfo.get('ProposalID')) == 4
+        assert result == [7, 3, 0, 0]
+        assert clients_consensus[0].pip.get_status_of_proposal(proposalinfo.get('ProposalID')) == 3
         assert clients_consensus[0].pip.get_yeas_of_proposal(proposalinfo.get('ProposalID')) == 3
         assert clients_consensus[0].pip.get_nays_of_proposal(proposalinfo.get('ProposalID')) == 0
         assert clients_consensus[0].pip.get_abstentions_of_proposal(proposalinfo.get('ProposalID')) == 0
-        assert clients_consensus[0].pip.get_accu_verifiers_of_proposal(proposalinfo.get('ProposalID')) == len(
-            clients_consensus)
+        assert clients_consensus[0].pip.get_accu_verifiers_of_proposal(proposalinfo.get('ProposalID')) == 7
 
     @pytest.mark.P1
     @allure.title('Version proposal statistics function verification')

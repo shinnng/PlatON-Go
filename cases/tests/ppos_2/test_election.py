@@ -196,14 +196,13 @@ def test_CS_CL_004(clients_new_node, client_consensus):
     :return:
     """
     client = clients_new_node[0]
-    StakingAddress = EconomicConfig.DEVELOPER_FOUNDATAION_ADDRESS
-    value = client_consensus.node.web3.toWei(1000000, "ether")
-    result = client_consensus.staking.increase_staking(0, StakingAddress, amount=value)
+    StakingAddress = client.economic.account.raw_accounts[2]['address']
+    # value = client_consensus.node.web3.toWei(1000000, "ether")
+    result = client_consensus.staking.increase_staking(0, StakingAddress, amount=client.economic.create_staking_limit)
     assert_code(result, 0)
     msg = client_consensus.ppos.getCandidateInfo(client_consensus.node.node_id)
     log.info(msg)
-    address, _ = client.economic.account.generate_account(client.node.web3,
-                                                          10 ** 18 * 10000000)
+    address, _ = client.economic.account.generate_account(client.node.web3, client.economic.create_staking_limit * 3)
     value = client.economic.create_staking_limit * 2
     result = client.staking.create_staking(0, address, address, amount=value)
     assert_code(result, 0)
@@ -289,22 +288,23 @@ def test_CS_CL_007(clients_new_node):
     """
     client_noconsensus1 = clients_new_node[0]
     client_noconsensus2 = clients_new_node[1]
-    address1, _ = client_noconsensus1.economic.account.generate_account(client_noconsensus1.node.web3,
-                                                                        10 ** 18 * 10000000)
-    address2, _ = client_noconsensus1.economic.account.generate_account(client_noconsensus1.node.web3,
-                                                                        10 ** 18 * 10000000)
-    value = client_noconsensus1.economic.create_staking_limit * 2
+    economic = client_noconsensus1.economic
+    node = client_noconsensus1.node
+    address1, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 4)
+    address2, _ = economic.account.generate_account(node.web3, economic.create_staking_limit * 4)
+    value = client_noconsensus1.economic.create_staking_limit * 3
     result = client_noconsensus1.staking.create_staking(0, address1, address1, amount=value)
     assert_code(result, 0)
+    time.sleep(3)
     result = client_noconsensus2.staking.create_staking(0, address2, address2, amount=value)
     assert_code(result, 0)
     # Next settlement period
-    client_noconsensus1.economic.wait_settlement(client_noconsensus2.node)
-    print(client_noconsensus2.node.ppos.getVerifierList())
+    economic.wait_settlement(node)
+    log.info('VerifierList ：{}'.format(node.ppos.getVerifierList()))
     verifierlist = get_pledge_list(client_noconsensus2.ppos.getVerifierList)
     log.info("verifierlist:{}".format(verifierlist))
-    log.info("node:{}".format(client_noconsensus1.node.node_id))
-    assert verifierlist[0] == client_noconsensus1.node.node_id
+    log.info("node:{}".format(node.node_id))
+    assert verifierlist[0] == node.node_id
 
 
 @pytest.mark.P1

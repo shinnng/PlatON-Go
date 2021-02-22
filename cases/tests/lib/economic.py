@@ -1,3 +1,4 @@
+import time
 from decimal import Decimal
 
 from dacite import from_dict
@@ -147,6 +148,7 @@ class Economic:
         # annualcycle = (self.additional_cycle_time * 60) // self.settlement_size
         # annual_size = annualcycle * self.settlement_size
         # # starting_block_height = math.floor(current_block / annual_size) * annual_size
+        # time.sleep(10)
         if verifier_num is None:
             verifier_list = get_pledge_list(node.ppos.getVerifierList)
             verifier_num = len(verifier_list)
@@ -169,8 +171,8 @@ class Economic:
     def get_switchpoint_by_settlement(self, node: Node, number=0):
         """
         Get the last block of the current billing cycle
-        :param node: node object
-        :param number: number of billing cycles
+        :param node: node object
+        :param number: number of billing cycles
         :return:
         """
         block_number = self.settlement_size * number
@@ -186,8 +188,8 @@ class Economic:
     def get_front_settlement_switchpoint(self, node: Node, number=0):
         """
         Get a block height before the current billing cycle
-        :param node: node object
-        :param number: number of billing cycles
+        :param node: node object
+        :param number: number of billing cycles
         :return:
         """
         block_num = self.settlement_size * (number + 1)
@@ -198,8 +200,8 @@ class Economic:
     def wait_settlement(self, node: Node, settlement=0):
         """
         Waiting for a billing cycle to settle
-        :param node:
-        :param number: number of billing cycles
+        :param node:
+        :param number: number of billing cycles
         :return:
         """
         end_block = self.get_switchpoint_by_settlement(node, settlement)

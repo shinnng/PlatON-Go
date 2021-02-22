@@ -213,7 +213,7 @@ def adjust_initial_parameters(new_genesis_env):
     genesis = from_dict(data_class=Genesis, data=new_genesis_env.genesis_config)
     genesis.economicModel.staking.unStakeFreezeDuration = 3
     genesis.economicModel.slashing.maxEvidenceAge = 2
-    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.13.0.json"
+    new_file = new_genesis_env.cfg.env_tmp + "/genesis_0.14.0.json"
     genesis.to_file(new_file)
     new_genesis_env.deploy_all(new_file)
 
@@ -570,7 +570,7 @@ def get_account_amount(client):
     # view report amount
     first_report_amount = client.node.eth.getBalance(report_address)
     # view Incentive pool account
-    first_incentive_pool_account = client.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    first_incentive_pool_account = client.node.eth.getBalance(client.economic.account.raw_accounts[1]['address'])
     return report_address, first_report_amount, first_incentive_pool_account
 
 
@@ -580,7 +580,7 @@ def asster_income_account_amount(client, first_report_amount, first_incentive_po
     # view report amount
     second_report_amount = client.node.eth.getBalance(report_address)
     # view Incentive pool account
-    second_incentive_pool_account = client.node.eth.getBalance(EconomicConfig.INCENTIVEPOOL_ADDRESS)
+    second_incentive_pool_account = client.node.eth.getBalance(client.economic.account.raw_accounts[1]['address'])
     # asster amount reward
     log.info("first_report_amount {} ,proportion_reward {} , second_report_amount {}".format(first_report_amount,
                                                                                              proportion_reward,
@@ -775,7 +775,7 @@ def test_PIP_MG_001_002(client_consensus, mark, reset_environment):
     # view Parameter value before treatment
     first_max_gas_limit = get_governable_parameter_value(first_client, 'maxBlockGasLimit')
     # create Parametric proposal
-    block = param_governance_verify_before_endblock(first_client, 'block', 'maxBlockGasLimit', '4712389', mark)
+    block = param_governance_verify_before_endblock(first_client, 'block', 'maxBlockGasLimit', '9424776', mark)
     # view Parameter value after treatment
     second_max_gas_limit = get_governable_parameter_value(first_client, 'maxBlockGasLimit')
     # wait block
@@ -794,7 +794,7 @@ def test_PIP_MG_003(client_consensus, reset_environment):
     first_client = client_consensus
     log.info("Current connection non-consensus first node：{}".format(first_client.node.node_mark))
     node = first_client.node
-    change_parameter_value = '4712389'
+    change_parameter_value = '10000000'
     # view Parameter value before treatment
     first_max_gas_limit = get_governable_parameter_value(first_client, 'maxBlockGasLimit')
     # create Parametric proposal

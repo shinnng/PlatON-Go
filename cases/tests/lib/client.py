@@ -49,6 +49,7 @@ def get_client_by_nodeid(nodeid, client_obj_list: List[Client]) -> Client:
             return client_obj
 
 
+
 def get_clients_by_nodeid(nodeid_list, client_obj_list: List[Client]) -> List[Client]:
     """
     Get the client object list according to the node id list

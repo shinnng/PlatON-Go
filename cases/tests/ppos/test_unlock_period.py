@@ -107,7 +107,7 @@ def test_UP_FV_003(client_new_node):
     # create account
     address1, _ = economic.account.generate_account(node.web3, von_amount(economic.create_staking_limit, 2))
     # create Restricting Plan
-    amount = von_amount(economic.delegate_limit, 10)
+    amount = economic.delegate_limit * 100
     plan = [{'Epoch': 1, 'Amount': amount}, {'Epoch': 2, 'Amount': amount}]
     result = client.restricting.createRestrictingPlan(address1, plan, address1)
     assert_code(result, 0)
@@ -196,7 +196,7 @@ def test_UP_FV_006(client_new_node):
                                                            von_amount(economic.create_staking_limit, 2))
     # create Restricting Plan
     amount1 = economic.create_staking_limit
-    amount2 = von_amount(economic.add_staking_limit, 10)
+    amount2 = economic.add_staking_limit * 100
     plan = [{'Epoch': 1, 'Amount': amount1}, {'Epoch': 2, 'Amount': amount2}]
     result = client.restricting.createRestrictingPlan(address1, plan, address1)
     assert_code(result, 0)
@@ -243,7 +243,7 @@ def test_UP_FV_007(client_new_node):
     amount2 = von_amount(economic.create_staking_limit, 1)
     address1, address2 = create_account_amount(client, amount1, amount2)
     # create Restricting Plan
-    delegate_amount = von_amount(economic.delegate_limit, 10)
+    delegate_amount = economic.delegate_limit * 100
     plan = [{'Epoch': 1, 'Amount': delegate_amount}]
     result = client.restricting.createRestrictingPlan(address2, plan, address2)
     assert_code(result, 0)
@@ -284,7 +284,7 @@ def test_UP_FV_008(client_new_node):
     amount2 = von_amount(economic.create_staking_limit, 1)
     address1, address2 = create_account_amount(client, amount1, amount2)
     # create Restricting Plan
-    delegate_amount = von_amount(economic.delegate_limit, 10)
+    delegate_amount = economic.delegate_limit * 100
     plan = [{'Epoch': 1, 'Amount': delegate_amount}]
     result = client.restricting.createRestrictingPlan(address2, plan, address2)
     assert_code(result, 0)
@@ -325,11 +325,22 @@ def test_UP_FV_009(clients_new_node):
     client2 = clients_new_node[1]
     economic = client1.economic
     node = client1.node
+    print(node.node_mark)
     # create restricting plan and staking
+    restricting_balance = node.eth.getBalance(node.ppos.restrictingAddress)
+    staking_balance = node.eth.getBalance(node.ppos.stakingAddress)
     address1 = restricting_plan_validation_staking(client1, economic, node)
     # Waiting for the end of the settlement period
+    time.sleep(2)
+    restricting_balance1 = node.eth.getBalance(node.ppos.restrictingAddress)
+    staking_balance1 = node.eth.getBalance(node.ppos.stakingAddress)
+
+    assert restricting_balance == restricting_balance1
+    assert staking_balance + economic.create_staking_limit == staking_balance1
     economic.wait_settlement(node)
     # Obtain block bonus and pledge bonus
+    balance = client2.node.eth.getBalance(address1)
+    print(balance)
     block_reward, staking_reward = client1.economic.get_current_year_reward(node)
     # Get penalty blocks
     slash_blocks = get_governable_parameter_value(client1, 'slashBlocksReward')
@@ -355,10 +366,13 @@ def test_UP_FV_009(clients_new_node):
     log.info("restricting plan informtion: {}".format(restricting_info))
     info = restricting_info['Ret']
     if punishment_amonut < economic.create_staking_limit:
-        assert (info['balance'] == economic.create_staking_limit - punishment_amonut) or (info['balance'] == economic.create_staking_limit - punishment_amonut * 2), 'ErrMsg: restricting balance amount {}'.format(
-            info['balance'])
+        assert info['Pledge'] == economic.create_staking_limit - punishment_amonut
     else:
         assert_code(restricting_info, 304005)
+    client2.economic.wait_settlement(client2.node, 3)
+    balance1 = client2.node.eth.getBalance(address1)
+    print(balance1)
+    assert balance + economic.create_staking_limit - punishment_amonut == balance1
 
 
 @pytest.mark.P2
@@ -429,7 +443,7 @@ def test_UP_FV_011(client_new_node, reset_environment):
     amount2 = von_amount(economic.create_staking_limit, 1)
     address1, report_address = create_account_amount(client1, amount1, amount2)
     # create Restricting Plan
-    delegate_amount = von_amount(economic.delegate_limit, 10)
+    delegate_amount = economic.delegate_limit * 100
     plan = [{'Epoch': 3, 'Amount': delegate_amount}]
     result = client1.restricting.createRestrictingPlan(report_address, plan, report_address)
     assert_code(result, 0)
@@ -583,7 +597,7 @@ def test_UP_FV_014(client_new_node, reset_environment):
     amount2 = von_amount(economic.create_staking_limit, 1)
     address1, report_address = create_account_amount(client, amount1, amount2)
     # create Restricting Plan
-    delegate_amount = von_amount(economic.delegate_limit, 10)
+    delegate_amount = economic.delegate_limit * 100
     plan = [{'Epoch': 3, 'Amount': delegate_amount}]
     result = client.restricting.createRestrictingPlan(report_address, plan, report_address)
     assert_code(result, 0)
@@ -671,7 +685,7 @@ def test_UP_FV_016(client_new_node):
     amount2 = von_amount(economic.create_staking_limit, 1)
     address1, address2 = create_account_amount(client, amount1, amount2)
     # create Restricting Plan
-    delegate_amount = von_amount(economic.add_staking_limit, 10)
+    delegate_amount = economic.add_staking_limit * 100
     plan = [{'Epoch': 3, 'Amount': delegate_amount}]
     result = client.restricting.createRestrictingPlan(address1, plan, address1)
     assert_code(result, 0)
@@ -735,7 +749,7 @@ def test_UP_FV_018(client_new_node):
     amount2 = von_amount(economic.create_staking_limit, 1)
     address1, address2 = create_account_amount(client, amount1, amount2)
     # create Restricting Plan
-    delegate_amount = von_amount(economic.delegate_limit, 10)
+    delegate_amount = economic.delegate_limit * 100
     plan = [{'Epoch': 1, 'Amount': delegate_amount}]
     result = client.restricting.createRestrictingPlan(address2, plan, address2)
     assert_code(result, 0)
@@ -755,14 +769,14 @@ def test_UP_FV_018(client_new_node):
     info = candidate_info['Ret']
     staking_blocknum = info['StakingBlockNum']
     # withdrew delegate
-    withdrew_amount = von_amount(economic.delegate_limit, 15)
+    withdrew_amount = von_amount(economic.delegate_limit, 150)
     result = client.delegate.withdrew_delegate(staking_blocknum, address2, amount=withdrew_amount)
     assert_code(result, 0)
     # view restricting plan
     restricting_info = client.ppos.getRestrictingInfo(address2)
     log.info("restricting plan informtion: {}".format(restricting_info))
     info = restricting_info['Ret']
-    assert info['debt'] == von_amount(economic.delegate_limit, 5), 'ErrMsg: restricting debt amount {}'.format(info['debt'])
+    assert info['debt'] == von_amount(economic.delegate_limit, 50), 'ErrMsg: restricting debt amount {}'.format(info['debt'])
 
 
 @pytest.mark.P1
@@ -778,7 +792,7 @@ def test_UP_FV_019(client_new_node):
     # create account
     amount = economic.create_staking_limit
     first_address, second_address = create_account_amount(client, amount, amount)
-    delegate_amount = von_amount(economic.delegate_limit, 10)
+    delegate_amount = economic.delegate_limit * 100
     plan = [{'Epoch': 2, 'Amount': delegate_amount}]
 
     # create Restricting Plan1

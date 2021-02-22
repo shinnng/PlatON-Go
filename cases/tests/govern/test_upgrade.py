@@ -364,7 +364,8 @@ class TestUpgradeVP:
         verifier_list = get_pledge_list(clients_consensus[0].ppos.getVerifierList)
         log.info('Get verifier list : {}'.format(verifier_list))
         assert pip_test.node.node_id in verifier_list
-        submitvpandvote(clients_consensus)
+
+        submitvpandvote(clients_consensus, 5)
         programversion = clients_consensus[0].staking.get_version()
         assert_code(programversion, pip.cfg.version0)
         proposalinfo = pip.get_effect_proposal_info_of_vote()
@@ -380,7 +381,7 @@ class TestUpgradeVP:
         log.info('Validator list : {}'.format(validator_list))
         assert pip_test.node.node_id not in validator_list
         assert_code(pip.get_status_of_proposal(proposalinfo.get('ProposalID')), 5)
-        _, staking_reward = pip_test.economic.get_current_year_reward(pip_test.node, verifier_num=5)
+        block_reward, staking_reward = pip_test.economic.get_current_year_reward(pip_test.node, verifier_num=5)
         pip.economic.wait_settlement(client_noconsensus.node)
 
         count = get_block_count_number(client_noconsensus.node, 320)
@@ -391,8 +392,11 @@ class TestUpgradeVP:
         log.info('Get verifier list : {}'.format(verifier_list))
         assert pip_test.node.node_id not in verifier_list
 
+        block_reward, staking_reward = pip.economic.get_current_year_reward(pip.node, 5)
+        log.info(f'block_reward == {block_reward}, staking_reward == {staking_reward}')
         balance_before = pip.node.eth.getBalance(address, 2 * pip.economic.settlement_size - 1)
         log.info('Block number {} address balace {}'.format(2 * pip.economic.settlement_size - 1, balance_before))
+        pip.economic.wait_consensus(pip.node)
         balance_after = pip.node.eth.getBalance(address, 2 * pip.economic.settlement_size)
         log.info('Block number {} address balace {}'.format(2 * pip.economic.settlement_size, balance_after))
         log.info('Staking reward : {}'.format(staking_reward))
@@ -403,8 +407,8 @@ class TestUpgradeVP:
         new_genesis_env.deploy_all()
         pip = clients_consensus[0].pip
         pip_test = client_noconsensus.pip
-        address, _ = pip_test.economic.account.generate_account(pip_test.node.web3, 10 ** 18 * 10000000)
-        result = client_noconsensus.staking.create_staking(0, address, address, amount=10 ** 18 * 2000000,
+        address, _ = pip_test.economic.account.generate_account(pip_test.node.web3, pip.economic.create_staking_limit * 3)
+        result = client_noconsensus.staking.create_staking(0, address, address, amount=pip.economic.create_staking_limit * 2,
                                                            transaction_cfg=pip_test.cfg.transaction_cfg)
         log.info('Node {} staking result : {}'.format(pip_test.node.node_id, result))
         programversion = client_noconsensus.staking.get_version()
@@ -414,7 +418,7 @@ class TestUpgradeVP:
         log.info('Get verifier list : {}'.format(verifier_list))
         assert pip_test.node.node_id in verifier_list
 
-        submitvpandvote(clients_consensus)
+        submitvpandvote(clients_consensus, 5)
         programversion = clients_consensus[0].staking.get_version()
         assert_code(programversion, pip.cfg.version0)
         proposalinfo = pip.get_effect_proposal_info_of_vote()

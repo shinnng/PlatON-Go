@@ -3,7 +3,6 @@ import os
 
 from common.connect import run_ssh, connect_linux
 from environment.config import TestConfig
-from common.log import log
 from environment.mock import mock_connect_linux
 
 

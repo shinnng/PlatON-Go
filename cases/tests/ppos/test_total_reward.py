@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#   @Time    : 2020/1/2 10:41
-#   @Author  : PlatON-Developer
-#   @Site    : https://github.com/PlatONnetwork/
+#   @Time    : 2020/1/2 10:41
+#   @Author  : PlatON-Developer
+#   @Site    : https://github.com/PlatONnetwork/
 import os
 import time
 import pytest
@@ -28,7 +28,7 @@ def calculate_reward(block_reward, staking_reward, block_num, reward):
 
 
 def calculate_pool_balance(node, economic):
-    return node.eth.getBalance(node.web3.delegateRewardAddress, calculate_switch_block(node, economic))
+    return node.eth.getBalance(node.ppos.delegateRewardAddress, calculate_switch_block(node, economic))
 
 
 def get_ben_balance(node, economic, ben_address):
@@ -55,25 +55,26 @@ def test_DG_TR_001(client_consensus, reset_environment):
     :param client_consensus:
     :return:
     """
-    reward = 1000
+    reward = 500
     economic = client_consensus.economic
     node = client_consensus.node
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("first candidate info:{}".format(candidate_info))
     assert_reward_per(candidate_info, 0)
     economic.wait_settlement(node, 1)
-    result = client_consensus.staking.edit_candidate(economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS, economic.cfg.INCENTIVEPOOL_ADDRESS, reward_per=reward)
+    print(economic.account.raw_accounts)
+    result = client_consensus.staking.edit_candidate(economic.account.raw_accounts[2]['address'], economic.account.raw_accounts[1]['address'], reward_per=reward)
     assert_code(result, 0)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("second candidate info:{}".format(candidate_info))
     assert_reward_per(candidate_info, 0)
-    edit_after_balance = node.eth.getBalance(economic.cfg.INCENTIVEPOOL_ADDRESS)
+    edit_after_balance = node.eth.getBalance(economic.account.raw_accounts[1]['address'])
     log.info("Get the balance before editing：{}".format(edit_after_balance))
     client_consensus.economic.wait_settlement(node)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("last candidate info:{}".format(candidate_info))
     assert_reward_total(candidate_info, 0, calculate_pool_balance(node, economic))
-    assert node.eth.getBalance(economic.cfg.INCENTIVEPOOL_ADDRESS) - edit_after_balance == 0
+    assert node.eth.getBalance(economic.account.raw_accounts[1]['address']) - edit_after_balance == 0
 
 
 @pytest.mark.P0
@@ -83,7 +84,7 @@ def test_DG_TR_002(client_consensus, reset_environment):
     :param client_consensus:
     :return:
     """
-    reward = 1000
+    reward = 500
     economic = client_consensus.economic
     node = client_consensus.node
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
@@ -91,13 +92,13 @@ def test_DG_TR_002(client_consensus, reset_environment):
     assert candidate_info["Ret"]["RewardPer"] == 0
     log.info("editing built in nodes")
     economic.wait_settlement(node, 1)
-    result = client_consensus.staking.edit_candidate(economic.cfg.DEVELOPER_FOUNDATAION_ADDRESS, economic.cfg.INCENTIVEPOOL_ADDRESS,
+    result = client_consensus.staking.edit_candidate(economic.account.raw_accounts[2]['address'], economic.account.raw_accounts[1]['address'],
                                                      reward_per=reward)
     assert_code(result, 0)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
     log.info("Verify the modification")
     assert_reward_per(candidate_info, 0)
-    assert candidate_info["Ret"]["BenefitAddress"] == economic.cfg.INCENTIVEPOOL_ADDRESS
+    assert candidate_info["Ret"]["BenefitAddress"] == economic.account.raw_accounts[1]['address']
     log.info("waiting for a settlement cycle")
     economic.wait_settlement(node)
     candidate_info = client_consensus.ppos.getCandidateInfo(node.node_id)
@@ -180,7 +181,7 @@ def test_DG_TR_003_01(client_noconsensus, value):
 
 
 @pytest.mark.P1
-@pytest.mark.parametrize('value', [0, 999, 1000])
+@pytest.mark.parametrize('value', [0, 499, 500])
 def test_DG_TR_003_02(staking_node_client, value):
     """
     减少非内置节点分红比例<rewardPerMaxChangeRange值
@@ -492,7 +493,7 @@ def test_DG_TR_011(client_new_node, reset_environment):
     :param client_new_node:
     :return:
     """
-    reward = 1000
+    reward = 500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, 0)
@@ -540,7 +541,7 @@ def test_DG_TR_012(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -570,7 +571,7 @@ def test_DG_TR_012(client_new_node, reset_environment):
     block_reward, staking_reward = economic.get_current_year_reward(node)
     candidate_info = client_new_node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, delegate_reward, calculate_pool_balance(node, economic))
-    assert node.eth.getBalance(node.web3.delegateRewardAddress, calculate_switch_block(node, economic)) == delegate_reward
+    assert node.eth.getBalance(node.ppos.delegateRewardAddress, calculate_switch_block(node, economic)) == delegate_reward
 
     economic.wait_settlement(node)
     block_num = economic.get_number_blocks_in_interval(node)
@@ -590,7 +591,7 @@ def test_DG_TR_013(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -622,7 +623,7 @@ def test_DG_TR_013(client_new_node, reset_environment):
 
     economic.wait_settlement(node)
     switch_block = calculate_switch_block(node, economic)
-    assert node.eth.getBalance(node.web3.delegateRewardAddress, switch_block) == 0
+    assert node.eth.getBalance(node.ppos.delegateRewardAddress, switch_block) == 0
     candidate_info = client_new_node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, 0, calculate_pool_balance(node, economic))
     end_balance_two = node.eth.getBalance(ben_address, switch_block)
@@ -639,7 +640,7 @@ def test_DG_TR_013_2(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -685,7 +686,7 @@ def test_DG_TR_014(client_new_node, reset_environment):
     :return:
     """
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = client_new_node.node
     economic = client_new_node.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(client_new_node, reward)
@@ -774,7 +775,7 @@ def test_DG_TR_016(client_new_node, reset_environment):
     """
     delegate_node_client = client_new_node
     reward = 1000
-    update_reward = 2000
+    update_reward = 1500
     node = delegate_node_client.node
     economic = delegate_node_client.economic
     staking_address, delegate_address, ben_address = create_staking_dif_ben(delegate_node_client, reward=reward)
@@ -1307,7 +1308,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
     reward = 1000
     node = client.node
     economic = client.economic
-    amount = calculate(client.economic.create_staking_limit, 5)
+    amount = calculate(client.economic.create_staking_limit, 2)
     staking_amount = calculate(client.economic.create_staking_limit, 1)
     staking_address, _ = client.economic.account.generate_account(node.web3, amount)
     delegate_address, _ = client.economic.account.generate_account(node.web3, economic.add_staking_limit * 5)
@@ -1318,6 +1319,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
     assert_code(result, 0)
     economic.wait_settlement(node)
     start_balance = get_ben_balance(node, economic, ben_address)
+    print('start_balance', start_balance)
     create_staking(client_2, reward)
     block_reward, staking_reward = economic.get_current_year_reward(node)
 
@@ -1328,6 +1330,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
 
     block_num = economic.get_number_blocks_in_interval(node)
     end_balance = get_ben_balance(node, economic, ben_address)
+    print('end_balance', end_balance)
     total_reward, delegate_reward = calculate_reward(block_reward, staking_reward, block_num, reward)
     candidate_info = node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, delegate_reward)
@@ -1335,6 +1338,7 @@ def test_DG_TR_030(clients_noconsensus, reset_environment):
     block_reward, staking_reward = economic.get_current_year_reward(node)
 
     economic.wait_settlement(node)
+    time.sleep(5)
     candidate_info = node.ppos.getCandidateInfo(node.node_id)
     assert_reward_total(candidate_info, delegate_reward)
     block_num = economic.get_number_blocks_in_interval(node)

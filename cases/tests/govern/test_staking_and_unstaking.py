@@ -22,7 +22,7 @@ def create_lockup_plan(client):
     log.info('CreateRestrictingPlan result : {}'.format(result))
     assert_code(result, 0)
     result = client.staking.create_staking(1, address, address,
-                                           amount=int(1.8 * client.economic.genesis.economicModel.staking.stakeThreshold),
+                                           amount=int(client.economic.genesis.economicModel.staking.stakeThreshold),
                                            transaction_cfg=client.pip.cfg.transaction_cfg)
     log.info('Create staking result : {}'.format(result))
     assert_code(result, 0)
@@ -121,7 +121,7 @@ class TestPreactiveProposalStaking:
         client_verifiers = get_clients_by_nodeid(verifier_list, all_clients)
         pips = [client.pip for client in client_verifiers]
         result = pips[0].submitVersion(pips[0].node.node_id, str(time.time()),
-                                       pips[0].cfg.version5, 3, pips[0].node.staking_address,
+                                       pips[0].cfg.version5, 4, pips[0].node.staking_address,
                                        transaction_cfg=pips[0].cfg.transaction_cfg)
         log.info('submit version proposal, result : {}'.format(result))
         proposalinfo = pips[0].get_effect_proposal_info_of_vote()
@@ -193,7 +193,7 @@ class TestUpgradedProposalStaking:
         client_verifiers = get_clients_by_nodeid(verifier_list, all_clients)
         pips = [client.pip for client in client_verifiers]
         result = pips[0].submitVersion(pips[0].node.node_id, str(time.time()),
-                                       pips[0].cfg.version5, 2, pips[0].node.staking_address,
+                                       pips[0].cfg.version5, 4, pips[0].node.staking_address,
                                        transaction_cfg=pips[0].cfg.transaction_cfg)
         log.info('submit version proposal, result : {}'.format(result))
         proposalinfo = pips[0].get_effect_proposal_info_of_vote()
@@ -852,7 +852,7 @@ class TestSlashing:
         genesis.economicModel.staking.unStakeFreezeDuration = 2
         genesis.economicModel.slashing.maxEvidenceAge = 1
         genesis.economicModel.gov.paramProposalVoteDurationSeconds = 300
-        genesis.economicModel.slashing.slashBlocksReward = 0
+        genesis.economicModel.slashing.slashBlocksReward = 10
         new_genesis_env.set_genesis(genesis.to_dict())
         new_genesis_env.deploy_all()
         pip = clients_noconsensus[0].pip
@@ -860,7 +860,7 @@ class TestSlashing:
 
         create_lockup_plan(clients_noconsensus[0])
         address = pip.node.staking_address
-        submitvpandvote([clients_noconsensus[0]], votingrounds=1)
+        submitvpandvote([clients_noconsensus[0]], votingrounds=2)
         proposalinfo_version = pip.get_effect_proposal_info_of_vote()
         log.info('Get version proposal information : {}'.format(proposalinfo_version))
         wait_block_number(pip.node, proposalinfo_version.get('EndVotingBlock'))
@@ -873,8 +873,10 @@ class TestSlashing:
         shares = clients_noconsensus[0].staking.get_staking_amount()
         log.info('Node staking amount : {}'.format(shares))
         pip.node.stop()
-
-        self.verify_amount_block(pip_test, address, shares, value=4)
+        block_reward, _ = pip_test.economic.get_current_year_reward(pip_test.node, 5)
+        slashing_amount = block_reward * genesis.economicModel.slashing.slashBlocksReward
+        amount = shares - slashing_amount
+        self.verify_amount_block(pip_test, address, amount, value=5)
 
     @pytest.mark.P2
     @allure.title('Node be slashed, verify unstake function')
@@ -883,7 +885,7 @@ class TestSlashing:
         genesis.economicModel.staking.unStakeFreezeDuration = 2
         genesis.economicModel.slashing.maxEvidenceAge = 1
         genesis.economicModel.gov.versionProposalVoteDurationSeconds = 2000
-        genesis.economicModel.slashing.slashBlocksReward = 0
+        genesis.economicModel.slashing.slashBlocksReward = 10
         new_genesis_env.set_genesis(genesis.to_dict())
         new_genesis_env.deploy_all()
         pip = clients_noconsensus[0].pip
@@ -891,11 +893,15 @@ class TestSlashing:
 
         create_lockup_plan(clients_noconsensus[0])
         address = pip.node.staking_address
-        submitvpandvote([clients_noconsensus[0]], votingrounds=14)
+        submitvpandvote([clients_noconsensus[0]], votingrounds=4)
         shares = clients_noconsensus[0].staking.get_staking_amount()
         log.info('Node staking amount : {}'.format(shares))
         pip.node.stop()
-        self.verify_amount(pip_test, address, shares)
+        log.info('Stop the node {} {}'.format(pip.node.host, pip.node.p2p_port))
+        block_reward, _ = pip_test.economic.get_current_year_reward(pip_test.node, 5)
+        slashing_amount = block_reward * genesis.economicModel.slashing.slashBlocksReward
+        amount = shares - slashing_amount
+        self.verify_amount_block(pip_test, address, amount, value=4, tag=True)
 
     @pytest.mark.P2
     @allure.title('Node be slashed, verify unstake function')
@@ -904,7 +910,7 @@ class TestSlashing:
         genesis.economicModel.staking.unStakeFreezeDuration = 2
         genesis.economicModel.slashing.maxEvidenceAge = 1
         genesis.economicModel.gov.textProposalVoteDurationSeconds = 480
-        genesis.economicModel.slashing.slashBlocksReward = 0
+        genesis.economicModel.slashing.slashBlocksReward = 10
         new_genesis_env.set_genesis(genesis.to_dict())
         new_genesis_env.deploy_all()
         pip = clients_noconsensus[0].pip
@@ -916,7 +922,10 @@ class TestSlashing:
         shares = clients_noconsensus[0].staking.get_staking_amount()
         log.info('Node staking amount : {}'.format(shares))
         pip.node.stop()
-        self.verify_amount(pip_test, address, shares)
+        block_reward, _ = pip_test.economic.get_current_year_reward(pip_test.node, 5)
+        slashing_amount = block_reward * genesis.economicModel.slashing.slashBlocksReward
+        amount = shares - slashing_amount
+        self.verify_amount_block(pip_test, address, amount, value=5)
 
     @pytest.mark.P2
     @allure.title('Node be slashed, verify unstake function')
@@ -925,7 +934,7 @@ class TestSlashing:
         genesis.economicModel.staking.unStakeFreezeDuration = 2
         genesis.economicModel.slashing.maxEvidenceAge = 1
         genesis.economicModel.gov.paramProposalVoteDurationSeconds = 640
-        genesis.economicModel.slashing.slashBlocksReward = 0
+        genesis.economicModel.slashing.slashBlocksReward = 10
         new_genesis_env.set_genesis(genesis.to_dict())
         new_genesis_env.deploy_all()
         pip = clients_noconsensus[0].pip
@@ -946,7 +955,10 @@ class TestSlashing:
         shares = clients_noconsensus[0].staking.get_staking_amount()
         log.info('Node staking amount : {}'.format(shares))
         pip.node.stop()
-        self.verify_amount(pip_test, address, shares)
+        block_reward, _ = pip_test.economic.get_current_year_reward(pip_test.node, 5)
+        slashing_amount = block_reward * genesis.economicModel.slashing.slashBlocksReward
+        amount = shares - slashing_amount
+        self.verify_amount_block(pip_test, address, amount, value=5, tag=True)
 
     @pytest.mark.P2
     @allure.title('Node be slashed, verify unstake function')
@@ -955,7 +967,7 @@ class TestSlashing:
         genesis.economicModel.staking.unStakeFreezeDuration = 2
         genesis.economicModel.slashing.maxEvidenceAge = 1
         genesis.economicModel.gov.paramProposalVoteDurationSeconds = 480
-        genesis.economicModel.slashing.slashBlocksReward = 0
+        genesis.economicModel.slashing.slashBlocksReward = 10
         new_genesis_env.set_genesis(genesis.to_dict())
         new_genesis_env.deploy_all()
         pip = clients_noconsensus[0].pip
@@ -967,7 +979,10 @@ class TestSlashing:
         shares = clients_noconsensus[0].staking.get_staking_amount()
         log.info('Node staking amount : {}'.format(shares))
         pip.node.stop()
-        self.verify_amount(pip_test, address, shares)
+        block_reward, _ = pip_test.economic.get_current_year_reward(pip_test.node, 5)
+        slashing_amount = block_reward * genesis.economicModel.slashing.slashBlocksReward
+        amount = shares - slashing_amount
+        self.verify_amount_block(pip_test, address, amount, value=5, tag=True)
 
     def verify_amount(self, pip, address, shares):
         self.verify_amount_block(pip, address, shares, value=4, tag=False)
@@ -991,7 +1006,7 @@ class TestSlashing:
                                                                                balance_after_lockup))
         assert balance_after == balance_before
         if tag:
-            assert balance_after_lockup == balance_before_lockup == shares
+            assert balance_after_lockup - balance_before_lockup == shares
         else:
             assert balance_after_lockup == balance_before_lockup
 

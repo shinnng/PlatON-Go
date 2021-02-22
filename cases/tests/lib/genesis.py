@@ -18,6 +18,7 @@ class Config:
     eip155Block: int
     cbft: Cbft
     genesisVersion: int
+    addressHRP: str
 
 
 @dataclass
@@ -67,6 +68,12 @@ class Reward:
     newBlockRate: int
     platONFoundationYear: int
     increaseIssuanceRatio: int
+    theNumberOfDelegationsReward: int
+
+
+@dataclass
+class Restricting:
+    minimumRelease: int
 
 
 @dataclass
@@ -84,6 +91,7 @@ class EconomicModel:
     slashing: Slashing
     gov: Gov
     reward: Reward
+    restricting: Restricting
     innerAcc: InnerAcc
 
 
@@ -100,6 +108,7 @@ class Genesis:
     gasUsed: str
     parentHash: str
 
+
     def to_dict(self):
         from copy import copy
         data = copy(self.__dict__)
@@ -111,6 +120,7 @@ class Genesis:
         data["economicModel"]["slashing"] = copy(self.economicModel.slashing.__dict__)
         data["economicModel"]["gov"] = copy(self.economicModel.gov.__dict__)
         data["economicModel"]["reward"] = copy(self.economicModel.reward.__dict__)
+        data["economicModel"]["restricting"] = copy(self.economicModel.restricting.__dict__)
         data["economicModel"]["innerAcc"] = copy(self.economicModel.innerAcc.__dict__)
         return data
 

@@ -43,7 +43,7 @@ def large_version_proposal_pips(all_clients):
 
 
 @pytest.fixture()
-def proposal_candidate_pips(all_clients):
+def proposal_candidate_pips(all_clients, noproposal_pips):
     '''
     There is voting stage proposal, get candidate list pip object
     :param global_test_env:
@@ -89,7 +89,7 @@ def proposal_candidate_pips(all_clients):
 
 
 @pytest.fixture()
-def large_version_proposal_candidate_pips(all_clients):
+def large_version_proposal_candidate_pips(noproposal_pips, all_clients):
     '''
     There is voting stage proposal, get candidate list pip object
     :param global_test_env:
@@ -307,13 +307,10 @@ class TestNoProposalVE:
             result = replace_version_declare(pip, pip.cfg.PLATON_NEW_BIN0, pip.cfg.version0)
             assert_code(result, 0)
             verifier_node_version(pip, pip.cfg.version0)
-
             result = wrong_verisonsign_declare(pip, noproposal_pips[1])
             assert_code(result, 302024)
-
             result = wrong_verison_declare(pip, pip.cfg.version3)
             assert_code(result, 302024)
-
             result = wrong_verison_declare(pip, pip.cfg.version2)
             assert_code(result, 302024)
 
@@ -1097,7 +1094,7 @@ class TestPreactiveProposalVE:
 class TestNoProposalCA:
     @pytest.mark.P0
     @allure.title('No effective proposal, candiate declare version')
-    def test_DE_CA_001(self, noproposal_candidate_pips, client_verifier):
+    def test_DE_CA_001(self, client_verifier, noproposal_candidate_pips):
         pip = noproposal_candidate_pips[0]
         verison = struct.pack('>I', pip.chain_version)
         if verison[3] != 0:
@@ -1177,13 +1174,10 @@ class TestNoProposalCA:
             result = replace_version_declare(pip, pip.cfg.PLATON_NEW_BIN0, pip.cfg.version0)
             assert_code(result, 0)
             verifier_node_version(pip, pip.cfg.version0)
-
             result = wrong_verisonsign_declare(pip, client_verifier.pip)
             assert_code(result, 302024)
-
-            result = wrong_verison_declare(pip, pip.cfg.version2)
-            assert_code(result, 302024)
-
+            # result = wrong_verison_declare(pip, pip.cfg.version2)
+            # assert_code(result, 302024)
             result = wrong_verison_declare(pip, pip.cfg.version3)
             assert_code(result, 302024)
 
