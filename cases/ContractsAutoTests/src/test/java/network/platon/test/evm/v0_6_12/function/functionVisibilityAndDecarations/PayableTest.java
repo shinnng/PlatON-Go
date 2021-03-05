@@ -1,8 +1,8 @@
 package network.platon.test.evm.v0_6_12.function.functionVisibilityAndDecarations;
 
-import com.alaya.bech32.Bech32;
-import com.alaya.parameters.NetworkParameters;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.bech32.Bech32;
+import com.platon.parameters.NetworkParameters;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_6_12.Payable;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

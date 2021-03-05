@@ -1,7 +1,7 @@
 package network.platon.test.evm.v0_6_12.exec_efficiency;
 
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_6_12.LoopCall;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

@@ -1,7 +1,7 @@
 package network.platon.test.evm.v0_6_12.event;
 
-import com.alaya.abi.solidity.datatypes.generated.Uint256;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.abi.solidity.datatypes.generated.Uint256;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_6_12.EventTypeContract;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;
@@ -59,7 +59,7 @@ public class EventTypeContractTest extends ContractPrepareTest {
             try {
                 eventCallContract.getTwoDimensionalArrayEventEvents(receipt);
             } catch (UnsupportedOperationException e) {
-                collector.assertEqual(e.getCause().getMessage(),"com.alaya.abi.solidity.datatypes.generated.StaticArray2<com.alaya.abi.solidity.datatypes.generated.Uint256>");
+                collector.assertEqual(e.getCause().getMessage(),"com.platon.abi.solidity.datatypes.generated.StaticArray2<com.platon.abi.solidity.datatypes.generated.Uint256>");
             }
         } catch (Exception e) {
             collector.logStepFail("EventTypeContractTest testTwoDimensionalArray failure,exception msg:" , e.getMessage());

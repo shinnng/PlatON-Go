@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_5_17.event;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_5_17.EventIndexedContract;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import com.alibaba.fastjson.JSONObject;
@@ -83,7 +83,7 @@ public class EventIndexedContractTest extends ContractPrepareTest {
             try {
                 eventCallContract.getTwoDimensionalArrayEventEvents(receipt);
             } catch (UnsupportedOperationException e) {
-                collector.assertEqual(e.getCause().getMessage(),"com.alaya.abi.solidity.datatypes.generated.StaticArray2<com.alaya.abi.solidity.datatypes.generated.Uint256>");
+                collector.assertEqual(e.getCause().getMessage(),"com.platon.abi.solidity.datatypes.generated.StaticArray2<com.platon.abi.solidity.datatypes.generated.Uint256>");
             }
         } catch (Exception e) {
             collector.logStepFail("EventIndexedContractTest testTwoDimensionalArray failure,exception msg:" , e.getMessage());

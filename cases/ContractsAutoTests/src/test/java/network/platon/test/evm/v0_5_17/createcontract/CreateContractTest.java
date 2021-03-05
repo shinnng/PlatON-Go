@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_5_17.createcontract;
 
-import com.alaya.tuples.generated.Tuple2;
+import com.platon.tuples.generated.Tuple2;
 import network.platon.contracts.evm.v0_5_17.CreateContract;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

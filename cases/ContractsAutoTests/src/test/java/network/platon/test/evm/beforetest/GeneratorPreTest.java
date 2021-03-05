@@ -1,6 +1,6 @@
 package network.platon.test.evm.beforetest;
-import com.alaya.bech32.Bech32;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.bech32.Bech32;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import network.platon.autotest.utils.FileUtil;

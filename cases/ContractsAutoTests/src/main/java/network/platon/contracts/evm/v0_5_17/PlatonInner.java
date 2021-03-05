@@ -1,17 +1,17 @@
 package network.platon.contracts.evm.v0_5_17;
 
-import com.alaya.abi.solidity.TypeReference;
-import com.alaya.abi.solidity.datatypes.DynamicBytes;
-import com.alaya.abi.solidity.datatypes.Function;
-import com.alaya.abi.solidity.datatypes.Type;
-import com.alaya.abi.solidity.datatypes.generated.Uint256;
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.RemoteCall;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tx.Contract;
-import com.alaya.tx.TransactionManager;
-import com.alaya.tx.gas.GasProvider;
+import com.platon.abi.solidity.TypeReference;
+import com.platon.abi.solidity.datatypes.DynamicBytes;
+import com.platon.abi.solidity.datatypes.Function;
+import com.platon.abi.solidity.datatypes.Type;
+import com.platon.abi.solidity.datatypes.generated.Uint256;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.RemoteCall;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tx.Contract;
+import com.platon.tx.TransactionManager;
+import com.platon.tx.gas.GasProvider;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,13 +20,13 @@ import java.util.Collections;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://github.com/PlatONnetwork/client-sdk-java/releases">platon-web3j command line tools</a>,
- * or the com.alaya.codegen.SolidityFunctionWrapperGenerator in the
+ * or the com.platon.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 0.13.2.1.
+ * <p>Generated with web3j version 0.15.1.7.
  */
 public class PlatonInner extends Contract {
-    private static final String BINARY = "608060405234801561001057600080fd5b50610370806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80636f10e28514610046578063eb51cc9114610060578063f40ae8d9146100dd575b600080fd5b61004e610190565b60408051918252519081900360200190f35b610068610196565b6040805160208082528351818301528351919283929083019185019080838360005b838110156100a257818101518382015260200161008a565b50505050905090810190601f1680156100cf5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b61018e600480360360408110156100f357600080fd5b81019060208101813564010000000081111561010e57600080fd5b82018360208201111561012057600080fd5b8035906020019184600183028401116401000000008311171561014257600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600092019190915250929550505090356001600160a01b0316915061022d9050565b005b60015481565b60008054604080516020601f60026000196101006001881615020190951694909404938401819004810282018101909252828152606093909290918301828280156102225780601f106101f757610100808354040283529160200191610222565b820191906000526020600020905b81548152906001019060200180831161020557829003601f168201915b505050505090505b90565b8151600080606081808560208901885af480610247578092505b506001829055604080513d808252601f19601f820116820160200190925290935083801561027c576020820181803883390190505b5090503d6000602083013e805161029a9060009060208401906102a3565b50505050505050565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f106102e457805160ff1916838001178555610311565b82800160010185558215610311579182015b828111156103115782518255916020019190600101906102f6565b5061031d929150610321565b5090565b61022a91905b8082111561031d576000815560010161032756fea265627a7a72315820145b018e89f7d8491cfbfd9eaa5d40b36ae0f4e3bf412bffe419f5eee54cdb0164736f6c63430005110032";
+    private static final String BINARY = "608060405234801561001057600080fd5b506103c0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c80636f10e28514610046578063eb51cc9114610064578063f40ae8d9146100e7575b600080fd5b61004e6101c2565b6040518082815260200191505060405180910390f35b61006c6101c8565b6040518080602001828103825283818151815260200191508051906020019080838360005b838110156100ac578082015181840152602081019050610091565b50505050905090810190601f1680156100d95780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b6101c0600480360360408110156100fd57600080fd5b810190808035906020019064010000000081111561011a57600080fd5b82018360208201111561012c57600080fd5b8035906020019184600183028401116401000000008311171561014e57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061026a565b005b60015481565b606060008054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156102605780601f1061023557610100808354040283529160200191610260565b820191906000526020600020905b81548152906001019060200180831161024357829003601f168201915b5050505050905090565b600082519050600060606000808460208801875af48061028657fe5b3d925050816040519080825280601f01601f1916602001820160405280156102bd5781602001600182028038833980820191505090505b5090503d6000602083013e80600090805190602001906102de9291906102e6565b505050505050565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061032757805160ff1916838001178555610355565b82800160010185558215610355579182015b82811115610354578251825591602001919060010190610339565b5b5090506103629190610366565b5090565b61038891905b8082111561038457600081600090555060010161036c565b5090565b9056fea265627a7a72315820bddfb07f9a54a63d856603a1dec3a20b77b09f95114d71d9b9ed18d2ad14a07a64736f6c63430005110032";
 
     public static final String FUNC_ASSEMBLYCALLPPOS = "assemblyCallppos";
 
@@ -34,50 +34,50 @@ public class PlatonInner extends Contract {
 
     public static final String FUNC_RES = "res";
 
-    protected PlatonInner(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider, chainId);
+    protected PlatonInner(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    protected PlatonInner(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    protected PlatonInner(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public RemoteCall<TransactionReceipt> assemblyCallppos(byte[] data, String addr) {
         final Function function = new Function(
-                FUNC_ASSEMBLYCALLPPOS,
-                Arrays.<Type>asList(new DynamicBytes(data),
-                        new com.alaya.abi.solidity.datatypes.Address(addr)),
+                FUNC_ASSEMBLYCALLPPOS, 
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.DynamicBytes(data), 
+                new com.platon.abi.solidity.datatypes.Address(addr)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<byte[]> getReturnValue() {
-        final Function function = new Function(FUNC_GETRETURNVALUE,
-                Arrays.<Type>asList(),
+        final Function function = new Function(FUNC_GETRETURNVALUE, 
+                Arrays.<Type>asList(), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<DynamicBytes>() {}));
         return executeRemoteCallSingleValueReturn(function, byte[].class);
     }
 
     public RemoteCall<BigInteger> res() {
-        final Function function = new Function(FUNC_RES,
-                Arrays.<Type>asList(),
+        final Function function = new Function(FUNC_RES, 
+                Arrays.<Type>asList(), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public static RemoteCall<PlatonInner> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(PlatonInner.class, web3j, credentials, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<PlatonInner> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return deployRemoteCall(PlatonInner.class, web3j, credentials, contractGasProvider, BINARY,  "");
     }
 
-    public static RemoteCall<PlatonInner> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(PlatonInner.class, web3j, transactionManager, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<PlatonInner> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return deployRemoteCall(PlatonInner.class, web3j, transactionManager, contractGasProvider, BINARY,  "");
     }
 
-    public static PlatonInner load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return new PlatonInner(contractAddress, web3j, credentials, contractGasProvider, chainId);
+    public static PlatonInner load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return new PlatonInner(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static PlatonInner load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return new PlatonInner(contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    public static PlatonInner load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return new PlatonInner(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 }

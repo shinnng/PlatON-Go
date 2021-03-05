@@ -1,7 +1,7 @@
 package network.platon.test.wasm.data_type;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.rlp.wasm.datatypes.*;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.rlp.wasm.datatypes.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

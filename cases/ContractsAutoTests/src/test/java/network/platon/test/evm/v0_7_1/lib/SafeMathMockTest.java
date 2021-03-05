@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_7_1.lib;
 
-import com.alaya.tx.exceptions.ContractCallException;
+import com.platon.tx.exceptions.ContractCallException;
 import network.platon.contracts.evm.v0_7_1.SafeMathMock;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

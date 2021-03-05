@@ -1,12 +1,12 @@
 package network.platon.test.wasm.gas;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.rlp.solidity.RlpEncoder;
-import com.alaya.rlp.solidity.RlpList;
-import com.alaya.rlp.solidity.RlpString;
-import com.alaya.rlp.solidity.RlpType;
-import com.alaya.rlp.wasm.datatypes.*;
-import com.alaya.utils.Numeric;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.rlp.solidity.RlpEncoder;
+import com.platon.rlp.solidity.RlpList;
+import com.platon.rlp.solidity.RlpString;
+import com.platon.rlp.solidity.RlpType;
+import com.platon.rlp.wasm.datatypes.*;
+import com.platon.utils.Numeric;
 import com.alibaba.fastjson.JSONObject;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;

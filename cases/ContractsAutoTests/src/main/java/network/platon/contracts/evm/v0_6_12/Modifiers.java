@@ -1,16 +1,16 @@
 package network.platon.contracts.evm.v0_6_12;
 
-import com.alaya.abi.solidity.TypeReference;
-import com.alaya.abi.solidity.datatypes.Function;
-import com.alaya.abi.solidity.datatypes.Type;
-import com.alaya.abi.solidity.datatypes.generated.Uint256;
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.RemoteCall;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tx.Contract;
-import com.alaya.tx.TransactionManager;
-import com.alaya.tx.gas.GasProvider;
+import com.platon.abi.solidity.TypeReference;
+import com.platon.abi.solidity.datatypes.Function;
+import com.platon.abi.solidity.datatypes.Type;
+import com.platon.abi.solidity.datatypes.generated.Uint256;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.RemoteCall;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tx.Contract;
+import com.platon.tx.TransactionManager;
+import com.platon.tx.gas.GasProvider;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,10 +19,10 @@ import java.util.Collections;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://github.com/PlatONnetwork/client-sdk-java/releases">platon-web3j command line tools</a>,
- * or the com.alaya.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the com.platon.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 0.13.2.1.
+ * <p>Generated with web3j version 0.15.1.7.
  */
 public class Modifiers extends Contract {
     private static final String BINARY = "6080604052600a600055348015601457600080fd5b5060c2806100236000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806366e41cb71460375780636b59084d146053575b600080fd5b603d605b565b6040518082815260200191505060405180910390f35b60596064565b005b60008054905090565b6000546000819050600080549050600c600081905550506000549050600b600081905550505056fea264697066735822122086b2f746be41c1c6bf2e1e6a4f788fddd2fb2319764dfe57990cc27fe8aed62564736f6c634300060c0033";
@@ -31,12 +31,12 @@ public class Modifiers extends Contract {
 
     public static final String FUNC_TEST2 = "test2";
 
-    protected Modifiers(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider, chainId);
+    protected Modifiers(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    protected Modifiers(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    protected Modifiers(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public RemoteCall<TransactionReceipt> test1() {
@@ -54,19 +54,19 @@ public class Modifiers extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public static RemoteCall<Modifiers> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(Modifiers.class, web3j, credentials, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<Modifiers> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return deployRemoteCall(Modifiers.class, web3j, credentials, contractGasProvider, BINARY,  "");
     }
 
-    public static RemoteCall<Modifiers> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(Modifiers.class, web3j, transactionManager, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<Modifiers> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return deployRemoteCall(Modifiers.class, web3j, transactionManager, contractGasProvider, BINARY,  "");
     }
 
-    public static Modifiers load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return new Modifiers(contractAddress, web3j, credentials, contractGasProvider, chainId);
+    public static Modifiers load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return new Modifiers(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static Modifiers load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return new Modifiers(contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    public static Modifiers load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return new Modifiers(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 }

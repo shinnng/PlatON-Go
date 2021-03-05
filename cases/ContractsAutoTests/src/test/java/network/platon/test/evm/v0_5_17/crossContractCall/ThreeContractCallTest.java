@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_5_17.crossContractCall;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_5_17.CallerOne;
 import network.platon.contracts.evm.v0_5_17.CallerThree;
 import network.platon.contracts.evm.v0_5_17.CallerTwo;

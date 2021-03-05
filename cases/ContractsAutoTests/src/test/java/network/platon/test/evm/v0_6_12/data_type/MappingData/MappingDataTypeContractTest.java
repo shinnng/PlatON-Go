@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_6_12.data_type.MappingData;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_6_12.MappingDataTypeContract;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

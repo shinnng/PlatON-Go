@@ -1,16 +1,16 @@
 package network.platon.contracts.evm.v0_6_12;
 
-import com.alaya.abi.solidity.TypeReference;
-import com.alaya.abi.solidity.datatypes.Function;
-import com.alaya.abi.solidity.datatypes.Type;
-import com.alaya.abi.solidity.datatypes.Utf8String;
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.RemoteCall;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tx.Contract;
-import com.alaya.tx.TransactionManager;
-import com.alaya.tx.gas.GasProvider;
+import com.platon.abi.solidity.TypeReference;
+import com.platon.abi.solidity.datatypes.Function;
+import com.platon.abi.solidity.datatypes.Type;
+import com.platon.abi.solidity.datatypes.Utf8String;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.RemoteCall;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tx.Contract;
+import com.platon.tx.TransactionManager;
+import com.platon.tx.gas.GasProvider;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -18,10 +18,10 @@ import java.util.Collections;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://github.com/PlatONnetwork/client-sdk-java/releases">platon-web3j command line tools</a>,
- * or the com.alaya.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the com.platon.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 0.13.2.1.
+ * <p>Generated with web3j version 0.15.1.7.
  */
 public class AbstractContractParentClass extends Contract {
     private static final String BINARY = "";
@@ -30,12 +30,12 @@ public class AbstractContractParentClass extends Contract {
 
     public static final String FUNC_SETPARENTNAME = "setParentName";
 
-    protected AbstractContractParentClass(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider, chainId);
+    protected AbstractContractParentClass(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    protected AbstractContractParentClass(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    protected AbstractContractParentClass(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public RemoteCall<String> parentName() {
@@ -48,24 +48,24 @@ public class AbstractContractParentClass extends Contract {
     public RemoteCall<TransactionReceipt> setParentName(String name) {
         final Function function = new Function(
                 FUNC_SETPARENTNAME, 
-                Arrays.<Type>asList(new Utf8String(name)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.Utf8String(name)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
-    public static RemoteCall<AbstractContractParentClass> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(AbstractContractParentClass.class, web3j, credentials, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<AbstractContractParentClass> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return deployRemoteCall(AbstractContractParentClass.class, web3j, credentials, contractGasProvider, BINARY,  "");
     }
 
-    public static RemoteCall<AbstractContractParentClass> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(AbstractContractParentClass.class, web3j, transactionManager, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<AbstractContractParentClass> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return deployRemoteCall(AbstractContractParentClass.class, web3j, transactionManager, contractGasProvider, BINARY,  "");
     }
 
-    public static AbstractContractParentClass load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return new AbstractContractParentClass(contractAddress, web3j, credentials, contractGasProvider, chainId);
+    public static AbstractContractParentClass load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return new AbstractContractParentClass(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static AbstractContractParentClass load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return new AbstractContractParentClass(contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    public static AbstractContractParentClass load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return new AbstractContractParentClass(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 }

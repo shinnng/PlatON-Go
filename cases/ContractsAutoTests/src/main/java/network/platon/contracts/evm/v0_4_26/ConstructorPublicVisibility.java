@@ -1,17 +1,17 @@
 package network.platon.contracts.evm.v0_4_26;
 
-import com.alaya.abi.solidity.FunctionEncoder;
-import com.alaya.abi.solidity.TypeReference;
-import com.alaya.abi.solidity.datatypes.Function;
-import com.alaya.abi.solidity.datatypes.Type;
-import com.alaya.abi.solidity.datatypes.generated.Uint256;
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.RemoteCall;
-import com.alaya.tuples.generated.Tuple2;
-import com.alaya.tx.Contract;
-import com.alaya.tx.TransactionManager;
-import com.alaya.tx.gas.GasProvider;
+import com.platon.abi.solidity.FunctionEncoder;
+import com.platon.abi.solidity.TypeReference;
+import com.platon.abi.solidity.datatypes.Function;
+import com.platon.abi.solidity.datatypes.Type;
+import com.platon.abi.solidity.datatypes.generated.Uint256;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.RemoteCall;
+import com.platon.tuples.generated.Tuple2;
+import com.platon.tx.Contract;
+import com.platon.tx.TransactionManager;
+import com.platon.tx.gas.GasProvider;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -21,10 +21,10 @@ import java.util.concurrent.Callable;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://github.com/PlatONnetwork/client-sdk-java/releases">platon-web3j command line tools</a>,
- * or the com.alaya.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the com.platon.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 0.13.2.1.
+ * <p>Generated with web3j version 0.15.1.7.
  */
 public class ConstructorPublicVisibility extends Contract {
     private static final String BINARY = "608060405234801561001057600080fd5b506040516020806102c38339810180604052810190808051906020019092919050505080600181905550506102798061004a6000396000f300608060405260043610610078576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806321687d5c1461007d57806335f646c0146100a857806383f2ac99146100d357806388b5383c1461011e578063bfe9ef4f14610150578063cc80f6f31461017b575b600080fd5b34801561008957600080fd5b506100926101a6565b6040518082815260200191505060405180910390f35b3480156100b457600080fd5b506100bd6101b0565b6040518082815260200191505060405180910390f35b3480156100df57600080fd5b5061010860048036038101908080359060200190929190803590602001909291905050506101ba565b6040518082815260200191505060405180910390f35b34801561012a57600080fd5b506101336101c7565b604051808381526020018281526020019250505060405180910390f35b34801561015c57600080fd5b50610165610226565b6040518082815260200191505060405180910390f35b34801561018757600080fd5b50610190610245565b6040518082815260200191505060405180910390f35b6000600154905090565b6000600154905090565b6000818301905092915050565b600080600080600080600080600060019650600095506001945086156101ec57600193505b5b85156101fc57600192506101ed565b600091505b600282101561021b57600190508180600101925050610201565b505050505050509091565b6000607b60008190555060005460015401600181905550600154905090565b6000349050905600a165627a7a72305820fe1f775edfd77384474f362c03e99cdc85ee0c585d8ea20a4cdc3c617128ad5d0029";
@@ -41,12 +41,12 @@ public class ConstructorPublicVisibility extends Contract {
 
     public static final String FUNC_SHOW = "show";
 
-    protected ConstructorPublicVisibility(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider, chainId);
+    protected ConstructorPublicVisibility(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    protected ConstructorPublicVisibility(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    protected ConstructorPublicVisibility(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public RemoteCall<BigInteger> constantCheck() {
@@ -65,8 +65,8 @@ public class ConstructorPublicVisibility extends Contract {
 
     public RemoteCall<BigInteger> namedReturn(BigInteger a, BigInteger b) {
         final Function function = new Function(FUNC_NAMEDRETURN, 
-                Arrays.<Type>asList(new Uint256(a),
-                new Uint256(b)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint256(a), 
+                new com.platon.abi.solidity.datatypes.generated.Uint256(b)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
@@ -101,21 +101,21 @@ public class ConstructorPublicVisibility extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public static RemoteCall<ConstructorPublicVisibility> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId, BigInteger _y) {
-        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new Uint256(_y)));
-        return deployRemoteCall(ConstructorPublicVisibility.class, web3j, credentials, contractGasProvider, BINARY, encodedConstructor, chainId);
+    public static RemoteCall<ConstructorPublicVisibility> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, BigInteger _y) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint256(_y)));
+        return deployRemoteCall(ConstructorPublicVisibility.class, web3j, credentials, contractGasProvider, BINARY, encodedConstructor);
     }
 
-    public static RemoteCall<ConstructorPublicVisibility> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId, BigInteger _y) {
-        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new Uint256(_y)));
-        return deployRemoteCall(ConstructorPublicVisibility.class, web3j, transactionManager, contractGasProvider, BINARY, encodedConstructor, chainId);
+    public static RemoteCall<ConstructorPublicVisibility> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, BigInteger _y) {
+        String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.generated.Uint256(_y)));
+        return deployRemoteCall(ConstructorPublicVisibility.class, web3j, transactionManager, contractGasProvider, BINARY, encodedConstructor);
     }
 
-    public static ConstructorPublicVisibility load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return new ConstructorPublicVisibility(contractAddress, web3j, credentials, contractGasProvider, chainId);
+    public static ConstructorPublicVisibility load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return new ConstructorPublicVisibility(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static ConstructorPublicVisibility load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return new ConstructorPublicVisibility(contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    public static ConstructorPublicVisibility load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return new ConstructorPublicVisibility(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 }

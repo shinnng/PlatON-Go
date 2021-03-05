@@ -1,11 +1,11 @@
 package network.platon.test.wasm.contract_migrate;
 
-import com.alaya.abi.wasm.WasmFunctionEncoder;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.rlp.wasm.datatypes.Uint16;
-import com.alaya.rlp.wasm.datatypes.Uint64;
-import com.alaya.rlp.wasm.datatypes.Uint8;
-import com.alaya.utils.Numeric;
+import com.platon.abi.wasm.WasmFunctionEncoder;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.rlp.wasm.datatypes.Uint16;
+import com.platon.rlp.wasm.datatypes.Uint64;
+import com.platon.rlp.wasm.datatypes.Uint8;
+import com.platon.utils.Numeric;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import network.platon.contracts.wasm.ContractMigrate_new;

@@ -1,9 +1,9 @@
 package network.platon.utils;
 
-import com.alaya.rlp.solidity.RlpEncoder;
-import com.alaya.rlp.solidity.RlpList;
-import com.alaya.rlp.solidity.RlpString;
-import com.alaya.rlp.solidity.RlpType;
+import com.platon.rlp.solidity.RlpEncoder;
+import com.platon.rlp.solidity.RlpList;
+import com.platon.rlp.solidity.RlpString;
+import com.platon.rlp.solidity.RlpType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;

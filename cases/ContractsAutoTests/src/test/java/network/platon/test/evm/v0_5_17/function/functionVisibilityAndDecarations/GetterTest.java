@@ -1,13 +1,13 @@
 package network.platon.test.evm.v0_5_17.function.functionVisibilityAndDecarations;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_5_17.Getter;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import org.junit.Before;
 import org.junit.Test;
-import com.alaya.tuples.generated.Tuple2;
+import com.platon.tuples.generated.Tuple2;
 
 import java.math.BigInteger;
 

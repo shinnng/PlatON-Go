@@ -1,25 +1,25 @@
 package network.platon.contracts.wasm;
 
-import com.alaya.rlp.wasm.datatypes.Uint64;
+import com.platon.rlp.wasm.datatypes.Uint64;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.alaya.abi.wasm.WasmEventEncoder;
-import com.alaya.abi.wasm.WasmFunctionEncoder;
-import com.alaya.abi.wasm.datatypes.WasmEvent;
-import com.alaya.abi.wasm.datatypes.WasmEventParameter;
-import com.alaya.abi.wasm.datatypes.WasmFunction;
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.DefaultBlockParameter;
-import com.alaya.protocol.core.RemoteCall;
-import com.alaya.protocol.core.methods.request.PlatonFilter;
-import com.alaya.protocol.core.methods.response.Log;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tx.TransactionManager;
-import com.alaya.tx.WasmContract;
-import com.alaya.tx.gas.GasProvider;
+import com.platon.abi.wasm.WasmEventEncoder;
+import com.platon.abi.wasm.WasmFunctionEncoder;
+import com.platon.abi.wasm.datatypes.WasmEvent;
+import com.platon.abi.wasm.datatypes.WasmEventParameter;
+import com.platon.abi.wasm.datatypes.WasmFunction;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.DefaultBlockParameter;
+import com.platon.protocol.core.RemoteCall;
+import com.platon.protocol.core.methods.request.PlatonFilter;
+import com.platon.protocol.core.methods.response.Log;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tx.TransactionManager;
+import com.platon.tx.WasmContract;
+import com.platon.tx.gas.GasProvider;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -55,9 +55,9 @@ public class ContractCallPPOS extends WasmContract {
     }
 
     public List<CallErrorInfoEventResponse> getCallErrorInfoEvents(TransactionReceipt transactionReceipt) {
-        List<WasmContract.WasmEventValuesWithLog> valueList = extractEventParametersWithLog(CALLERRORINFO_EVENT, transactionReceipt);
+        List<WasmEventValuesWithLog> valueList = extractEventParametersWithLog(CALLERRORINFO_EVENT, transactionReceipt);
         ArrayList<CallErrorInfoEventResponse> responses = new ArrayList<CallErrorInfoEventResponse>(valueList.size());
-        for (WasmContract.WasmEventValuesWithLog eventValues : valueList) {
+        for (WasmEventValuesWithLog eventValues : valueList) {
             CallErrorInfoEventResponse typedResponse = new CallErrorInfoEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse.arg1 = (byte[]) eventValues.getNonIndexedValues().get(0);
@@ -70,7 +70,7 @@ public class ContractCallPPOS extends WasmContract {
         return web3j.platonLogObservable(filter).map(new Func1<Log, CallErrorInfoEventResponse>() {
             @Override
             public CallErrorInfoEventResponse call(Log log) {
-                WasmContract.WasmEventValuesWithLog eventValues = extractEventParametersWithLog(CALLERRORINFO_EVENT, log);
+                WasmEventValuesWithLog eventValues = extractEventParametersWithLog(CALLERRORINFO_EVENT, log);
                 CallErrorInfoEventResponse typedResponse = new CallErrorInfoEventResponse();
                 typedResponse.log = log;
                 typedResponse.arg1 = (byte[]) eventValues.getNonIndexedValues().get(0);

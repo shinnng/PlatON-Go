@@ -1,11 +1,11 @@
 package network.platon.test.wasm.beforetest;
 
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.http.HttpService;
-import com.alaya.tx.RawTransactionManager;
-import com.alaya.tx.gas.ContractGasProvider;
-import com.alaya.utils.Numeric;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.http.HttpService;
+import com.platon.tx.RawTransactionManager;
+import com.platon.tx.gas.ContractGasProvider;
+import com.platon.utils.Numeric;
 import network.platon.test.BaseTest;
 import java.math.BigInteger;
 

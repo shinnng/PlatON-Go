@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_5_17.oop.inherit;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_5_17.InheritContractAMutipleClass;
 import network.platon.contracts.evm.v0_5_17.InheritContractBMutipleClass;
 import network.platon.test.evm.beforetest.ContractPrepareTest;

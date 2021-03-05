@@ -1,6 +1,6 @@
 package network.platon.test.evm.v0_7_1.complexcontracts.erc20_0513;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
 import network.platon.contracts.evm.v0_7_1.ERC200513Token;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

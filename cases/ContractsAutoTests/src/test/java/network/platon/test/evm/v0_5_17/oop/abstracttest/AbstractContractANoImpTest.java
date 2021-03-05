@@ -1,11 +1,11 @@
 package network.platon.test.evm.v0_5_17.oop.abstracttest;
 
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.protocol.http.HttpService;
-import com.alaya.tx.RawTransactionManager;
-import com.alaya.tx.gas.ContractGasProvider;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.http.HttpService;
+import com.platon.tx.RawTransactionManager;
+import com.platon.tx.gas.ContractGasProvider;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import network.platon.autotest.junit.rules.AssertCollector;

@@ -1,7 +1,7 @@
 package network.platon.test;
 
-import com.alaya.crypto.ECKeyPair;
-import com.alaya.crypto.Keys;
+import com.platon.crypto.ECKeyPair;
+import com.platon.crypto.Keys;
 import com.alibaba.fastjson.JSONObject;
 import network.platon.autotest.junit.rules.AssertCollector;
 import network.platon.autotest.junit.rules.DriverService;

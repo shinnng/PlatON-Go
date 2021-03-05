@@ -1,7 +1,7 @@
 package network.platon.test.evm.v0_7_1.exceptionhandle;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.protocol.exceptions.TransactionException;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.protocol.exceptions.TransactionException;
 import network.platon.contracts.evm.v0_7_1.RequireMessageHandle;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

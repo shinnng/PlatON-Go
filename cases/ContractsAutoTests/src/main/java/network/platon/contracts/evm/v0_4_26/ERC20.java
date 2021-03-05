@@ -1,22 +1,22 @@
 package network.platon.contracts.evm.v0_4_26;
 
-import com.alaya.abi.solidity.EventEncoder;
-import com.alaya.abi.solidity.TypeReference;
-import com.alaya.abi.solidity.datatypes.Address;
-import com.alaya.abi.solidity.datatypes.Event;
-import com.alaya.abi.solidity.datatypes.Function;
-import com.alaya.abi.solidity.datatypes.Type;
-import com.alaya.abi.solidity.datatypes.generated.Uint256;
-import com.alaya.crypto.Credentials;
-import com.alaya.protocol.Web3j;
-import com.alaya.protocol.core.DefaultBlockParameter;
-import com.alaya.protocol.core.RemoteCall;
-import com.alaya.protocol.core.methods.request.PlatonFilter;
-import com.alaya.protocol.core.methods.response.Log;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tx.Contract;
-import com.alaya.tx.TransactionManager;
-import com.alaya.tx.gas.GasProvider;
+import com.platon.abi.solidity.EventEncoder;
+import com.platon.abi.solidity.TypeReference;
+import com.platon.abi.solidity.datatypes.Address;
+import com.platon.abi.solidity.datatypes.Event;
+import com.platon.abi.solidity.datatypes.Function;
+import com.platon.abi.solidity.datatypes.Type;
+import com.platon.abi.solidity.datatypes.generated.Uint256;
+import com.platon.crypto.Credentials;
+import com.platon.protocol.Web3j;
+import com.platon.protocol.core.DefaultBlockParameter;
+import com.platon.protocol.core.RemoteCall;
+import com.platon.protocol.core.methods.request.PlatonFilter;
+import com.platon.protocol.core.methods.response.Log;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tx.Contract;
+import com.platon.tx.TransactionManager;
+import com.platon.tx.gas.GasProvider;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,10 +29,10 @@ import rx.functions.Func1;
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://github.com/PlatONnetwork/client-sdk-java/releases">platon-web3j command line tools</a>,
- * or the com.alaya.codegen.SolidityFunctionWrapperGenerator in the 
+ * or the com.platon.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/PlatONnetwork/client-sdk-java/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 0.13.2.1.
+ * <p>Generated with web3j version 0.15.1.7.
  */
 public class ERC20 extends Contract {
     private static final String BINARY = "";
@@ -57,19 +57,19 @@ public class ERC20 extends Contract {
             Arrays.<TypeReference<?>>asList(new TypeReference<Address>(true) {}, new TypeReference<Address>(true) {}, new TypeReference<Uint256>() {}));
     ;
 
-    protected ERC20(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, credentials, contractGasProvider, chainId);
+    protected ERC20(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    protected ERC20(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    protected ERC20(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        super(BINARY, contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public RemoteCall<TransactionReceipt> approve(String spender, BigInteger value) {
         final Function function = new Function(
                 FUNC_APPROVE, 
-                Arrays.<Type>asList(new Address(spender),
-                new Uint256(value)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.Address(spender), 
+                new com.platon.abi.solidity.datatypes.generated.Uint256(value)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
@@ -84,16 +84,16 @@ public class ERC20 extends Contract {
     public RemoteCall<TransactionReceipt> transferFrom(String from, String to, BigInteger value) {
         final Function function = new Function(
                 FUNC_TRANSFERFROM, 
-                Arrays.<Type>asList(new Address(from),
-                new Address(to),
-                new Uint256(value)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.Address(from), 
+                new com.platon.abi.solidity.datatypes.Address(to), 
+                new com.platon.abi.solidity.datatypes.generated.Uint256(value)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<BigInteger> balanceOf(String who) {
         final Function function = new Function(FUNC_BALANCEOF, 
-                Arrays.<Type>asList(new Address(who)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.Address(who)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
@@ -101,24 +101,24 @@ public class ERC20 extends Contract {
     public RemoteCall<TransactionReceipt> transfer(String to, BigInteger value) {
         final Function function = new Function(
                 FUNC_TRANSFER, 
-                Arrays.<Type>asList(new Address(to),
-                new Uint256(value)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.Address(to), 
+                new com.platon.abi.solidity.datatypes.generated.Uint256(value)), 
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function);
     }
 
     public RemoteCall<BigInteger> allowance(String owner, String spender) {
         final Function function = new Function(FUNC_ALLOWANCE, 
-                Arrays.<Type>asList(new Address(owner),
-                new Address(spender)),
+                Arrays.<Type>asList(new com.platon.abi.solidity.datatypes.Address(owner), 
+                new com.platon.abi.solidity.datatypes.Address(spender)), 
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public List<TransferEventResponse> getTransferEvents(TransactionReceipt transactionReceipt) {
-        List<EventValuesWithLog> valueList = extractEventParametersWithLog(TRANSFER_EVENT, transactionReceipt);
+        List<Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(TRANSFER_EVENT, transactionReceipt);
         ArrayList<TransferEventResponse> responses = new ArrayList<TransferEventResponse>(valueList.size());
-        for (EventValuesWithLog eventValues : valueList) {
+        for (Contract.EventValuesWithLog eventValues : valueList) {
             TransferEventResponse typedResponse = new TransferEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse._from = (String) eventValues.getIndexedValues().get(0).getValue();
@@ -133,7 +133,7 @@ public class ERC20 extends Contract {
         return web3j.platonLogObservable(filter).map(new Func1<Log, TransferEventResponse>() {
             @Override
             public TransferEventResponse call(Log log) {
-                EventValuesWithLog eventValues = extractEventParametersWithLog(TRANSFER_EVENT, log);
+                Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(TRANSFER_EVENT, log);
                 TransferEventResponse typedResponse = new TransferEventResponse();
                 typedResponse.log = log;
                 typedResponse._from = (String) eventValues.getIndexedValues().get(0).getValue();
@@ -151,9 +151,9 @@ public class ERC20 extends Contract {
     }
 
     public List<ApprovalEventResponse> getApprovalEvents(TransactionReceipt transactionReceipt) {
-        List<EventValuesWithLog> valueList = extractEventParametersWithLog(APPROVAL_EVENT, transactionReceipt);
+        List<Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(APPROVAL_EVENT, transactionReceipt);
         ArrayList<ApprovalEventResponse> responses = new ArrayList<ApprovalEventResponse>(valueList.size());
-        for (EventValuesWithLog eventValues : valueList) {
+        for (Contract.EventValuesWithLog eventValues : valueList) {
             ApprovalEventResponse typedResponse = new ApprovalEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse._owner = (String) eventValues.getIndexedValues().get(0).getValue();
@@ -168,7 +168,7 @@ public class ERC20 extends Contract {
         return web3j.platonLogObservable(filter).map(new Func1<Log, ApprovalEventResponse>() {
             @Override
             public ApprovalEventResponse call(Log log) {
-                EventValuesWithLog eventValues = extractEventParametersWithLog(APPROVAL_EVENT, log);
+                Contract.EventValuesWithLog eventValues = extractEventParametersWithLog(APPROVAL_EVENT, log);
                 ApprovalEventResponse typedResponse = new ApprovalEventResponse();
                 typedResponse.log = log;
                 typedResponse._owner = (String) eventValues.getIndexedValues().get(0).getValue();
@@ -185,20 +185,20 @@ public class ERC20 extends Contract {
         return approvalEventObservable(filter);
     }
 
-    public static RemoteCall<ERC20> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(ERC20.class, web3j, credentials, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<ERC20> deploy(Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return deployRemoteCall(ERC20.class, web3j, credentials, contractGasProvider, BINARY,  "");
     }
 
-    public static RemoteCall<ERC20> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return deployRemoteCall(ERC20.class, web3j, transactionManager, contractGasProvider, BINARY,  "", chainId);
+    public static RemoteCall<ERC20> deploy(Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return deployRemoteCall(ERC20.class, web3j, transactionManager, contractGasProvider, BINARY,  "");
     }
 
-    public static ERC20 load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider, Long chainId) {
-        return new ERC20(contractAddress, web3j, credentials, contractGasProvider, chainId);
+    public static ERC20 load(String contractAddress, Web3j web3j, Credentials credentials, GasProvider contractGasProvider) {
+        return new ERC20(contractAddress, web3j, credentials, contractGasProvider);
     }
 
-    public static ERC20 load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider, Long chainId) {
-        return new ERC20(contractAddress, web3j, transactionManager, contractGasProvider, chainId);
+    public static ERC20 load(String contractAddress, Web3j web3j, TransactionManager transactionManager, GasProvider contractGasProvider) {
+        return new ERC20(contractAddress, web3j, transactionManager, contractGasProvider);
     }
 
     public static class TransferEventResponse {

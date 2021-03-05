@@ -1,7 +1,7 @@
 package network.platon.test.evm.v0_5_17.data_type.ReferenceData;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tuples.generated.Tuple2;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tuples.generated.Tuple2;
 import network.platon.contracts.evm.v0_5_17.ReferenceDataTypeArrayContract;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;

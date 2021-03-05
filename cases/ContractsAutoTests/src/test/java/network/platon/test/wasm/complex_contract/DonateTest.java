@@ -1,10 +1,10 @@
 package network.platon.test.wasm.complex_contract;
 
-import com.alaya.protocol.core.DefaultBlockParameterName;
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.rlp.wasm.datatypes.Uint128;
-import com.alaya.rlp.wasm.datatypes.WasmAddress;
-import com.alaya.utils.Convert;
+import com.platon.protocol.core.DefaultBlockParameterName;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.rlp.wasm.datatypes.Uint128;
+import com.platon.rlp.wasm.datatypes.WasmAddress;
+import com.platon.utils.Convert;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import network.platon.contracts.wasm.Donate;

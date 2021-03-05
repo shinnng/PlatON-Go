@@ -1,6 +1,6 @@
 package network.platon.test.datatypes;
 
-import com.alaya.rlp.wasm.datatypes.Uint128;
+import com.platon.rlp.wasm.datatypes.Uint128;
 //import com.platon.rlp.datatypes.Uint128;
 
 import java.math.BigInteger;

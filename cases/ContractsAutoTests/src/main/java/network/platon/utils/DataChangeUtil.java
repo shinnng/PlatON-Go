@@ -1,8 +1,8 @@
 package network.platon.utils;
 
-import com.alaya.rlp.wasm.RLPCodec;
-import com.alaya.rlp.wasm.RLPList;
-import com.alaya.utils.Numeric;
+import com.platon.rlp.wasm.RLPCodec;
+import com.platon.rlp.wasm.RLPList;
+import com.platon.utils.Numeric;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigInteger;

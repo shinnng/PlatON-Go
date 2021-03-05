@@ -1,9 +1,9 @@
 package network.platon.test.wasm.data_type;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.rlp.wasm.datatypes.Uint32;
-import com.alaya.rlp.wasm.datatypes.Uint64;
-import com.alaya.rlp.wasm.datatypes.Uint8;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.rlp.wasm.datatypes.Uint32;
+import com.platon.rlp.wasm.datatypes.Uint64;
+import com.platon.rlp.wasm.datatypes.Uint8;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import network.platon.contracts.wasm.TypeConversionContract;

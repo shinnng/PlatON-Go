@@ -1,8 +1,8 @@
 package network.platon.test.wasm.exec_efficiency;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.rlp.wasm.datatypes.Int32;
-import com.alaya.rlp.wasm.datatypes.Int64;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.rlp.wasm.datatypes.Int32;
+import com.platon.rlp.wasm.datatypes.Int64;
 import network.platon.autotest.junit.annotations.DataSource;
 import network.platon.autotest.junit.enums.DataSourceType;
 import network.platon.contracts.wasm.MergeSort;

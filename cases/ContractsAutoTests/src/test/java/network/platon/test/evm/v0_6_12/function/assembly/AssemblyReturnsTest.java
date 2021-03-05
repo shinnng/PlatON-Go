@@ -1,7 +1,7 @@
 package network.platon.test.evm.v0_6_12.function.assembly;
 
-import com.alaya.protocol.core.methods.response.TransactionReceipt;
-import com.alaya.tuples.generated.Tuple5;
+import com.platon.protocol.core.methods.response.TransactionReceipt;
+import com.platon.tuples.generated.Tuple5;
 import network.platon.contracts.evm.v0_6_12.AssemblyReturns;
 import network.platon.test.evm.beforetest.ContractPrepareTest;
 import network.platon.autotest.junit.annotations.DataSource;
